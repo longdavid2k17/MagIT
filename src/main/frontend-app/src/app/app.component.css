@@ -1,0 +1,95 @@
+.card-header,
+.card-footer {
+  background-color: #fff !important
+}
+
+nav{
+  color: white;
+}
+nav button{
+  border:5px solid black;
+}
+
+.badge {
+  cursor: pointer
+}
+
+button {
+  justify-content: center;
+  border: none !important
+}
+
+a {
+  color: black !important;
+  text-decoration: none !important
+}
+
+.badge-outline {
+  border: 1px solid #999;
+  background-color: transparent
+}
+
+li {
+  color: rgb(65, 65, 65);
+  font-size: 30px
+}
+
+.hl {
+  align-content: center;
+  width: 25%
+}
+
+p {
+  font-size: 15px !important
+}
+
+span {
+  font-size: 18px !important
+}
+
+.badge {
+  padding: 0.5em .4em !important;
+  font-size: 13px !important
+}
+
+.badge-pill {
+  padding-right: 0.8rem !important;
+  padding-left: 0.8rem !important
+}
+
+.footer {
+  font-size: 16px !important;
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+}
+
+img {
+  opacity: 0.8 !important
+}
+
+h6 {
+  font-size: 14px !important
+}
+
+@media (max-width: 756px) {
+  .card .card-body {
+    padding: 0 !important
+  }
+
+  .card {
+    margin-top: 5px !important
+  }
+}
+
+@media (min-width: 1200px) {
+  .col-xl-3 {
+    flex: 0 0 35%;
+    max-width: 31%
+  }
+}
+
+.container-fluid {
+  margin-top: 50px !important;
+  margin-bottom: 50px !important;
+
+}
