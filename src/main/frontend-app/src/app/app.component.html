@@ -4,33 +4,18 @@
     <li class="nav-item">
       <a href="#about" class="nav-link"><h4>O aplikacji</h4></a>
     </li>
-    <div ngbDropdown class="d-inline-block">
-      <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Panel rekrutera</button>
-      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-        <a href="/add-job-offer" class="nav-link" routerLink="add-job-offer"><button ngbDropdownItem>Dodaj ogłoszenie</button></a>
-        <a href="/manage-offers" class="nav-link" routerLink="manage-offers"><button ngbDropdownItem>Zarządzaj kampaniami</button></a>
-        <a href="/edit-company" class="nav-link" routerLink="edit-company"><button ngbDropdownItem>Zarządzaj panelem firmy</button></a>
-      </div>
+  </ul>
+  <div class="nav-item" ngbDropdown >
+    <button class="btn btn-warning" tabindex="0" id="navbarDropdown2" ngbDropdownToggle style="float:right;">Konto</button>
+    <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu dropdown-menu-end" *ngIf="!isLoggedIn">
+      <a ngbDropdownItem href="/login" class="nav-link" routerLink="login">Zaloguj się</a>
+      <a ngbDropdownItem href="/register" class="nav-link" routerLink="register">Zarejestruj się</a>
     </div>
-  </ul>
-
-  <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
-    <li class="nav-item">
-      <a href="/login" class="nav-link" routerLink="login"><h4>Zaloguj się</h4></a>
-    </li>
-    <li class="nav-item">
-      <a href="/register" class="nav-link" routerLink="register"><h4>Zarejestruj się</h4></a>
-    </li>
-  </ul>
-
-  <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn">
-    <li class="nav-item">
-      <a href="/profile" class="nav-link" routerLink="profile" title="Zarządzaj swoim profilem"></a>
-    </li>
-    <li class="nav-item">
-      <a href class="nav-link" (click)="logout()">Wyloguj się</a>
-    </li>
-  </ul>
+    <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu dropdown-menu-end" *ngIf="isLoggedIn">
+      <a ngbDropdownItem href="#" (click)="logout()">Wyloguj się</a>
+      <a ngbDropdownItem href="/login" class="nav-link" routerLink="add-job-offer">Zarządzaj swoim profilem</a>
+    </div>
+  </div>
 </nav>
 <div class="container">
   <router-outlet></router-outlet>

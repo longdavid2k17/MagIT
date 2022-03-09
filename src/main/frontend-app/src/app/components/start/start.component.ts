@@ -11,7 +11,7 @@ export class StartComponent implements OnInit {
   constructor(private toastr:ToastrService) { }
 
   ngOnInit(): void {
-    this.toastr.success('Zalogowano!')
+    //this.toastr.success('Zalogowano!')
   }
 
 }

@@ -3,13 +3,6 @@
   background-color: #fff !important
 }
 
-nav{
-  color: white;
-}
-nav button{
-  border:5px solid black;
-}
-
 .badge {
   cursor: pointer
 }
