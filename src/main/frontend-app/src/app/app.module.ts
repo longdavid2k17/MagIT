@@ -10,6 +10,9 @@ import { StartComponent } from './components/start/start.component';
 import {ToastrModule} from "ngx-toastr";
 import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {HttpClientModule} from "@angular/common/http";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { TokenComponent } from './components/token/token.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +20,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    StartComponent
+    StartComponent,
+    TokenComponent
   ],
   imports: [
     BrowserModule,
@@ -32,8 +36,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
       }
     ),
     NgbModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [HttpClientModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -19,33 +19,30 @@ public class User
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     @Size(max = 20)
     private String username;
 
-    @NotBlank
     @Size(max = 50)
     @Email
     private String email;
 
-    @NotBlank
     @Size(max = 120)
     private String password;
 
     @Size(max = 500)
     private String bio;
 
-    @NotBlank
     @Size(max = 12)
     private String phoneNumber;
 
-    @NotBlank
     @Size(max = 50)
     private String name;
 
-    @NotBlank
     @Size(max = 50)
     private String surname;
+
+    @Column(name = "enabled")
+    private boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(	name = "user_roles",
@@ -53,9 +50,27 @@ public class User
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @Transient
+    private String invite_code;
+
     public User()
     {
+        super();
+        this.enabled=false;
+    }
 
+    public User(Long id, String username, String email, String password, String bio, String phoneNumber, String name, String surname, boolean enabled, Set<Role> roles)
+    {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.bio = bio;
+        this.phoneNumber = phoneNumber;
+        this.name = name;
+        this.surname = surname;
+        this.enabled = enabled;
+        this.roles = roles;
     }
 
     public User(Long id, String username, String email, String password, String bio, String phoneNumber, String name, String surname, Set<Role> roles)
@@ -69,6 +84,14 @@ public class User
         this.name = name;
         this.surname = surname;
         this.roles = roles;
+    }
+
+    public String getInvite_code() {
+        return invite_code;
+    }
+
+    public void setInvite_code(String invite_code) {
+        this.invite_code = invite_code;
     }
 
     public Long getId() {
@@ -143,6 +166,14 @@ public class User
         this.roles = roles;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -154,6 +185,7 @@ public class User
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
+                ", enabled=" + enabled +
                 ", roles=" + roles +
                 '}';
     }
@@ -163,11 +195,11 @@ public class User
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(bio, user.bio) && Objects.equals(phoneNumber, user.phoneNumber) && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(roles, user.roles);
+        return enabled == user.enabled && Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(bio, user.bio) && Objects.equals(phoneNumber, user.phoneNumber) && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(roles, user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, email, password, bio, phoneNumber, name, surname, roles);
+        return Objects.hash(id, username, email, password, bio, phoneNumber, name, surname, enabled, roles);
     }
 }

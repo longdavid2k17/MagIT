@@ -10,34 +10,52 @@
           </div>
           <div class="form-input">
             <h2>Rejestracja</h2>
-            <form>
+            <form *ngIf="!isSuccessful" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
               <div class="form-group">
-                <input type="text"  id="" name="name" required>
+                <input type="text"  id="name" name="name" [(ngModel)]="form.name" required #name="ngModel">
                 <label>Imię</label>
+                <div class="alert-danger" *ngIf="name.errors && f.submitted">
+                  <div *ngIf="name.errors.required">Imie jest wymagane</div>
+                </div>
               </div>
               <div class="form-group">
-                <input type="text"  id="" name="name" required>
+                <input type="text"  id="surname" name="surname" [(ngModel)]="form.surname" required #surname="ngModel" >
                 <label>Nazwisko</label>
+                <div class="alert-danger" *ngIf="surname.errors && f.submitted">
+                  <div *ngIf="surname.errors.required">Nazwisko jest wymagane</div>
+                </div>
               </div>
               <div class="form-group">
-                <input type="email"  id="" name="email" required>
+                <input type="email"  id="email" name="email" [(ngModel)]="form.email" required #email="ngModel">
                 <label>Email</label>
+                <div class="alert-danger" *ngIf="email.errors && f.submitted">
+                  <div *ngIf="email.errors.required">Email jest wymagany</div>
+                </div>
               </div>
               <div class="form-group">
-                <input type="text"  id="" name="login" required>
+                <input type="text"  id="username" name="username" [(ngModel)]="form.username" required #username="ngModel">
                 <label>Login</label>
+                <div class="alert-danger" *ngIf="username.errors && f.submitted">
+                  <div *ngIf="username.errors.required">Login jest wymagany</div>
+                </div>
               </div>
               <div class="form-group">
-                <input type="password" id="" name="password" required>
+                <input type="password" id="password" name="password" [(ngModel)]="form.password" required #password="ngModel">
                 <label>Hasło</label>
+                <div class="alert-danger" *ngIf="password.errors && f.submitted">
+                  <div *ngIf="password.errors.required">Hasło jest wymagane</div>
+                  <div *ngIf="password.errors.minlength">
+                    Hasło musi mieć przynajmniej 6 znaków
+                  </div>
+                </div>
               </div>
               <div class="form-group">
-                <input type="password" id="" name="repassword" required>
+                <input type="password" id="repassword" name="repassword" [(ngModel)]="form.rePassword" required #rePassword="ngModel">
                 <label>Powtórz hasło</label>
               </div>
               <div class="form-group">
                 <label>Kod zaproszenia</label>
-                <input type="text"  id="invite_code" name="invite_code">
+                <input type="text"  id="invite_code" name="invite_code" [(ngModel)]="form.inviteCode" #inviteCode="ngModel">
               </div>
               <div class="myform-button">
                 <button class="myform-btn" type="submit">Zarejestruj się</button>
@@ -45,10 +63,16 @@
               <div style="margin: 10px">
               <span style="padding: 10px">Posiadasz już konto? <a href="/login">Zaloguj się</a></span>
               </div>
+              <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
+                Rejestracja nieudana!<br />{{ errorMessage }}
+              </div>
             </form>
           </div>
         </div>
       </div>
     </div>
+  </div>
+  <div class="alert alert-success" *ngIf="isSuccessful">
+    Zarejestrowałeś się poprawnie!
   </div>
 </section>

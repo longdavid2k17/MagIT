@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="col-md-12">
+    <div class="card card-container">
+      <div class="form-group" *ngIf="status == tokenStatus.VALID">
+        <div class="alert alert-success" role="alert">Konto zostało zweryfikowane! Możesz zacząć działać</div>
+        <a routerLink="/login">Zaloguj się do swojego konta</a>
+      </div>
+      <div class="form-group" *ngIf="status == tokenStatus.EXPIRED">
+        <div class="alert alert-danger" role="alert">Link aktywacyjny stracił ważność!</div>
+        <button class="btn btn-primary btn-block" (click)="resendToken()">Wyślij ponownie</button>
+      </div>
+      <div class="form-group" *ngIf="status == tokenStatus.SENDING">
+        <div class="alert alert-info" role="alert">Wysyłanie wiadomości</div>
+      </div>
+      <div class="form-group" *ngIf="status == tokenStatus.SENT">
+        <div class="alert alert-info" role="alert">Wysłano!</div>
+      </div>
+      <div class="form-group" *ngIf="status == tokenStatus.INVALID">
+        <div class="alert alert-danger" role="alert">Link jest niepoprawny!</div>
+      </div>
+      <div class="form-group" *ngIf="errorMessage">
+        <div class="alert alert-danger" role="alert">{{errorMessage}}</div>
+      </div>
+    </div>
+  </div>
+</div>
