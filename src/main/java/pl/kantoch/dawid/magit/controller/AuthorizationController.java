@@ -5,17 +5,28 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import pl.kantoch.dawid.magit.models.AppConstants;
 import pl.kantoch.dawid.magit.models.events.OnRegistrationCompleteEvent;
 import pl.kantoch.dawid.magit.models.exceptions.UserAlreadyExistException;
+import pl.kantoch.dawid.magit.models.payloads.requests.LoginRequest;
 import pl.kantoch.dawid.magit.models.payloads.requests.SignupRequest;
+import pl.kantoch.dawid.magit.models.payloads.responses.JwtResponse;
 import pl.kantoch.dawid.magit.models.payloads.responses.SimpleApiResponse;
+import pl.kantoch.dawid.magit.security.JWTUtils;
 import pl.kantoch.dawid.magit.security.user.User;
+import pl.kantoch.dawid.magit.security.user.UserDetailsImpl;
 import pl.kantoch.dawid.magit.security.user.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -25,22 +36,39 @@ public class AuthorizationController
 
     private final UserService userService;
     private final ApplicationEventPublisher eventPublisher;
+    private final AuthenticationManager authenticationManager;
+    private final JWTUtils jwtUtils;
 
-    public AuthorizationController(UserService userService, ApplicationEventPublisher eventPublisher) {
+    public AuthorizationController(UserService userService, ApplicationEventPublisher eventPublisher, AuthenticationManager authenticationManager, JWTUtils jwtUtils)
+    {
         this.userService = userService;
         this.eventPublisher = eventPublisher;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
     }
 
-    /*    @PostMapping("/sign-in")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest)
+    @PostMapping("/sign-in")
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest,HttpServletRequest request)
     {
         if(loginRequest!=null)
         {
-            return authorizationService.authenticateUser(loginRequest);
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                    userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getEmail(),
+                    roles));
         }
         else
             return ResponseEntity.badRequest().body("Żądanie jest niepoprawne!");
-    }*/
+    }
 
     @PostMapping("/sign-up")
     public ResponseEntity<?> registerUserAccount(@RequestBody SignupRequest signupRequest,

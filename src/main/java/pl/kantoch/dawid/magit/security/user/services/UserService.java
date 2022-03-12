@@ -1,6 +1,7 @@
 package pl.kantoch.dawid.magit.security.user.services;
 
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.kantoch.dawid.magit.models.AppConstants;
 import pl.kantoch.dawid.magit.models.VerificationToken;
@@ -24,14 +25,17 @@ public class UserService implements IUserService
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final VerificationTokenRepository tokenRepository;
+    private final PasswordEncoder encoder;
     private final ApplicationEventPublisher eventPublisher;
 
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, VerificationTokenRepository tokenRepository, ApplicationEventPublisher eventPublisher)
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, VerificationTokenRepository tokenRepository,
+                       PasswordEncoder encoder, ApplicationEventPublisher eventPublisher)
     {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.tokenRepository = tokenRepository;
+        this.encoder = encoder;
         this.eventPublisher = eventPublisher;
     }
 
@@ -46,7 +50,8 @@ public class UserService implements IUserService
         User user = new User();
         user.setName(userDto.getName());
         user.setSurname(userDto.getSurname());
-        user.setPassword(userDto.getPassword());
+        user.setPassword(encoder.encode(userDto.getPassword()));
+        user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         Set<String> strRoles = userDto.getRole();
         Set<Role> roles = new HashSet<>();
