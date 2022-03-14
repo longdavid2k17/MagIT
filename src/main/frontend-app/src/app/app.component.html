@@ -4,6 +4,9 @@
     <li class="nav-item">
       <a href="#about" class="nav-link"><h4>O aplikacji</h4></a>
     </li>
+    <li class="nav-item" *ngIf="isLoggedIn">
+      <a href="/home" class="nav-link"><h4>Moje zadania</h4></a>
+    </li>
   </ul>
   <div class="nav-item" ngbDropdown >
     <button class="btn btn-warning" tabindex="0" id="navbarDropdown2" ngbDropdownToggle style="float:right;">Konto</button>
