@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import pl.kantoch.dawid.magit.models.events.OnRegistrationCompleteEvent;
 import pl.kantoch.dawid.magit.security.user.User;
 import pl.kantoch.dawid.magit.security.user.services.IUserService;
+import pl.kantoch.dawid.magit.services.MailService;
 
 import javax.mail.MessagingException;
 import java.util.UUID;

@@ -13,6 +13,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { TokenComponent } from './components/token/token.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ResetPasswordConfirmationComponent } from './components/reset-password-confirmation/reset-password-confirmation.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { TokenComponent } from './components/token/token.component';
     RegisterComponent,
     HomeComponent,
     StartComponent,
-    TokenComponent
+    TokenComponent,
+    ResetPasswordComponent,
+    ResetPasswordConfirmationComponent
   ],
   imports: [
     BrowserModule,

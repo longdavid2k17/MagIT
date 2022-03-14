@@ -43,9 +43,9 @@ export class LoginComponent implements OnInit {
         this.toastr.success('Zalogowano!')
       },
       err => {
-        this.errorMessage = err.error.message;
+        this.errorMessage = err.error;
         this.isLoginFailed = true;
-        this.toastr.error('Błąd logowania!');
+        this.toastr.error(this.errorMessage,'Błąd!');
       }
     );
   }

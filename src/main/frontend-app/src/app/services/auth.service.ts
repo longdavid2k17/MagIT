@@ -43,4 +43,17 @@ export class AuthService {
       headers: new HttpHeaders({ 'Content-Type': 'text/plain' })
     });
   }
+
+  resetPassword(email: any) : Observable<any> {
+    return this.http.post(AUTH_API + 'reset-password', email, {
+      headers: new HttpHeaders({ 'Content-Type': 'text/plain' })
+    });
+  }
+
+  setNewPassword(password: any, token: string | null) {
+    return this.http.post(AUTH_API + 'set-new-password', {
+      password,
+      token,
+    }, httpOptions);
+  }
 }

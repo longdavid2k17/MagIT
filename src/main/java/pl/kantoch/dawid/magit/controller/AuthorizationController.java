@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,7 @@ import pl.kantoch.dawid.magit.models.AppConstants;
 import pl.kantoch.dawid.magit.models.events.OnRegistrationCompleteEvent;
 import pl.kantoch.dawid.magit.models.exceptions.UserAlreadyExistException;
 import pl.kantoch.dawid.magit.models.payloads.requests.LoginRequest;
+import pl.kantoch.dawid.magit.models.payloads.requests.SetNewPasswordRequest;
 import pl.kantoch.dawid.magit.models.payloads.requests.SignupRequest;
 import pl.kantoch.dawid.magit.models.payloads.responses.JwtResponse;
 import pl.kantoch.dawid.magit.models.payloads.responses.SimpleApiResponse;
@@ -50,24 +52,31 @@ public class AuthorizationController
     @PostMapping("/sign-in")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest,HttpServletRequest request)
     {
-        if(loginRequest!=null)
+        try
         {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = jwtUtils.generateJwtToken(authentication);
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            List<String> roles = userDetails.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList());
+            if(loginRequest!=null)
+            {
+                Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                String jwt = jwtUtils.generateJwtToken(authentication);
+                UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+                List<String> roles = userDetails.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList());
 
-            return ResponseEntity.ok(new JwtResponse(jwt,
-                    userDetails.getId(),
-                    userDetails.getUsername(),
-                    userDetails.getEmail(),
-                    roles));
+                return ResponseEntity.ok(new JwtResponse(jwt,
+                        userDetails.getId(),
+                        userDetails.getUsername(),
+                        userDetails.getEmail(),
+                        roles));
+            }
+            else
+                return ResponseEntity.badRequest().body("Żądanie jest niepoprawne!");
         }
-        else
-            return ResponseEntity.badRequest().body("Żądanie jest niepoprawne!");
+        catch (BadCredentialsException e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błędne dane logowania!");
+        }
     }
 
     @PostMapping("/sign-up")
@@ -93,6 +102,18 @@ public class AuthorizationController
         }
 
         return ResponseEntity.ok().body(registered);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@NotEmpty @RequestBody String email)
+    {
+        return userService.resetPassword(email);
+    }
+
+    @PostMapping("/set-new-password")
+    public ResponseEntity<?> setNewPasword(@RequestBody SetNewPasswordRequest request)
+    {
+        return userService.setNewPasword(request.getToken(), request.getPassword());
     }
 
     @PostMapping("/token/verify")

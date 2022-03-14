@@ -26,15 +26,10 @@
                 <button class="myform-btn" (click)="onSubmit()">Zaloguj się</button>
               </div>
               <div style="margin: 10px">
-                <span style="padding: 10px">Nie masz konta? <a href="/register">Zarejestruj się</a></span>
+                <span style="padding: 10px">Zapomniałeś hasła? <a href="/reset-password">Zresetuj hasło</a></span>
               </div>
-              <div class="form-group">
-                <div
-                  class="alert alert-danger"
-                  role="alert"
-                  *ngIf="f.submitted && isLoginFailed">
-                  Logowanie się nie powiodło: {{ errorMessage }}
-                </div>
+              <div style="margin: 10px">
+                <span style="padding: 10px">Nie masz konta? <a href="/register">Zarejestruj się</a></span>
               </div>
             </form>
           </div>

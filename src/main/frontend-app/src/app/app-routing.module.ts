@@ -5,6 +5,10 @@ import {RegisterComponent} from "./components/register/register.component";
 import {HomeComponent} from "./components/home/home.component";
 import {StartComponent} from "./components/start/start.component";
 import {TokenComponent} from "./components/token/token.component";
+import {ResetPasswordComponent} from "./components/reset-password/reset-password.component";
+import {
+  ResetPasswordConfirmationComponent
+} from "./components/reset-password-confirmation/reset-password-confirmation.component";
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -12,6 +16,8 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'start', component: StartComponent },
   { path: 'register-confirm', component: TokenComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'reset-confirm', component: ResetPasswordConfirmationComponent },
   { path: '', redirectTo: 'start', pathMatch: 'full' }
 ];
 
