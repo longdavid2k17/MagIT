@@ -32,9 +32,6 @@ public class User
     @Size(max = 500)
     private String bio;
 
-    @Size(max = 12)
-    private String phoneNumber;
-
     @Size(max = 50)
     private String name;
 
@@ -59,28 +56,26 @@ public class User
         this.enabled=false;
     }
 
-    public User(Long id, String username, String email, String password, String bio, String phoneNumber, String name, String surname, boolean enabled, Set<Role> roles)
+    public User(Long id, String username, String email, String password, String bio, String name, String surname, boolean enabled, Set<Role> roles)
     {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.bio = bio;
-        this.phoneNumber = phoneNumber;
         this.name = name;
         this.surname = surname;
         this.enabled = enabled;
         this.roles = roles;
     }
 
-    public User(Long id, String username, String email, String password, String bio, String phoneNumber, String name, String surname, Set<Role> roles)
+    public User(Long id, String username, String email, String password, String bio, String name, String surname, Set<Role> roles)
     {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.bio = bio;
-        this.phoneNumber = phoneNumber;
         this.name = name;
         this.surname = surname;
         this.roles = roles;
@@ -134,14 +129,6 @@ public class User
         this.bio = bio;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getName() {
         return name;
     }
@@ -182,7 +169,6 @@ public class User
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", bio='" + bio + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", enabled=" + enabled +
@@ -195,11 +181,11 @@ public class User
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return enabled == user.enabled && Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(bio, user.bio) && Objects.equals(phoneNumber, user.phoneNumber) && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(roles, user.roles);
+        return enabled == user.enabled && Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(bio, user.bio) && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(roles, user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, email, password, bio, phoneNumber, name, surname, enabled, roles);
+        return Objects.hash(id, username, email, password, bio, name, surname, enabled, roles);
     }
 }

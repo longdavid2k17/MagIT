@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {AuthService} from "../../services/auth.service";
+import {DOCUMENT} from "@angular/common";
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
   roles: string[] = [];
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService,private toastr:ToastrService,private router: Router) { }
+  constructor(@Inject(DOCUMENT) private document: Document,private authService: AuthService, private tokenStorage: TokenStorageService,private toastr:ToastrService,private router: Router) { }
 
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
@@ -39,8 +40,10 @@ export class LoginComponent implements OnInit {
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getUser().roles;
-        this.router.navigateByUrl('/home');
         this.toastr.success('Zalogowano!')
+        setTimeout(() =>{
+          this.document.location.href = '/home';
+        },2000);
       },
       err => {
         this.errorMessage = err.error;
