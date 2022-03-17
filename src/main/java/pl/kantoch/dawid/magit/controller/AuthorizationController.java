@@ -68,7 +68,7 @@ public class AuthorizationController
                         userDetails.getId(),
                         userDetails.getUsername(),
                         userDetails.getEmail(),
-                        roles));
+                        roles,userDetails.getOrganisation()));
             }
             else
                 return ResponseEntity.badRequest().body("Żądanie jest niepoprawne!");

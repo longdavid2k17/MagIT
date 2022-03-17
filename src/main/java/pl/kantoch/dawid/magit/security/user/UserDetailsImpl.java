@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.kantoch.dawid.magit.models.Organisation;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,21 +20,24 @@ public class UserDetailsImpl implements UserDetails {
 
     private final String email;
 
-    private boolean isEnabled;
+    private final boolean isEnabled;
 
     @JsonIgnore
     private final String password;
 
+    private final Organisation organisation;
+
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(Long id, String username, String email, String password,boolean isEnabled,
-                           Collection<? extends GrantedAuthority> authorities) {
+                           Collection<? extends GrantedAuthority> authorities,Organisation organisation) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.isEnabled = isEnabled;
         this.authorities = authorities;
+        this.organisation = organisation;
     }
 
     public static UserDetailsImpl build(User user) {
@@ -47,7 +51,8 @@ public class UserDetailsImpl implements UserDetails {
                 user.getEmail(),
                 user.getPassword(),
                 user.isEnabled(),
-                authorities);
+                authorities,
+                user.getOrganisation());
     }
 
     @Override
@@ -91,6 +96,10 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public Organisation getOrganisation() {
+        return organisation;
     }
 
     @Override
