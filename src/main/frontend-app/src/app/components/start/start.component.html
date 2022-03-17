@@ -84,15 +84,25 @@
     </div>
   </section>
 
-  <section id="start" class="hero d-flex align-items-center">
-    <div class="container" data-aos="fade-up">
-      <header class="section-header">
-        <h1>Gotowy na optymalizacje twoich projektów?</h1>
-        <a href="/login" class="nav-link"><button type="button" class="btn btn-success btn-lg" >Zacznij teraz</button></a>
-      </header>
+  <div *ngIf="isLoggedIn">
+    <section id="start" class="hero d-flex align-items-center">
+      <div class="container" data-aos="fade-up">
+        <header class="section-header">
+          <h1>Zarządzaj swoimi zadaniami już teraz</h1>
+          <a href="/home" class="nav-link"><button type="button" class="btn btn-success btn-lg" >Otwórz dashboard</button></a>
+        </header>
       </div>
-  </section>
-
-
+    </section>
+  </div>
+  <div *ngIf="!isLoggedIn">
+    <section id="start" class="hero d-flex align-items-center">
+      <div class="container" data-aos="fade-up">
+        <header class="section-header">
+          <h1>Gotowy na optymalizacje twoich projektów?</h1>
+          <a href="/login" class="nav-link"><button type="button" class="btn btn-success btn-lg" >Zacznij teraz</button></a>
+        </header>
+      </div>
+    </section>
+  </div>
 </main><!-- End #main -->
 

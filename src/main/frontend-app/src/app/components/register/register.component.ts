@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit {
 
     if(rePassword==password)
     {
-      this.authService.registerUser(username, email, password, name, surname).subscribe(
+      this.authService.registerUser(username, email, password, name, surname,inviteCode).subscribe(
         data => {
           console.log(data);
           this.isSuccessful = true;

@@ -9,6 +9,15 @@ public class SignupRequest
     private String password;
     private String name;
     private String surname;
+    private String inviteCode;
+
+    public String getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(String inviteCode) {
+        this.inviteCode = inviteCode;
+    }
 
     public String getUsername() {
         return username;

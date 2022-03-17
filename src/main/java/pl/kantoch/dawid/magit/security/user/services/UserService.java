@@ -7,12 +7,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kantoch.dawid.magit.models.AppConstants;
+import pl.kantoch.dawid.magit.models.Organisation;
 import pl.kantoch.dawid.magit.models.PasswordResetToken;
 import pl.kantoch.dawid.magit.models.VerificationToken;
 import pl.kantoch.dawid.magit.models.events.OnPasswordResetRequestEvent;
 import pl.kantoch.dawid.magit.models.events.OnRegistrationCompleteEvent;
 import pl.kantoch.dawid.magit.models.exceptions.UserAlreadyExistException;
 import pl.kantoch.dawid.magit.models.payloads.requests.SignupRequest;
+import pl.kantoch.dawid.magit.repositories.OrganisationsRepository;
 import pl.kantoch.dawid.magit.repositories.PasswordResetTokenRepository;
 import pl.kantoch.dawid.magit.repositories.VerificationTokenRepository;
 import pl.kantoch.dawid.magit.security.user.ERole;
@@ -32,10 +34,12 @@ public class UserService implements IUserService
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PasswordEncoder encoder;
     private final ApplicationEventPublisher eventPublisher;
+    private final OrganisationsRepository organisationsRepository;
 
 
     public UserService(UserRepository userRepository, RoleRepository roleRepository, VerificationTokenRepository tokenRepository,
-                       PasswordResetTokenRepository passwordResetTokenRepository, PasswordEncoder encoder, ApplicationEventPublisher eventPublisher)
+                       PasswordResetTokenRepository passwordResetTokenRepository, PasswordEncoder encoder,
+                       ApplicationEventPublisher eventPublisher, OrganisationsRepository organisationsRepository)
     {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -43,6 +47,7 @@ public class UserService implements IUserService
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.encoder = encoder;
         this.eventPublisher = eventPublisher;
+        this.organisationsRepository = organisationsRepository;
     }
 
     @Override
@@ -51,6 +56,11 @@ public class UserService implements IUserService
             throw new UserAlreadyExistException(
                     "Istnieje już konto z podanym adresem email: "
                             + userDto.getEmail());
+        }
+        if (loginExist(userDto.getUsername())) {
+            throw new UserAlreadyExistException(
+                    "Istnieje już konto z podaną nazwą użytkownika: "
+                            + userDto.getUsername());
         }
 
         User user = new User();
@@ -86,6 +96,12 @@ public class UserService implements IUserService
                 }
             });
         }
+        if(userDto.getInviteCode()!=null)
+        {
+            Organisation organisation = organisationsRepository.findByInviteCode(userDto.getInviteCode());
+            if(organisation!=null)
+                user.setOrganisation(organisation);
+        }
         user.setRoles(roles);
         return userRepository.save(user);
     }
@@ -113,6 +129,10 @@ public class UserService implements IUserService
 
     private boolean emailExist(String email) {
         return userRepository.findByEmail(email) != null;
+    }
+
+    private boolean loginExist(String login) {
+        return userRepository.findByUsername(login).isPresent();
     }
 
     public String validateVerificationToken(String token)
@@ -197,6 +217,24 @@ public class UserService implements IUserService
         {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wystąpił błąd podczas próby resetowania hasła! Komunikat: "+e.getMessage());
+        }
+    }
+
+    public void updateLastLoggedDateForUser(String username)
+    {
+        try
+        {
+            Optional<User> optionalUser = userRepository.findByUsername(username);
+            if(optionalUser.isPresent())
+            {
+                User user = optionalUser.get();
+                user.setLastLogged(new Date());
+                userRepository.save(user);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 }

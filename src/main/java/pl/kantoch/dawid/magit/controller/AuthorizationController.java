@@ -63,7 +63,7 @@ public class AuthorizationController
                 List<String> roles = userDetails.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList());
-
+                userService.updateLastLoggedDateForUser(userDetails.getUsername());
                 return ResponseEntity.ok(new JwtResponse(jwt,
                         userDetails.getId(),
                         userDetails.getUsername(),
@@ -77,6 +77,12 @@ public class AuthorizationController
         {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błędne dane logowania!");
         }
+    }
+
+    @PostMapping("/create-org")
+    public ResponseEntity<?> createOrganisation()
+    {
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/sign-up")

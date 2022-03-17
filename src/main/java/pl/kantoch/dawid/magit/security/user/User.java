@@ -1,9 +1,12 @@
 package pl.kantoch.dawid.magit.security.user;
 
+import pl.kantoch.dawid.magit.models.Organisation;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -47,8 +50,12 @@ public class User
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @Transient
-    private String invite_code;
+    @ManyToOne
+    @JoinColumn(name = "organisation_id")
+    private Organisation organisation;
+
+    @Column(name = "last_logged")
+    private Date lastLogged;
 
     public User()
     {
@@ -81,12 +88,34 @@ public class User
         this.roles = roles;
     }
 
-    public String getInvite_code() {
-        return invite_code;
+    public User(Long id, String username, String email, String password, String bio, String name, String surname, boolean enabled, Set<Role> roles, Organisation organisation, Date lastLogged) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.bio = bio;
+        this.name = name;
+        this.surname = surname;
+        this.enabled = enabled;
+        this.roles = roles;
+        this.organisation = organisation;
+        this.lastLogged = lastLogged;
     }
 
-    public void setInvite_code(String invite_code) {
-        this.invite_code = invite_code;
+    public Date getLastLogged() {
+        return lastLogged;
+    }
+
+    public void setLastLogged(Date lastLogged) {
+        this.lastLogged = lastLogged;
+    }
+
+    public Organisation getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
     }
 
     public Long getId() {
