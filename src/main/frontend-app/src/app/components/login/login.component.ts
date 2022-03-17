@@ -4,6 +4,7 @@ import {ToastrService} from "ngx-toastr";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {AuthService} from "../../services/auth.service";
 import {DOCUMENT} from "@angular/common";
+import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-login',
@@ -15,12 +16,20 @@ export class LoginComponent implements OnInit {
     username: null,
     password: null
   };
+  closeResult = '';
   isLoggedIn = false;
+  login ='';
+  orgCreation = false
   isLoginFailed = false;
   errorMessage = '';
   roles: string[] = [];
 
-  constructor(@Inject(DOCUMENT) private document: Document,private authService: AuthService, private tokenStorage: TokenStorageService,private toastr:ToastrService,private router: Router) { }
+  constructor(@Inject(DOCUMENT) private document: Document,
+              private authService: AuthService,
+              private tokenStorage: TokenStorageService,
+              private toastr:ToastrService,
+              private router: Router,
+              private modalService:NgbModal) { }
 
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
@@ -29,7 +38,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+  onSubmit(content:any): void {
     const { username, password } = this.form;
 
     this.authService.logUser(username, password).subscribe(
@@ -40,10 +49,22 @@ export class LoginComponent implements OnInit {
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getUser().roles;
-        this.toastr.success('Zalogowano!')
-        setTimeout(() =>{
-          this.document.location.href = '/home';
-        },2000);
+        this.login = data.username;
+        if(data.organization)
+        {
+          this.toastr.success('Zalogowano!')
+          setTimeout(() =>{
+            this.document.location.href = '/home';
+          },2000);
+        }
+        else {
+          this.orgCreation=true;
+          this.modalService.open( content,{ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+            this.closeResult = `Closed with: ${result}`;
+          }, (reason) => {
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+          });
+        }
       },
       err => {
         this.errorMessage = err.error;
@@ -51,6 +72,16 @@ export class LoginComponent implements OnInit {
         this.toastr.error(this.errorMessage,'Błąd!');
       }
     );
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
   }
 
   reloadPage(): void {
