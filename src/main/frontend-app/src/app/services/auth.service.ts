@@ -57,4 +57,12 @@ export class AuthService {
       token,
     }, httpOptions);
   }
+
+  createOrganisation(login: string, name: any, description: any) : Observable<any> {
+    return this.http.post(AUTH_API + 'create-org', {
+      login,
+      name,
+      description
+    }, httpOptions);
+  }
 }

@@ -8,13 +8,16 @@
       <a href="/home" class="nav-link"><h4>Moje zadania</h4></a>
     </li>
   </ul>
-  <div class="nav-item" ngbDropdown >
+  <div class="nav-item" *ngIf="!isLoggedIn" ngbDropdown >
     <button class="btn btn-warning" tabindex="0" id="navbarDropdown2" ngbDropdownToggle style="float:right;">Konto</button>
     <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu dropdown-menu-end" *ngIf="!isLoggedIn">
       <a ngbDropdownItem href="/login" class="nav-link" routerLink="login">Zaloguj się</a>
       <a ngbDropdownItem href="/register" class="nav-link" routerLink="register">Zarejestruj się</a>
     </div>
-    <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu dropdown-menu-end" *ngIf="isLoggedIn">
+  </div>
+  <div class="nav-item" *ngIf="isLoggedIn" ngbDropdown >
+    <button class="btn btn-warning" tabindex="0" id="navbarDropdown1" ngbDropdownToggle style="float:right;">{{login}}</button>
+    <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu dropdown-menu-end" *ngIf="isLoggedIn">
       <a ngbDropdownItem href="#" (click)="logout()">Wyloguj się</a>
       <a ngbDropdownItem href="/login" class="nav-link" routerLink="add-job-offer">Zarządzaj swoim profilem</a>
     </div>

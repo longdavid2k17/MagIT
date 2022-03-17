@@ -13,10 +13,9 @@ export class HomeComponent implements OnInit {
   constructor(private toastr:ToastrService,private tokenStorageService:TokenStorageService) { }
 
   ngOnInit(): void {
-
   }
 
-  showContacts() {
+  showContacts():void {
     if(this.isVisible)
     {
       this.isVisible = false;

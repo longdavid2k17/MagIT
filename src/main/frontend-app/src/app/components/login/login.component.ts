@@ -16,6 +16,10 @@ export class LoginComponent implements OnInit {
     username: null,
     password: null
   };
+  organisationForm: any = {
+    name:null,
+    description:null
+  };
   closeResult = '';
   isLoggedIn = false;
   login ='';
@@ -50,7 +54,7 @@ export class LoginComponent implements OnInit {
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getUser().roles;
         this.login = data.username;
-        if(data.organization)
+        if(data.organisation)
         {
           this.toastr.success('Zalogowano!')
           setTimeout(() =>{
@@ -86,6 +90,18 @@ export class LoginComponent implements OnInit {
 
   reloadPage(): void {
     window.location.reload();
+  }
+
+  createOrganisation():void {
+    const {name, description} = this.organisationForm;
+    this.authService.createOrganisation(this.login, name, description).subscribe(res => {
+      this.toastr.success(res.message,'Utworzono organizację!')
+      setTimeout(() =>{
+        this.document.location.href = '/home';
+      },2000);
+    },error => {
+      this.toastr.error(error.error,"Błąd podczas tworzenia organizacji!")
+    });
   }
 
 }

@@ -47,23 +47,23 @@
     </div>
     <div class="modal-body">
       <h6 class="modal-title">Użytkownik {{login}} nie posiada przypisanej organizacji. Utwórz własną!</h6>
-      <form>
+      <form *ngIf="orgCreation" name="organisationForm" (ngSubmit)="orgCreation.form.valid && createOrganisation()"#orgCreation="ngForm" novalidate>
         <div class="mb-3">
           <label for="name">Nazwa organizacji</label>
           <div class="input-group">
-            <input id="name" class="form-control" type="text" placeholder="Obowiązkowa">
+            <input id="name" class="form-control" name="name" type="text" placeholder="Obowiązkowa" [(ngModel)]="organisationForm.name" required #name="ngModel">
           </div>
         </div>
         <div class="mb-3">
           <label for="description">Krótki opis</label>
           <div class="input-group">
-            <input id="description" class="form-control"  name="description" type="text" placeholder="Nieobowiązkowy">
+            <input id="description" class="form-control"  name="description" type="text" placeholder="Nieobowiązkowy" [(ngModel)]="organisationForm.description" #description="ngModel">
           </div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Zapisz</button>
+      <button type="button" class="btn btn-success" (click)="createOrganisation()">Zapisz</button>
     </div>
   </div>
 </ng-template>

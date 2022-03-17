@@ -11,6 +11,7 @@ export class AppComponent {
   title = 'frontend-app';
   private roles: string[] = [];
   isLoggedIn = false;
+  login='';
   showAdminBoard = false;
   showModeratorBoard = false;
 
@@ -19,6 +20,7 @@ export class AppComponent {
 
     if (this.isLoggedIn) {
       const user = this.tokenStorageService.getUser();
+      this.login = user.username;
       this.roles = user.roles;
     }
   }

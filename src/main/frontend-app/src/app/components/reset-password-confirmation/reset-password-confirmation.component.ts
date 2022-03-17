@@ -27,7 +27,7 @@ export class ResetPasswordConfirmationComponent implements OnInit {
 
   }
 
-  resetPassword() {
+  resetPassword():void {
     const { password,repassword } = this.form;
     if(password==repassword)
     {

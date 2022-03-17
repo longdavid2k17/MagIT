@@ -1,7 +1,6 @@
 package pl.kantoch.dawid.magit.models;
 
 import org.hibernate.annotations.CreationTimestamp;
-import pl.kantoch.dawid.magit.security.user.User;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -22,9 +21,8 @@ public class Organisation
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private User owner;
+    @Column(name = "owner_id")
+    private Long ownerId;
 
     @CreationTimestamp
     @Column(name = "creation_date")
@@ -36,11 +34,11 @@ public class Organisation
     public Organisation() {
     }
 
-    public Organisation(Long id, String name, String description, User owner, Date creationDate, String inviteCode) {
+    public Organisation(Long id, String name, String description, Long ownerId, Date creationDate, String inviteCode) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.owner = owner;
+        this.ownerId = ownerId;
         this.creationDate = creationDate;
         this.inviteCode = inviteCode;
     }
@@ -77,12 +75,12 @@ public class Organisation
         this.description = description;
     }
 
-    public User getOwner() {
-        return owner;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setOwnerId(Long owner) {
+        this.ownerId = owner;
     }
 
     public Date getCreationDate() {
@@ -99,7 +97,7 @@ public class Organisation
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", owner=" + owner +
+                ", owner=" + ownerId +
                 ", creationDate=" + creationDate +
                 '}';
     }
