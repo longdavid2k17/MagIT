@@ -11,6 +11,7 @@ export class AppComponent {
   title = 'frontend-app';
   private roles: string[] = [];
   isLoggedIn = false;
+  isVisible = false;
   isAdmin = false;
   login='';
 
@@ -30,5 +31,17 @@ export class AppComponent {
     this.tokenStorageService.signOut();
     window.location.reload();
     this.toastr.success("Wylogowano użytkownika!");
+  }
+
+  showContacts():void {
+    if(this.isVisible)
+    {
+      this.isVisible = false;
+      this.toastr.success("Schowano");
+    }
+    else {
+      this.isVisible = true;
+      this.toastr.success("Pokazano");
+    }
   }
 }

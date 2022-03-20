@@ -9,6 +9,8 @@ import {ResetPasswordComponent} from "./components/reset-password/reset-password
 import {
   ResetPasswordConfirmationComponent
 } from "./components/reset-password-confirmation/reset-password-confirmation.component";
+import {OrganisationManagementComponent} from "./components/organisation-management/organisation-management.component";
+import {ProfileManagementComponent} from "./components/profile-management/profile-management.component";
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -18,6 +20,8 @@ const routes: Routes = [
   { path: 'register-confirm', component: TokenComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'reset-confirm', component: ResetPasswordConfirmationComponent },
+  { path: 'organisation-management', component: OrganisationManagementComponent },
+  { path: 'profile', component: ProfileManagementComponent },
   { path: '', redirectTo: 'start', pathMatch: 'full' }
 ];
 

@@ -16,6 +16,8 @@ import { TokenComponent } from './components/token/token.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ResetPasswordConfirmationComponent } from './components/reset-password-confirmation/reset-password-confirmation.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { OrganisationManagementComponent } from './components/organisation-management/organisation-management.component';
+import { ProfileManagementComponent } from './components/profile-management/profile-management.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     StartComponent,
     TokenComponent,
     ResetPasswordComponent,
-    ResetPasswordConfirmationComponent
+    ResetPasswordConfirmationComponent,
+    OrganisationManagementComponent,
+    ProfileManagementComponent
   ],
   imports: [
     BrowserModule,

@@ -1,31 +1,46 @@
-<nav class="navbar navbar-expand navbar-dark bg-dark">
-  <a href="/" class="navbar-brand"><h3>MagIT</h3></a>
-  <ul class="navbar-nav mr-auto" routerLinkActive="active">
-    <li class="nav-item">
-      <a href="#about" class="nav-link"><h4>O aplikacji</h4></a>
-    </li>
-    <li class="nav-item" *ngIf="isLoggedIn">
-      <a href="/home" class="nav-link"><h4>Moje zadania</h4></a>
-    </li>
-  </ul>
-  <div class="nav-item" *ngIf="!isLoggedIn" ngbDropdown >
-    <button class="btn btn-warning" tabindex="0" id="navbarDropdown2" ngbDropdownToggle style="float:right;">Konto</button>
-    <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu dropdown-menu-end" *ngIf="!isLoggedIn">
-      <a ngbDropdownItem href="/login" class="nav-link" routerLink="login">Zaloguj się</a>
-      <a ngbDropdownItem href="/register" class="nav-link" routerLink="register">Zarejestruj się</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <a class="navbar-brand mt-2 mt-lg-0" href="/">
+        <h3>MagIT</h3>
+      </a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="#">O aplikacji</a>
+        </li>
+        <li class="nav-item" *ngIf="isLoggedIn">
+          <a class="nav-link" href="/home">Moje zadania</a>
+        </li>
+      </ul>
     </div>
-  </div>
-  <div class="nav-item" *ngIf="isLoggedIn" ngbDropdown >
-    <button class="btn btn-warning" tabindex="0" id="navbarDropdown1" ngbDropdownToggle style="float:right;">{{login}}</button>
-    <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu dropdown-menu-end" *ngIf="isLoggedIn">
-      <a ngbDropdownItem href="/login" class="nav-link" routerLink="add-job-offer">Zarządzaj swoim profilem</a>
-      <a *ngIf="isAdmin" ngbDropdownItem href="/login" class="nav-link" routerLink="add-job-offer">Zarządzaj organizacją</a>
-      <a ngbDropdownItem href="#" (click)="logout()">Wyloguj się</a>
+    <div class="d-flex align-items-center" style="margin-right:75px;">
+      <div class="nav-item" *ngIf="!isLoggedIn" ngbDropdown >
+        <button class="btn btn-warning" tabindex="0" id="navbarDropdown2" ngbDropdownToggle style="float:right;">Konto</button>
+        <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu dropdown-menu-end" *ngIf="!isLoggedIn">
+          <a ngbDropdownItem href="/login" class="nav-link" routerLink="login">Zaloguj się</a>
+          <a ngbDropdownItem href="/register" class="nav-link" routerLink="register">Zarejestruj się</a>
+        </div>
+      </div>
+      <div class="nav-item" *ngIf="isLoggedIn" ngbDropdown >
+        <button class="btn btn-warning" tabindex="0" id="navbarDropdown1" ngbDropdownToggle style="float:right;">{{login}}</button>
+        <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu dropdown-menu-right" *ngIf="isLoggedIn" style="padding: 0;float: right;">
+          <a ngbDropdownItem href="/profile" class="nav-link" routerLink="profile">Zarządzaj swoim profilem</a>
+          <a *ngIf="isAdmin" ngbDropdownItem href="/organisation-managment" class="nav-link" routerLink="organisation-management">Zarządzaj organizacją</a>
+          <a ngbDropdownItem href="#" (click)="logout()">Wyloguj się</a>
+        </div>
+      </div>
     </div>
   </div>
 </nav>
+
 <div class="container">
   <router-outlet></router-outlet>
+  <div class="position-absolute bottom-0 end-0" style="margin: 15px" *ngIf="isLoggedIn">
+    <button type="button" class="btn btn-danger position-relative" style="border-radius: 30px;" (click)="showContacts()">
+      <i class="bi-megaphone-fill fa-1x"></i>
+      <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">+3 <span class="visually-hidden">unread messages</span></span>
+    </button>
+  </div>
 </div>
 <footer class="bg-dark text-center text-white">
   <div class="copyright py-4 text-center text-white">
