@@ -19,6 +19,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { OrganisationManagementComponent } from './components/organisation-management/organisation-management.component';
 import { ProfileManagementComponent } from './components/profile-management/profile-management.component';
 import {UserEmulationInterceptor} from "./interceptors/user-emulation.interceptor";
+import {MatTabsModule} from "@angular/material/tabs";
+import {DatePipe} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import {UserEmulationInterceptor} from "./interceptors/user-emulation.intercepto
     BrowserModule,
     AppRoutingModule,
     NgMultiSelectDropDownModule.forRoot(),
+    MatTabsModule,
     ToastrModule.forRoot({
         timeOut: 5000,
         progressBar: true,
@@ -51,7 +54,7 @@ import {UserEmulationInterceptor} from "./interceptors/user-emulation.intercepto
     FormsModule,
     BrowserAnimationsModule
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: UserEmulationInterceptor, multi: true }],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: UserEmulationInterceptor, multi: true },DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
