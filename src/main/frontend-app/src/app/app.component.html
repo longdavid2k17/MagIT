@@ -18,8 +18,9 @@
   <div class="nav-item" *ngIf="isLoggedIn" ngbDropdown >
     <button class="btn btn-warning" tabindex="0" id="navbarDropdown1" ngbDropdownToggle style="float:right;">{{login}}</button>
     <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu dropdown-menu-end" *ngIf="isLoggedIn">
-      <a ngbDropdownItem href="#" (click)="logout()">Wyloguj się</a>
       <a ngbDropdownItem href="/login" class="nav-link" routerLink="add-job-offer">Zarządzaj swoim profilem</a>
+      <a *ngIf="isAdmin" ngbDropdownItem href="/login" class="nav-link" routerLink="add-job-offer">Zarządzaj organizacją</a>
+      <a ngbDropdownItem href="#" (click)="logout()">Wyloguj się</a>
     </div>
   </div>
 </nav>

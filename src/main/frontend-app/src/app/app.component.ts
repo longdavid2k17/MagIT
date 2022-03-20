@@ -11,9 +11,8 @@ export class AppComponent {
   title = 'frontend-app';
   private roles: string[] = [];
   isLoggedIn = false;
+  isAdmin = false;
   login='';
-  showAdminBoard = false;
-  showModeratorBoard = false;
 
   constructor(private tokenStorageService:TokenStorageService, private toastr:ToastrService) {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
@@ -22,6 +21,8 @@ export class AppComponent {
       const user = this.tokenStorageService.getUser();
       this.login = user.username;
       this.roles = user.roles;
+      if(this.roles.includes("ROLE_ADMIN"))
+        this.isAdmin = true;
     }
   }
 
