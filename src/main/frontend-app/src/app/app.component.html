@@ -35,11 +35,16 @@
 
 <div class="container">
   <router-outlet></router-outlet>
-  <div class="position-absolute bottom-0 end-0" style="margin: 15px" *ngIf="isLoggedIn">
-    <button type="button" class="btn btn-danger position-relative" style="border-radius: 30px;" (click)="showContacts()">
+  <div id="contactMessenger"  *ngIf="isLoggedIn" ngbDropdown>
+    <button type="button" class="btn btn-danger position-relative" style="border-radius: 30px;" (click)="showContacts()" id="messengerDropdown" ngbDropdownToggle>
       <i class="bi-megaphone-fill fa-1x"></i>
-      <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">+3 <span class="visually-hidden">unread messages</span></span>
+      <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary" *ngIf="!isVisible">+3</span>
     </button>
+    <div ngbDropdownMenu aria-labelledby="messengerDropdown" class="dropdown-content">
+      <a href="#">Link 1</a>
+      <a href="#">Link 2</a>
+      <a href="#">Link 3</a>
+    </div>
   </div>
 </div>
 <footer class="bg-dark text-center text-white">
@@ -49,4 +54,5 @@
     </div>
   </div>
 </footer>
+
 

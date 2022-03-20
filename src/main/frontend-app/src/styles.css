@@ -347,5 +347,14 @@ input.au-input.au-input-xl{
   }
 }
 
+#page-container {
+  position: relative;
+  min-height: 90vh;
+}
+
+#content-wrap {
+  padding-bottom: 2.5rem;    /* Footer height */
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

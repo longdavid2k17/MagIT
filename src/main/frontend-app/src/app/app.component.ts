@@ -37,11 +37,11 @@ export class AppComponent {
     if(this.isVisible)
     {
       this.isVisible = false;
-      this.toastr.success("Schowano");
+      //this.toastr.success("Schowano");
     }
     else {
       this.isVisible = true;
-      this.toastr.success("Pokazano");
+      //this.toastr.success("Pokazano");
     }
   }
 }

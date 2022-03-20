@@ -1,69 +1,73 @@
-<section class="myform-area">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="form-area login-form">
-          <div class="form-content">
-            <h2>Ważne</h2>
-            <p>Przed logowaniem upewnij się że twoje konto jest przypisane do twojej organizacji.</p>
-            <ul>
-              <li><a href="#" class="facebook"><i class="fa fa-facebook-f"></i><span>facebook</span></a></li>
-              <li><a href="#" class="twitter"><i class="fa fa-twitter"></i><span>twitter</span></a></li>
-            </ul>
-          </div>
-          <div class="form-input">
-            <h2>Logowanie</h2>
-            <form *ngIf="!isLoggedIn || orgCreation" name="form" (ngSubmit)="f.form.valid && onSubmit(content)"#f="ngForm" novalidate>
-              <div class="form-group">
-                <input type="text"  id="username" name="username" [(ngModel)]="form.username" required #username="ngModel">
-                <label>Login użytkownika</label>
+<div id="page-container">
+  <div id="content-wrap">
+    <section class="myform-area">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="form-area login-form">
+              <div class="form-content">
+                <h2>Ważne</h2>
+                <p>Przed logowaniem upewnij się że twoje konto jest przypisane do twojej organizacji.</p>
+                <ul>
+                  <li><a href="#" class="facebook"><i class="fa fa-facebook-f"></i><span>facebook</span></a></li>
+                  <li><a href="#" class="twitter"><i class="fa fa-twitter"></i><span>twitter</span></a></li>
+                </ul>
               </div>
-              <div class="form-group">
-                <input type="password" id="password" name="password" [(ngModel)]="form.password" required #password="ngModel">
-                <label>Hasło</label>
+              <div class="form-input">
+                <h2>Logowanie</h2>
+                <form *ngIf="!isLoggedIn || orgCreation" name="form" (ngSubmit)="f.form.valid && onSubmit(content)"#f="ngForm" novalidate>
+                  <div class="form-group">
+                    <input type="text"  id="username" name="username" [(ngModel)]="form.username" required #username="ngModel">
+                    <label>Login użytkownika</label>
+                  </div>
+                  <div class="form-group">
+                    <input type="password" id="password" name="password" [(ngModel)]="form.password" required #password="ngModel">
+                    <label>Hasło</label>
+                  </div>
+                  <div class="myform-button">
+                    <button class="myform-btn" (click)="onSubmit(content)">Zaloguj się</button>
+                  </div>
+                  <div style="margin: 10px">
+                    <span style="padding: 10px">Zapomniałeś hasła? <a href="/reset-password">Zresetuj hasło</a></span>
+                  </div>
+                  <div style="margin: 10px">
+                    <span style="padding: 10px">Nie masz konta? <a href="/register">Zarejestruj się</a></span>
+                  </div>
+                </form>
               </div>
-              <div class="myform-button">
-                <button class="myform-btn" (click)="onSubmit(content)">Zaloguj się</button>
-              </div>
-              <div style="margin: 10px">
-                <span style="padding: 10px">Zapomniałeś hasła? <a href="/reset-password">Zresetuj hasło</a></span>
-              </div>
-              <div style="margin: 10px">
-                <span style="padding: 10px">Nie masz konta? <a href="/register">Zarejestruj się</a></span>
-              </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<ng-template #content let-modal>
-  <div style="margin: 50px">
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Brak organizacji</h4>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
-      <h6 class="modal-title">Użytkownik {{login}} nie posiada przypisanej organizacji. Utwórz własną!</h6>
-      <form *ngIf="orgCreation" name="organisationForm" (ngSubmit)="orgCreation.form.valid && createOrganisation()"#orgCreation="ngForm" novalidate>
-        <div class="mb-3">
-          <label for="name">Nazwa organizacji</label>
-          <div class="input-group">
-            <input id="name" class="form-control" name="name" type="text" placeholder="Obowiązkowa" [(ngModel)]="organisationForm.name" required #name="ngModel">
-          </div>
+    <ng-template #content let-modal>
+      <div style="margin: 50px">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Brak organizacji</h4>
+          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
         </div>
-        <div class="mb-3">
-          <label for="description">Krótki opis</label>
-          <div class="input-group">
-            <input id="description" class="form-control"  name="description" type="text" placeholder="Nieobowiązkowy" [(ngModel)]="organisationForm.description" #description="ngModel">
-          </div>
+        <div class="modal-body">
+          <h6 class="modal-title">Użytkownik {{login}} nie posiada przypisanej organizacji. Utwórz własną!</h6>
+          <form *ngIf="orgCreation" name="organisationForm" (ngSubmit)="orgCreation.form.valid && createOrganisation()"#orgCreation="ngForm" novalidate>
+            <div class="mb-3">
+              <label for="name">Nazwa organizacji</label>
+              <div class="input-group">
+                <input id="name" class="form-control" name="name" type="text" placeholder="Obowiązkowa" [(ngModel)]="organisationForm.name" required #name="ngModel">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="description">Krótki opis</label>
+              <div class="input-group">
+                <input id="description" class="form-control"  name="description" type="text" placeholder="Nieobowiązkowy" [(ngModel)]="organisationForm.description" #description="ngModel">
+              </div>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-success" (click)="createOrganisation()">Zapisz</button>
-    </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" (click)="createOrganisation()">Zapisz</button>
+        </div>
+      </div>
+    </ng-template>
   </div>
-</ng-template>
+</div>
