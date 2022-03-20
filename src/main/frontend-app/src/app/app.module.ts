@@ -10,7 +10,7 @@ import { StartComponent } from './components/start/start.component';
 import {ToastrModule} from "ngx-toastr";
 import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { TokenComponent } from './components/token/token.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
@@ -18,6 +18,7 @@ import { ResetPasswordConfirmationComponent } from './components/reset-password-
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { OrganisationManagementComponent } from './components/organisation-management/organisation-management.component';
 import { ProfileManagementComponent } from './components/profile-management/profile-management.component';
+import {UserEmulationInterceptor} from "./interceptors/user-emulation.interceptor";
 
 @NgModule({
   declarations: [
@@ -50,7 +51,7 @@ import { ProfileManagementComponent } from './components/profile-management/prof
     FormsModule,
     BrowserAnimationsModule
   ],
-  providers: [HttpClientModule],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: UserEmulationInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
