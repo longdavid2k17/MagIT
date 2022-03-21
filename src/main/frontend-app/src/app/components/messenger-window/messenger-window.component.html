@@ -2,21 +2,27 @@
      cdkDragRootElement=".cdk-overlay-pane"
      cdkDragHandle>
   <h3 mat-dialog-title>{{data.messengerInstance.interlocutor.name}} {{data.messengerInstance.interlocutor.surname}}</h3>
-  <button mat-icon-button aria-label="close dialog" mat-dialog-close>
+  <button mat-icon-button aria-label="close dialog" mat-dialog-close title="Zamknij czat">
     <mat-icon>close</mat-icon>
   </button>
 </div>
   <div mat-dialog-content>
     <div *ngFor="let message of data.messengerInstance.messages" class="messages">
-      <span>{{message.text}}</span>
+      <div class="message">
+        <b *ngIf="message.authorUserId!=data.messengerInstance.interlocutor.id">Ty : </b>
+        <b *ngIf="message.authorUserId==data.messengerInstance.interlocutor.id">{{data.messengerInstance.interlocutor.name}} : </b>
+        <span>{{message.text}}</span>
+      </div>
     </div>
     <div class="sendTooltip">
-      <mat-form-field appearance="fill">
-        <mat-label>Wpisz wiadomość...</mat-label>
-        <input matInput [(ngModel)]="data.animal">
-        <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>
-          <mat-icon>send</mat-icon>
-        </button>
-      </mat-form-field>
+      <form name="form" #f="ngForm">
+        <mat-form-field appearance="fill">
+          <mat-label>Wpisz wiadomość...</mat-label>
+          <input matInput [(ngModel)]="form.message" name="message" required>
+          <button mat-button (click)="sendMessage()" cdkFocusInitial>
+            <mat-icon>send</mat-icon>
+          </button>
+        </mat-form-field>
+      </form>
     </div>
   </div>

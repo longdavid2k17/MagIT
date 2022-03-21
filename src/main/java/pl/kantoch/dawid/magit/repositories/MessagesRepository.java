@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface MessagesRepository extends JpaRepository<Message,Long> {
     List<Message> findAllByAuthorUserIdOrTargetUserId(Long authorId, Long targetId);
+    List<Message> findAllByAuthorUserIdAndTargetUserId(Long authorId, Long targetId);
 }

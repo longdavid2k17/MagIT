@@ -42,8 +42,8 @@
     </button>
     <div ngbDropdownMenu aria-labelledby="messengerDropdown" class="dropdown-content">
       <div *ngFor="let inst of messengerInstantions?.entityList">
-        <a *ngIf="!inst.messages[0].isRead" (click)="openMessenger(inst)"><b><i>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</i></b> {{inst.messages[0].text}}</a>
-        <a *ngIf="inst.messages[0].isRead"><i>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</i> {{inst.messages[0].text}}</a>
+        <a *ngIf="inst.messages[inst.messages.length-1].read!=true" (click)="openMessenger(inst)"><b><i>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</i></b> {{inst.messages[inst.messages.length-1].text}}</a>
+        <a *ngIf="inst.messages[inst.messages.length-1].read==true" (click)="openMessenger(inst)"><i>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</i> {{inst.messages[inst.messages.length-1].text}}</a>
       </div>
     </div>
   </div>

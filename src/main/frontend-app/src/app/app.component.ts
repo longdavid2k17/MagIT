@@ -15,7 +15,7 @@ export class AppComponent {
   title = 'frontend-app';
   private roles: string[] = [];
   isLoggedIn = false;
-  hasBeenOpened = false;
+  userId:any;
   isAdmin = false;
   login='';
   messengerInstantions:any;
@@ -29,6 +29,7 @@ export class AppComponent {
       const user = this.tokenStorageService.getUser()
       this.login = user.username;
       this.roles = user.roles;
+      this.userId = user.id;
       if(this.roles.includes("ROLE_ADMIN"))
       {
         this.isAdmin = true;
@@ -49,14 +50,18 @@ export class AppComponent {
 
   openMessenger(instance: any)
   {
+    if(instance?.interlocutor)
+    {
+      this.messengerService.setAsRead(this.userId,instance?.interlocutor.id).subscribe();
+    }
     const modalRef = this.dialog.open(MessengerWindowComponent, {
       autoFocus: false,
-      data:{messengerInstance:instance},
+      data:{messengerInstance:instance,userId:this.userId},
       width:"250px",
       height:"400px"
     });
-    modalRef.afterClosed().subscribe(result => {
+    /*modalRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-    });
+    });*/
   }
 }

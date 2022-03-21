@@ -63,6 +63,13 @@ public class User
         this.enabled=false;
     }
 
+    public User(Long id,String name, String surname)
+    {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+    }
+
     public User(Long id, String username, String email, String password, String bio, String name, String surname, boolean enabled, Set<Role> roles)
     {
         this.id = id;
