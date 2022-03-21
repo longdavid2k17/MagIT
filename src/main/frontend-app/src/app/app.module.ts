@@ -21,6 +21,13 @@ import { ProfileManagementComponent } from './components/profile-management/prof
 import {UserEmulationInterceptor} from "./interceptors/user-emulation.interceptor";
 import {MatTabsModule} from "@angular/material/tabs";
 import {DatePipe} from "@angular/common";
+import { MessengerWindowComponent } from './components/messenger-window/messenger-window.component';
+import {DragDropModule} from "@angular/cdk/drag-drop";
+import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule} from "@angular/material/dialog";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatButtonModule} from "@angular/material/button";
+import {MatInputModule} from "@angular/material/input";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -33,13 +40,15 @@ import {DatePipe} from "@angular/common";
     ResetPasswordComponent,
     ResetPasswordConfirmationComponent,
     OrganisationManagementComponent,
-    ProfileManagementComponent
+    ProfileManagementComponent,
+    MessengerWindowComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgMultiSelectDropDownModule.forRoot(),
     MatTabsModule,
+    MatDialogModule,
     ToastrModule.forRoot({
         timeOut: 5000,
         progressBar: true,
@@ -52,9 +61,18 @@ import {DatePipe} from "@angular/common";
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    DragDropModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatInputModule,
+    MatIconModule
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: UserEmulationInterceptor, multi: true },DatePipe],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: UserEmulationInterceptor, multi: true },
+    DatePipe,
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
