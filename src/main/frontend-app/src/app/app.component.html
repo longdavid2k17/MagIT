@@ -38,11 +38,11 @@
   <div id="contactMessenger"  *ngIf="isLoggedIn" ngbDropdown>
     <button type="button" class="btn btn-danger position-relative" style="border-radius: 30px;" id="messengerDropdown" ngbDropdownToggle>
       <i class="bi-megaphone-fill fa-1x"></i>
-      <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary" *ngIf="orgUsers.length>0">+{{orgUsers.length}}</span>
+      <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary" *ngIf="messengerInstantions.allUnread>0">+{{messengerInstantions.allUnread}}</span>
     </button>
     <div ngbDropdownMenu aria-labelledby="messengerDropdown" class="dropdown-content">
-      <div *ngFor="let user of orgUsers">
-        <a href="#" >{{user.name}} {{user.surname}}</a>
+      <div *ngFor="let inst of messengerInstantions.entityList">
+        <a href="#" ><b>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</b> {{inst.messages[0].text}}</a>
       </div>
     </div>
   </div>

@@ -15,7 +15,7 @@ export class AppComponent {
   hasBeenOpened = false;
   isAdmin = false;
   login='';
-  orgUsers:any[]=[]
+  messengerInstantions:any;
 
   constructor(private tokenStorageService:TokenStorageService, private toastr:ToastrService, private messengerService:MessengerService) {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
@@ -29,7 +29,7 @@ export class AppComponent {
         this.isAdmin = true;
       }
       this.messengerService.getAll(user.id).subscribe(res =>{
-        this.orgUsers=res;
+        this.messengerInstantions=res;
       },error => {
         this.toastr.error(error.error,"Błąd pobierania wiadomości!")
       })
