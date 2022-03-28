@@ -52,6 +52,7 @@ export class OrganisationManagementComponent implements OnInit {
     }
     this.organisationService.save(this.form.value).subscribe(res=>{
       this.toastr.success("Poprawnie zapisano dane!","Sukces!");
+      this.dialogRef.close();
     },error => {
       this.toastr.error(error.errorMessage,"Błąd podczas zapisywania danych!");
     })
