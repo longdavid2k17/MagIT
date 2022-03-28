@@ -1,6 +1,7 @@
 package pl.kantoch.dawid.magit.security.user;
 
 import pl.kantoch.dawid.magit.models.Organisation;
+import pl.kantoch.dawid.magit.models.OrganisationRole;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -50,6 +51,12 @@ public class User
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(	name = "user_organisation_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<OrganisationRole> organisationRoles = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "organisation_id")
     private Organisation organisation;
@@ -95,7 +102,8 @@ public class User
         this.roles = roles;
     }
 
-    public User(Long id, String username, String email, String password, String bio, String name, String surname, boolean enabled, Set<Role> roles, Organisation organisation, Date lastLogged) {
+    public User(Long id, String username, String email, String password, String bio, String name, String surname, boolean enabled, Set<Role> roles, Set<OrganisationRole> organisationRoles, Organisation organisation, Date lastLogged)
+    {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -105,8 +113,17 @@ public class User
         this.surname = surname;
         this.enabled = enabled;
         this.roles = roles;
+        this.organisationRoles = organisationRoles;
         this.organisation = organisation;
         this.lastLogged = lastLogged;
+    }
+
+    public Set<OrganisationRole> getOrganisationRoles() {
+        return organisationRoles;
+    }
+
+    public void setOrganisationRoles(Set<OrganisationRole> organisationRoles) {
+        this.organisationRoles = organisationRoles;
     }
 
     public Date getLastLogged() {
