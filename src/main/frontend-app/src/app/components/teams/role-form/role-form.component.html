@@ -13,12 +13,14 @@
           <input matInput name="name" formControlName="name" required>
         </mat-form-field>
       </div>
-      <div class="form-group">
-        <mat-form-field appearance="fill">
-          <mat-label>Ikona</mat-label>
-          <input matInput name="iconName" formControlName="iconName" required>
-        </mat-form-field>
-      </div>
+      <mat-form-field appearance="fill">
+        <mat-label>Ikona</mat-label>
+        <mat-select formControlName="iconName" required >
+          <mat-option *ngFor="let icon of roleIcons" [value]="icon">
+            <mat-icon>{{icon}}</mat-icon> - {{icon}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <mat-dialog-actions align="end">
       <button mat-raised-button title="Zapisz" type="submit">

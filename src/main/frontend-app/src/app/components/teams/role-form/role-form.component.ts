@@ -14,6 +14,10 @@ export class RoleFormComponent implements OnInit {
   editMode = false;
   editedRole:any;
   organisationId:any;
+  roleIcons:string[] =["account_circle","build","html",
+    "javascript","data_thresholding","language","lightbulb",
+    "question_answer","supervisor_account","view_in_ar","php","install_mobile",
+  "install_desktop"];
 
   constructor(public dialogRef: MatDialogRef<RoleFormComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,

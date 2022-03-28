@@ -30,7 +30,7 @@
         </mat-card-actions>
       </mat-card>
     </div>
-    <div style="grid-column: 1/span 3; grid-row: 4 / span 7;">
+    <div style="grid-column: 1; grid-row: 4 / span 7;">
       <mat-card>
         <mat-card-title>Role w {{organisation.name}}</mat-card-title>
         <mat-card-content>
@@ -41,7 +41,7 @@
             <button mat-button class="menu-button" title="Zarządzaj" (click)="editRoleForm(role)">
               <mat-icon>edit</mat-icon>
             </button>
-            <span>{{role.name}}</span>
+            <span>{{role.name}} - <mat-icon>{{role.iconName}}</mat-icon></span>
           </div>
         </mat-card-content>
         <mat-card-actions align="end">

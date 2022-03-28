@@ -29,11 +29,12 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatNativeDateModule} from "@angular/material/core";
+import {MatNativeDateModule, MatOptionModule} from "@angular/material/core";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import { TeamDashboardComponent } from './components/teams/team-dashboard/team-dashboard.component';
 import {MatCardModule} from "@angular/material/card";
 import { RoleFormComponent } from './components/teams/role-form/role-form.component';
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -51,35 +52,37 @@ import { RoleFormComponent } from './components/teams/role-form/role-form.compon
     TeamDashboardComponent,
     RoleFormComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        NgMultiSelectDropDownModule.forRoot(),
-        MatTabsModule,
-        MatDialogModule,
-        ToastrModule.forRoot({
-                timeOut: 5000,
-                progressBar: true,
-                progressAnimation: 'increasing',
-                preventDuplicates: true,
-                positionClass: 'toast-top-right'
-            }
-        ),
-        NgbModule,
-        HttpClientModule,
-        ReactiveFormsModule,
-        FormsModule,
-        BrowserAnimationsModule,
-        DragDropModule,
-        MatFormFieldModule,
-        MatButtonModule,
-        MatInputModule,
-        MatIconModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        ClipboardModule,
-        MatCardModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    NgMultiSelectDropDownModule.forRoot(),
+    MatTabsModule,
+    MatDialogModule,
+    ToastrModule.forRoot({
+        timeOut: 5000,
+        progressBar: true,
+        progressAnimation: 'increasing',
+        preventDuplicates: true,
+        positionClass: 'toast-top-right'
+      }
+    ),
+    NgbModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    DragDropModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatInputModule,
+    MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ClipboardModule,
+    MatCardModule,
+    MatSelectModule,
+    MatOptionModule
+  ],
   providers: [
     MatDatepickerModule,
     { provide: HTTP_INTERCEPTORS, useClass: UserEmulationInterceptor, multi: true },
