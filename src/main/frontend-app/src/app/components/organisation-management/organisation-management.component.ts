@@ -11,7 +11,6 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 })
 export class OrganisationManagementComponent implements OnInit {
   form: FormGroup;
-  organisation:any;
   dataExist = false;
   inviteCode = '';
 
@@ -20,6 +19,7 @@ export class OrganisationManagementComponent implements OnInit {
               private toastr:ToastrService,
               private organisationService:OrganisationService,
               private fb: FormBuilder) {
+    dialogRef.disableClose = true;
     this.form = this.fb.group({
       name: [null, [Validators.required, Validators.minLength(3)]],
       description: [null, [Validators.required, Validators.minLength(3)]],
@@ -35,7 +35,6 @@ export class OrganisationManagementComponent implements OnInit {
     if(this.data?.userId)
     {
       this.organisationService.getByOwnerId(this.data.userId).subscribe(res=>{
-        this.organisation = res;
         this.dataExist=true;
         this.inviteCode = res.inviteCode;
         this.form.patchValue(res);

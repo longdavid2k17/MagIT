@@ -5,6 +5,7 @@ import {MessengerService} from "./services/messenger.service";
 import {MessengerWindowComponent} from "./components/messenger-window/messenger-window.component";
 import {MatDialog} from "@angular/material/dialog";
 import {OrganisationManagementComponent} from "./components/organisation-management/organisation-management.component";
+import {ProfileManagementComponent} from "./components/profile-management/profile-management.component";
 
 @Component({
   selector: 'app-root',
@@ -68,8 +69,17 @@ export class AppComponent {
 
   openOrgManager() {
     const modalRef = this.dialog.open(OrganisationManagementComponent, {
-      autoFocus: true,
+      disableClose: true,
       data:{userId:this.userId},
     });
+    modalRef.afterClosed().subscribe();
+  }
+
+  openProfileManager() {
+    const modalRef = this.dialog.open(ProfileManagementComponent, {
+      disableClose: true,
+      data:{userId:this.userId},
+    });
+    modalRef.afterClosed().subscribe();
   }
 }

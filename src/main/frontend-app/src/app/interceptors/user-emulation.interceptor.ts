@@ -28,7 +28,6 @@ export class UserEmulationInterceptor implements HttpInterceptor {
       });
       return next.handle(modReq);
     }
-    console.log("Zwracam zwykły request");
     return next.handle(request);
   }
 }

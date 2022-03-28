@@ -33,7 +33,7 @@
       <div class="nav-item" *ngIf="isLoggedIn" ngbDropdown >
         <button class="btn btn-warning" tabindex="0" id="navbarDropdown1" ngbDropdownToggle style="float:right;">{{login}}</button>
         <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu dropdown-menu-right" *ngIf="isLoggedIn" style="padding: 0;float: right;">
-          <a ngbDropdownItem href="/profile" class="nav-link" routerLink="profile">Zarządzaj swoim profilem</a>
+          <a ngbDropdownItem class="nav-link" (click)="openProfileManager()" >Zarządzaj swoim profilem</a>
           <a *ngIf="isAdmin" ngbDropdownItem class="nav-link" (click)="openOrgManager()">Zarządzaj organizacją</a>
           <a ngbDropdownItem href="#" (click)="logout()">Wyloguj się</a>
         </div>
