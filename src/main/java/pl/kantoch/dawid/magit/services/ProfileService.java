@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import pl.kantoch.dawid.magit.security.user.User;
 import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -59,6 +60,20 @@ public class ProfileService
         {
             LOGGER.error("Error in ProfileService.save for entity {}. Message: {}",user.toString(),e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd podczas zapisu profilu! Komunikat: "+e.getMessage());
+        }
+    }
+
+    public ResponseEntity<?> getByOrganisationId(Long id)
+    {
+        try
+        {
+            List<User> user = userRepository.findAllByOrganisation_Id(id);
+            return ResponseEntity.ok().body(user);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in ProfileService.getByCompanyId for id={}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd podczas pobierania użytkowników dla organizacji o ID="+id+". Komunikat: "+e.getMessage());
         }
     }
 }

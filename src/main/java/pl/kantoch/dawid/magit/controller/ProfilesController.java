@@ -27,4 +27,10 @@ public class ProfilesController
     {
         return profileService.save(user);
     }
+
+    @GetMapping("/by-organisation/{id}")
+    public ResponseEntity<?> getByOrganisationId(@PathVariable Long id)
+    {
+        return profileService.getByOrganisationId(id);
+    }
 }

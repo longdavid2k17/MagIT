@@ -11,6 +11,7 @@ import {
 } from "./components/reset-password-confirmation/reset-password-confirmation.component";
 import {OrganisationManagementComponent} from "./components/organisation-management/organisation-management.component";
 import {ProfileManagementComponent} from "./components/profile-management/profile-management.component";
+import {TeamDashboardComponent} from "./components/teams/team-dashboard/team-dashboard.component";
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'reset-confirm', component: ResetPasswordConfirmationComponent },
   { path: 'organisation-management', component: OrganisationManagementComponent },
   { path: 'profile', component: ProfileManagementComponent },
+  { path: 'teams', component: TeamDashboardComponent },
   { path: '', redirectTo: 'start', pathMatch: 'full' }
 ];
 

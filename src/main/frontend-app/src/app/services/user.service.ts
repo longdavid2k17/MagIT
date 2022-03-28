@@ -15,6 +15,10 @@ export class UserService {
     return this.http.get<any>(`${API}by-id/${userId}`);
   }
 
+  getByOrganisationId(orgId:any):Observable<any[]>{
+    return this.http.get<any[]>(`${API}by-organisation/${orgId}`);
+  }
+
   save(profile: any) {
     return this.http.put<any>(`${API}save`,
       profile);

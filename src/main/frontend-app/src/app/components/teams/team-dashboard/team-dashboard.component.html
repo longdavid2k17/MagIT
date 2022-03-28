@@ -1,0 +1,39 @@
+<div class="content" style="margin: 25px;min-height: 79.5vh;">
+  <div style="display: grid; position: relative;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);">
+    <div style="grid-column: 1; grid-row: 1 / span 7;">
+      <mat-card>
+        <mat-card-title>Użytkownicy</mat-card-title>
+        <mat-card-content>
+          <div *ngFor="let user of users">
+            <button mat-button class="menu-button" title="Zarządzaj">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <span>{{user.username}}</span>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button>LIKE</button>
+          <button mat-button>SHARE</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div style="grid-column: 2/ span 3 ; grid-row: 1 / span 7;">
+      <mat-card>
+        <mat-card-title>Zespoły</mat-card-title>
+        <mat-card-content>
+          <div *ngFor="let team of teams">
+            <button>{{team}}</button>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button>LIKE</button>
+          <button mat-button>SHARE</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

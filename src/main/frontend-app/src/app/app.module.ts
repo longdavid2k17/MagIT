@@ -31,6 +31,8 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {ClipboardModule} from "@angular/cdk/clipboard";
+import { TeamDashboardComponent } from './components/teams/team-dashboard/team-dashboard.component';
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -44,36 +46,38 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
     ResetPasswordConfirmationComponent,
     OrganisationManagementComponent,
     ProfileManagementComponent,
-    MessengerWindowComponent
+    MessengerWindowComponent,
+    TeamDashboardComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    NgMultiSelectDropDownModule.forRoot(),
-    MatTabsModule,
-    MatDialogModule,
-    ToastrModule.forRoot({
-        timeOut: 5000,
-        progressBar: true,
-        progressAnimation: 'increasing',
-        preventDuplicates: true,
-        positionClass: 'toast-top-right'
-      }
-    ),
-    NgbModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    BrowserAnimationsModule,
-    DragDropModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatInputModule,
-    MatIconModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    ClipboardModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        NgMultiSelectDropDownModule.forRoot(),
+        MatTabsModule,
+        MatDialogModule,
+        ToastrModule.forRoot({
+                timeOut: 5000,
+                progressBar: true,
+                progressAnimation: 'increasing',
+                preventDuplicates: true,
+                positionClass: 'toast-top-right'
+            }
+        ),
+        NgbModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        DragDropModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatInputModule,
+        MatIconModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        ClipboardModule,
+        MatCardModule
+    ],
   providers: [
     MatDatepickerModule,
     { provide: HTTP_INTERCEPTORS, useClass: UserEmulationInterceptor, multi: true },
