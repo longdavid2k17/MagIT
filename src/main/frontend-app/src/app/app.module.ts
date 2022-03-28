@@ -33,6 +33,7 @@ import {MatNativeDateModule} from "@angular/material/core";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import { TeamDashboardComponent } from './components/teams/team-dashboard/team-dashboard.component';
 import {MatCardModule} from "@angular/material/card";
+import { RoleFormComponent } from './components/teams/role-form/role-form.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import {MatCardModule} from "@angular/material/card";
     OrganisationManagementComponent,
     ProfileManagementComponent,
     MessengerWindowComponent,
-    TeamDashboardComponent
+    TeamDashboardComponent,
+    RoleFormComponent
   ],
     imports: [
         BrowserModule,

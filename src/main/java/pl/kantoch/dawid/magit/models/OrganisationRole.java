@@ -16,12 +16,16 @@ public class OrganisationRole
     @Column(length = 20)
     private String name;
 
+    @Column(name = "icon_name")
+    private String iconName;
+
     @Column(name = "organisation_id")
     private Long organisationId;
 
-    public OrganisationRole(Integer id, String name, Long organisationId) {
+    public OrganisationRole(Integer id, String name, String iconName, Long organisationId) {
         this.id = id;
         this.name = name;
+        this.iconName = iconName;
         this.organisationId = organisationId;
     }
 
@@ -30,6 +34,14 @@ public class OrganisationRole
 
     public Integer getId() {
         return id;
+    }
+
+    public String getIconName() {
+        return iconName;
+    }
+
+    public void setIconName(String iconName) {
+        this.iconName = iconName;
     }
 
     public void setId(Integer id) {

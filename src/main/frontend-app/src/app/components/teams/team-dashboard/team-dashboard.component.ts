@@ -4,6 +4,8 @@ import {TokenStorageService} from "../../../services/token-storage.service";
 import {ToastrService} from "ngx-toastr";
 import {MatDialog} from "@angular/material/dialog";
 import {TeamsService} from "../../../services/teams.service";
+import {OrganisationRolesService} from "../../../services/organisation-roles.service";
+import {RoleFormComponent} from "../role-form/role-form.component";
 
 @Component({
   selector: 'app-team-dashboard',
@@ -14,9 +16,12 @@ export class TeamDashboardComponent implements OnInit {
 
   users:any[] = [];
   teams:any[] = [];
+  roles:any[] = [];
+  organisation:any;
 
   constructor(private userService:UserService,
               private teamsService:TeamsService,
+              private roleService:OrganisationRolesService,
               private tokenStorageService:TokenStorageService,
               private toastr:ToastrService,
               public dialog: MatDialog) { }
@@ -25,6 +30,7 @@ export class TeamDashboardComponent implements OnInit {
     const user = this.tokenStorageService.getUser();
     if(user?.organisation)
     {
+      this.organisation = user.organisation;
       this.userService.getByOrganisationId(user.organisation.id).subscribe(res=>{
         this.users=res;
       },error => {
@@ -34,8 +40,37 @@ export class TeamDashboardComponent implements OnInit {
         this.teams=res;
       },error => {
         this.toastr.error(error.error,"Błąd pobierania zespołów!")
-      })
+      });
+      this.roleService.getByOrganisationId(user.organisation.id).subscribe(res=>{
+        this.roles=res;
+      },error => {
+        this.toastr.error(error.error,"Błąd pobierania ról!")
+      });
     }
   }
 
+  openRoleForm() {
+    const modalRef = this.dialog.open(RoleFormComponent, {
+      disableClose: true,
+      data:{organisationId:this.organisation.id},
+    });
+    modalRef.afterClosed().subscribe(res =>{
+      this.refresh();
+    });
+  }
+
+  editRoleForm(role: any)
+  {
+    const modalRef = this.dialog.open(RoleFormComponent, {
+      disableClose: true,
+      data:{role:role},
+    });
+    modalRef.afterClosed().subscribe(res => {
+      this.refresh();
+    });
+  }
+
+  refresh(): void {
+    window.location.reload();
+  }
 }
