@@ -3,8 +3,8 @@ import {TokenStorageService} from "./services/token-storage.service";
 import {ToastrService} from "ngx-toastr";
 import {MessengerService} from "./services/messenger.service";
 import {MessengerWindowComponent} from "./components/messenger-window/messenger-window.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {MatDialog} from "@angular/material/dialog";
+import {OrganisationManagementComponent} from "./components/organisation-management/organisation-management.component";
 
 @Component({
   selector: 'app-root',
@@ -20,8 +20,9 @@ export class AppComponent {
   login='';
   messengerInstantions:any;
 
-  constructor(private tokenStorageService:TokenStorageService, private toastr:ToastrService,
-              private messengerService:MessengerService,private modalService: NgbModal,
+  constructor(private tokenStorageService:TokenStorageService,
+              private toastr:ToastrService,
+              private messengerService:MessengerService,
               public dialog: MatDialog) {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
 
@@ -63,5 +64,12 @@ export class AppComponent {
     /*modalRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });*/
+  }
+
+  openOrgManager() {
+    const modalRef = this.dialog.open(OrganisationManagementComponent, {
+      autoFocus: true,
+      data:{userId:this.userId},
+    });
   }
 }

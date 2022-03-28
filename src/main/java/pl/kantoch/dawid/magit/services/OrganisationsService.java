@@ -103,4 +103,35 @@ public class OrganisationsService
             return null;
         }
     }
+
+    public ResponseEntity<?> getOrganisationByOwnerId(Long id)
+    {
+        try
+        {
+            Optional<Organisation> optionalOrganisation = organisationsRepository.findOrganisationByOwnerId(id);
+            if(optionalOrganisation.isPresent())
+                return ResponseEntity.ok().body(optionalOrganisation.get());
+            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Nie znaleziono organizacji, której właścicielem jest użytkownik o ID="+id);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in OrganisationsService.getOrganisationByOwnerId for ID={}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wystąpił błąd podczas pobierania danych dla użytkownika o ID="+id+". Komunikat: "+e.getMessage());
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<?> save(Organisation organisation)
+    {
+        try
+        {
+            Organisation saved = organisationsRepository.save(organisation);
+            return ResponseEntity.ok().body(saved);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in OrganisationsService.save for entity {}. Message: {}",organisation.toString(),e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd podczas zapisu danych organizacji! Komunikat: "+e.getMessage());
+        }
+    }
 }

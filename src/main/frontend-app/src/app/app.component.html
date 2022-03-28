@@ -11,6 +11,15 @@
         <li class="nav-item" *ngIf="isLoggedIn">
           <a class="nav-link" href="/home">Moje zadania</a>
         </li>
+        <li class="nav-item" *ngIf="isAdmin">
+          <a class="nav-link" href="/home">Projekty</a>
+        </li>
+        <li class="nav-item" *ngIf="isAdmin">
+          <a class="nav-link" href="/home">Zespoły</a>
+        </li>
+        <li class="nav-item" *ngIf="isAdmin">
+          <a class="nav-link" href="/home">Wydajność</a>
+        </li>
       </ul>
     </div>
     <div class="d-flex align-items-center" style="margin-right:75px;">
@@ -25,7 +34,7 @@
         <button class="btn btn-warning" tabindex="0" id="navbarDropdown1" ngbDropdownToggle style="float:right;">{{login}}</button>
         <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu dropdown-menu-right" *ngIf="isLoggedIn" style="padding: 0;float: right;">
           <a ngbDropdownItem href="/profile" class="nav-link" routerLink="profile">Zarządzaj swoim profilem</a>
-          <a *ngIf="isAdmin" ngbDropdownItem href="/organisation-managment" class="nav-link" routerLink="organisation-management">Zarządzaj organizacją</a>
+          <a *ngIf="isAdmin" ngbDropdownItem class="nav-link" (click)="openOrgManager()">Zarządzaj organizacją</a>
           <a ngbDropdownItem href="#" (click)="logout()">Wyloguj się</a>
         </div>
       </div>

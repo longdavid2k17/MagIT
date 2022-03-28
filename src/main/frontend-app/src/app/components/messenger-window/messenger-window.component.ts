@@ -18,7 +18,7 @@ export class MessengerWindowComponent implements OnInit {
               private toastr:ToastrService) { }
 
   ngOnInit(): void {
-    console.log(this.data);
+
   }
 
   onNoClick(): void {
