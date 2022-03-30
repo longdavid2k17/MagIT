@@ -43,19 +43,19 @@
 </nav>
 
 <div class="container">
-  <router-outlet></router-outlet>
-  <div id="contactMessenger"  *ngIf="isLoggedIn" ngbDropdown>
-    <button type="button" class="btn btn-danger position-relative" style="border-radius: 30px;" id="messengerDropdown" ngbDropdownToggle>
-      <i class="bi-megaphone-fill fa-1x"></i>
-      <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary" *ngIf="messengerInstantions?.allUnread>0">+{{messengerInstantions.allUnread}}</span>
-    </button>
-    <div ngbDropdownMenu aria-labelledby="messengerDropdown" class="dropdown-content">
-      <div *ngFor="let inst of messengerInstantions?.entityList">
-        <a *ngIf="inst.messages[inst.messages.length-1].read!=true" (click)="openMessenger(inst)"><b><i>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</i></b> {{inst.messages[inst.messages.length-1].text}}</a>
-        <a *ngIf="inst.messages[inst.messages.length-1].read==true" (click)="openMessenger(inst)"><i>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</i> {{inst.messages[inst.messages.length-1].text}}</a>
+    <router-outlet></router-outlet>
+    <div id="contactMessenger"  *ngIf="isLoggedIn" ngbDropdown>
+      <button type="button" class="btn btn-danger position-relative" style="border-radius: 30px;" id="messengerDropdown" ngbDropdownToggle>
+        <i class="bi-megaphone-fill fa-1x"></i>
+        <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary" *ngIf="messengerInstantions?.allUnread>0">+{{messengerInstantions.allUnread}}</span>
+      </button>
+      <div ngbDropdownMenu aria-labelledby="messengerDropdown" class="dropdown-content">
+        <div *ngFor="let inst of messengerInstantions?.entityList">
+          <a *ngIf="inst.messages[inst.messages.length-1].read!=true" (click)="openMessenger(inst)"><b><i>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</i></b> {{inst.messages[inst.messages.length-1].text}}</a>
+          <a *ngIf="inst.messages[inst.messages.length-1].read==true" (click)="openMessenger(inst)"><i>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</i> {{inst.messages[inst.messages.length-1].text}}</a>
+        </div>
       </div>
     </div>
-  </div>
 </div>
 <footer class="bg-dark text-center text-white">
   <div class="copyright py-4 text-center text-white">
