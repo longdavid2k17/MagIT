@@ -42,8 +42,8 @@ export class AuthService {
     });
   }
 
-  resetPassword(email: any) : Observable<any> {
-    return this.http.post(AUTH_API + 'reset-password', email, {
+  resetPassword(formVal: any) : Observable<any> {
+    return this.http.post(AUTH_API + 'reset-password', formVal.email, {
       headers: new HttpHeaders({ 'Content-Type': 'text/plain' })
     });
   }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from "../../services/auth.service";
 import {ToastrService} from "ngx-toastr";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-reset-password',
@@ -8,22 +9,28 @@ import {ToastrService} from "ngx-toastr";
   styleUrls: ['./reset-password.component.css']
 })
 export class ResetPasswordComponent implements OnInit {
-  form: any = {
-    email: null
-  };
+  form: FormGroup;
   success = false;
   errorMessage = '';
-  constructor(private authService:AuthService,private toastr:ToastrService) { }
+  constructor(private authService:AuthService,
+              private toastr:ToastrService,
+              private fb: FormBuilder) {
+    this.form = this.fb.group({
+      email: [null, [Validators.required, Validators.minLength(3)]],
+    });
+  }
 
   ngOnInit(): void {
   }
 
   resetPassword():void {
-    const { email } = this.form;
-    this.authService.resetPassword(email).subscribe(
+    if (!this.form.valid) {
+      return;
+    }
+    this.authService.resetPassword(this.form.value).subscribe(
       data => {
         this.success=true;
-        this.toastr.success("Pomyślnie wysłano żądanie!")
+        this.toastr.success("Pomyślnie wysłano żądanie! Kliknij w przesłany link")
       },
       err => {
         this.errorMessage = err.error;
