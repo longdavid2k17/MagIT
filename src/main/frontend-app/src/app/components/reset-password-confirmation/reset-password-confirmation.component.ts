@@ -3,6 +3,16 @@ import {AuthService} from "../../services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 import {timeout} from "rxjs/operators";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup, FormGroupDirective, NgForm,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
+import {ErrorStateMatcher} from "@angular/material/core";
 
 @Component({
   selector: 'app-reset-password-confirmation',
@@ -10,14 +20,22 @@ import {timeout} from "rxjs/operators";
   styleUrls: ['./reset-password-confirmation.component.css']
 })
 export class ResetPasswordConfirmationComponent implements OnInit {
+  form: FormGroup;
   token: string | null = '';
   isValid=false;
-  form: any = {
-    password: null,
-    repassword: null
-  };
   errorMessage = '';
-  constructor(private authService: AuthService, private route: ActivatedRoute,private toastr:ToastrService,private router: Router) { }
+  matcher = new MyErrorStateMatcher();
+
+  constructor(private authService: AuthService,
+              private route: ActivatedRoute,
+              private toastr:ToastrService,
+              private router: Router,
+              private fb: FormBuilder) {
+    this.form = this.fb.group({
+      password: [null, [Validators.required, Validators.minLength(3)]],
+      repassword:  ['']
+    }, { validators: this.checkPasswords });
+  }
 
   ngOnInit(): void {
     this.token = this.route.snapshot.queryParamMap.get('token');
@@ -27,11 +45,19 @@ export class ResetPasswordConfirmationComponent implements OnInit {
 
   }
 
+  checkPasswords: ValidatorFn = (group: AbstractControl):  ValidationErrors | null => {
+    // @ts-ignore
+    let pass = group.get('password').value;
+    // @ts-ignore
+    let confirmPass = group.get('repassword').value
+    return pass === confirmPass ? null : { notSame: true }
+  }
+
   resetPassword():void {
-    const { password,repassword } = this.form;
-    if(password==repassword)
-    {
-      this.authService.setNewPassword(password,this.token).subscribe(response => {
+    if (!this.form.valid) {
+      return;
+    }
+      this.authService.setNewPassword(this.form.value,this.token).subscribe(response => {
         this.toastr.success("Pomyślnie zresetowano hasło! Możesz się zalogować do systemu z nowymi danymi dostępu!");
         setTimeout(() =>{
           this.router.navigateByUrl('/login');
@@ -40,6 +66,15 @@ export class ResetPasswordConfirmationComponent implements OnInit {
         this.errorMessage = error.error;
         this.toastr.error(this.errorMessage,'Błąd!');
       });
-    }
+
+  }
+}
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const invalidCtrl = !!(control?.invalid && control?.parent?.dirty);
+    const invalidParent = !!(control?.parent?.invalid && control?.parent?.dirty);
+
+    return invalidCtrl || invalidParent;
   }
 }

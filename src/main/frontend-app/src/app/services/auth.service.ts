@@ -48,10 +48,10 @@ export class AuthService {
     });
   }
 
-  setNewPassword(password: any, token: string | null) {
+  setNewPassword(formVal: any, token: string | null) {
     return this.http.post(AUTH_API + 'set-new-password', {
-      password,
-      token,
+      password:formVal.password,
+      token:token
     }, httpOptions);
   }
 
