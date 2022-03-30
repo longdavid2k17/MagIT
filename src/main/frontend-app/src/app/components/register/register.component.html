@@ -1,78 +1,67 @@
-<section class="myform-area">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="form-area login-form">
-          <div class="form-content">
-            <h2>Organizacja</h2>
-            <p>Jeśli posiadasz kod zaproszenia, wklej go podczas wypełniania formularza. Jeśli go nie posiadasz, utworzymy nową organizację, której nazwę wybierzesz w następnym kroku.</p>
-            <i class="bi-compass fa-9x" style="text-align: center"></i>
+<div class="main-wrapper" fxLayout="row" fxLayoutAlign="center center">
+  <mat-card class="box">
+    <mat-card-header>
+      <mat-card-title>Rejestracja</mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="margin-top: 50px">
+      <div *ngIf="!isSuccessful">
+        <form class="example-form" name="form" [formGroup]="form" (submit)="onSubmit()">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <input matInput type="text"  id="name" name="name" formControlName="name" required>
+              <mat-label>Imię</mat-label>
+            </mat-form-field>
           </div>
-          <div class="form-input">
-            <h2>Rejestracja</h2>
-            <form *ngIf="!isSuccessful" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-              <div class="form-group">
-                <input type="text"  id="name" name="name" [(ngModel)]="form.name" required #name="ngModel">
-                <label>Imię</label>
-                <div class="alert-danger" *ngIf="name.errors && f.submitted">
-                  <div *ngIf="name.errors.required">Imie jest wymagane</div>
-                </div>
-              </div>
-              <div class="form-group">
-                <input type="text"  id="surname" name="surname" [(ngModel)]="form.surname" required #surname="ngModel" >
-                <label>Nazwisko</label>
-                <div class="alert-danger" *ngIf="surname.errors && f.submitted">
-                  <div *ngIf="surname.errors.required">Nazwisko jest wymagane</div>
-                </div>
-              </div>
-              <div class="form-group">
-                <input type="email"  id="email" name="email" [(ngModel)]="form.email" required #email="ngModel">
-                <label>Email</label>
-                <div class="alert-danger" *ngIf="email.errors && f.submitted">
-                  <div *ngIf="email.errors.required">Email jest wymagany</div>
-                </div>
-              </div>
-              <div class="form-group">
-                <input type="text"  id="username" name="username" [(ngModel)]="form.username" required #username="ngModel">
-                <label>Login</label>
-                <div class="alert-danger" *ngIf="username.errors && f.submitted">
-                  <div *ngIf="username.errors.required">Login jest wymagany</div>
-                </div>
-              </div>
-              <div class="form-group">
-                <input type="password" id="password" name="password" [(ngModel)]="form.password" required #password="ngModel">
-                <label>Hasło</label>
-                <div class="alert-danger" *ngIf="password.errors && f.submitted">
-                  <div *ngIf="password.errors.required">Hasło jest wymagane</div>
-                  <div *ngIf="password.errors.minlength">
-                    Hasło musi mieć przynajmniej 6 znaków
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <input type="password" id="repassword" name="repassword" [(ngModel)]="form.rePassword" required #rePassword="ngModel">
-                <label>Powtórz hasło</label>
-              </div>
-              <div class="form-group">
-                <label>Kod zaproszenia</label>
-                <input type="text"  id="invite_code" name="invite_code" [(ngModel)]="form.inviteCode" #inviteCode="ngModel">
-              </div>
-              <div class="myform-button">
-                <button class="myform-btn" type="submit">Zarejestruj się</button>
-              </div>
-              <div style="margin: 10px">
-              <span style="padding: 10px">Posiadasz już konto? <a href="/login">Zaloguj się</a></span>
-              </div>
-              <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
-                Rejestracja nieudana!<br />{{ errorMessage }}
-              </div>
-            </form>
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <input matInput type="text"  id="surname" name="surname" formControlName="surname" required>
+              <mat-label>Nazwisko</mat-label>
+            </mat-form-field>
           </div>
-        </div>
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <input matInput type="email"  id="email" name="email" formControlName="email" required>
+              <mat-label>Email</mat-label>
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Login użytkownika</mat-label>
+              <input matInput formControlName="username" name="username" required>
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Hasło</mat-label>
+              <input matInput formControlName="password" type="password" name="password" required>
+            </mat-form-field>
+          </div>
+          <mat-form-field class="example-full-width">
+            <mat-label>Powtórz hasło</mat-label>
+            <input matInput type="password" formControlName="rePassword" name="rePassword" required [errorStateMatcher]="matcher">
+            <mat-error *ngIf="form.hasError('notSame')">
+              Wprowadzone hasło nie jest identyczne!
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <mat-label>Kod organizacji</mat-label>
+            <input matInput type="text" formControlName="inviteCode" name="inviteCode">
+          </mat-form-field>
+          <div class="form-group">
+            <button mat-stroked-button color="primary" type="submit" class="btn-block">Zarejestruj się</button>
+          </div>
+          <div style="margin: 10px">
+            <span style="padding: 10px">Posiadasz już konto? <a href="/login">Zaloguj się</a></span>
+          </div>
+          <div class="alert alert-warning" *ngIf="isSignUpFailed">
+            Rejestracja nieudana!<br />{{ errorMessage }}
+          </div>
+        </form>
       </div>
-    </div>
-  </div>
-  <div class="alert alert-success" *ngIf="isSuccessful">
-    Zarejestrowałeś się poprawnie!
-  </div>
-</section>
+      <div class="alert alert-success" *ngIf="isSuccessful">
+       <span>Zarejestrowałeś się poprawnie! Aktywuj konto z linku przesłanego na podany email!</span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
