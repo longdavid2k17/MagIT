@@ -36,6 +36,7 @@ import {MatCardModule} from "@angular/material/card";
 import { RoleFormComponent } from './components/teams/role-form/role-form.component';
 import {MatSelectModule} from "@angular/material/select";
 import { OrganisationFormComponent } from './components/organisation-form/organisation-form.component';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { OrganisationFormComponent } from './components/organisation-form/organi
     ClipboardModule,
     MatCardModule,
     MatSelectModule,
-    MatOptionModule
+    MatOptionModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     MatDatepickerModule,

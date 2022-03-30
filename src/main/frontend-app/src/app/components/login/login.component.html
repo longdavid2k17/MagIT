@@ -1,44 +1,33 @@
-<div id="page-container">
-  <div id="content-wrap">
-    <section class="myform-area">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-8">
-            <div class="form-area login-form">
-              <div class="form-content">
-                <h2>Ważne</h2>
-                <p>Przed logowaniem upewnij się że twoje konto jest przypisane do twojej organizacji.</p>
-                <ul>
-                  <li><a href="#" class="facebook"><i class="fa fa-facebook-f"></i><span>facebook</span></a></li>
-                  <li><a href="#" class="twitter"><i class="fa fa-twitter"></i><span>twitter</span></a></li>
-                </ul>
-              </div>
-              <div class="form-input">
-                <h2>Logowanie</h2>
-                <form *ngIf="!isLoggedIn || orgCreation" name="form" (ngSubmit)="f.form.valid && onSubmit()"#f="ngForm" novalidate>
-                  <div class="form-group">
-                    <input type="text"  id="username" name="username" [(ngModel)]="form.username" required #username="ngModel">
-                    <label>Login użytkownika</label>
-                  </div>
-                  <div class="form-group">
-                    <input type="password" id="password" name="password" [(ngModel)]="form.password" required #password="ngModel">
-                    <label>Hasło</label>
-                  </div>
-                  <div class="myform-button">
-                    <button class="myform-btn" type="submit">Zaloguj się</button>
-                  </div>
-                  <div style="margin: 10px">
-                    <span style="padding: 10px">Zapomniałeś hasła? <a href="/reset-password">Zresetuj hasło</a></span>
-                  </div>
-                  <div style="margin: 10px">
-                    <span style="padding: 10px">Nie masz konta? <a href="/register">Zarejestruj się</a></span>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
+<div class="main-wrapper" fxLayout="row" fxLayoutAlign="center center">
+<mat-card class="box">
+  <mat-card-header>
+    <mat-card-title>Logowanie</mat-card-title>
+  </mat-card-header>
+  <mat-card-content style="margin-top: 50px">
+    <form class="example-form" *ngIf="!isLoggedIn || orgCreation" name="form" [formGroup]="form" (submit)="onSubmit()">
+      <div class="form-group">
+        <mat-form-field class="example-full-width">
+          <mat-label>Login użytkownika</mat-label>
+          <input matInput formControlName="username" name="username" required>
+        </mat-form-field>
       </div>
-    </section>
-  </div>
+      <div class="form-group">
+        <mat-form-field class="example-full-width">
+          <mat-label>Hasło</mat-label>
+          <input matInput formControlName="password" type="password" name="password" required>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <button mat-stroked-button color="primary" type="submit" class="btn-block">Zaloguj się</button>
+      </div>
+      <div style="margin: 10px">
+        <span style="padding: 10px">Zapomniałeś hasła? <a href="/reset-password">Zresetuj hasło</a></span>
+      </div>
+      <div style="margin: 10px">
+        <span style="padding: 10px">Nie masz konta? <a href="/register">Zarejestruj się</a></span>
+      </div>
+    </form>
+    <!--<mat-spinner></mat-spinner>-->
+  </mat-card-content>
+</mat-card>
 </div>

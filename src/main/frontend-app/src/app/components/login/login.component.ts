@@ -5,6 +5,7 @@ import {AuthService} from "../../services/auth.service";
 import {DOCUMENT} from "@angular/common";
 import {OrganisationFormComponent} from "../organisation-form/organisation-form.component";
 import {MatDialog} from "@angular/material/dialog";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-login',
@@ -12,14 +13,7 @@ import {MatDialog} from "@angular/material/dialog";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  form: any = {
-    username: null,
-    password: null
-  };
-  organisationForm: any = {
-    name:null,
-    description:null
-  };
+  form: FormGroup;
   closeResult = '';
   isLoggedIn = false;
   login ='';
@@ -32,7 +26,13 @@ export class LoginComponent implements OnInit {
               private authService: AuthService,
               private tokenStorage: TokenStorageService,
               private toastr:ToastrService,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog,
+              private fb: FormBuilder) {
+    this.form = this.fb.group({
+      username: [null, [Validators.required, Validators.minLength(3)]],
+      password: [null, [Validators.required, Validators.minLength(3)]],
+    });
+  }
 
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
@@ -42,9 +42,10 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const { username, password } = this.form;
-
-    this.authService.logUser(username, password).subscribe(
+    if (!this.form.valid) {
+      return;
+    }
+    this.authService.logUser(this.form.value).subscribe(
       data => {
         this.tokenStorage.saveToken(data.accessToken);
         this.tokenStorage.saveUser(data);
