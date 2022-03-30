@@ -125,6 +125,8 @@ public class OrganisationsService
     {
         try
         {
+            if(organisation.getInviteCode()==null)
+                organisation.setInviteCode(generateInviteCode());
             Organisation saved = organisationsRepository.save(organisation);
             return ResponseEntity.ok().body(saved);
         }

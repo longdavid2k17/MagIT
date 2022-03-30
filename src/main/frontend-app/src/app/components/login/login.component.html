@@ -15,7 +15,7 @@
               </div>
               <div class="form-input">
                 <h2>Logowanie</h2>
-                <form *ngIf="!isLoggedIn || orgCreation" name="form" (ngSubmit)="f.form.valid && onSubmit(content)"#f="ngForm" novalidate>
+                <form *ngIf="!isLoggedIn || orgCreation" name="form" (ngSubmit)="f.form.valid && onSubmit()"#f="ngForm" novalidate>
                   <div class="form-group">
                     <input type="text"  id="username" name="username" [(ngModel)]="form.username" required #username="ngModel">
                     <label>Login użytkownika</label>
@@ -25,7 +25,7 @@
                     <label>Hasło</label>
                   </div>
                   <div class="myform-button">
-                    <button class="myform-btn" (click)="onSubmit(content)">Zaloguj się</button>
+                    <button class="myform-btn" type="submit">Zaloguj się</button>
                   </div>
                   <div style="margin: 10px">
                     <span style="padding: 10px">Zapomniałeś hasła? <a href="/reset-password">Zresetuj hasło</a></span>
@@ -40,34 +40,5 @@
         </div>
       </div>
     </section>
-
-    <ng-template #content let-modal>
-      <div style="margin: 50px">
-        <div class="modal-header">
-          <h4 class="modal-title" id="modal-basic-title">Brak organizacji</h4>
-          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-        </div>
-        <div class="modal-body">
-          <h6 class="modal-title">Użytkownik {{login}} nie posiada przypisanej organizacji. Utwórz własną!</h6>
-          <form *ngIf="orgCreation" name="organisationForm" (ngSubmit)="orgCreation.form.valid && createOrganisation()"#orgCreation="ngForm" novalidate>
-            <div class="mb-3">
-              <label for="name">Nazwa organizacji</label>
-              <div class="input-group">
-                <input id="name" class="form-control" name="name" type="text" placeholder="Obowiązkowa" [(ngModel)]="organisationForm.name" required #name="ngModel">
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="description">Krótki opis</label>
-              <div class="input-group">
-                <input id="description" class="form-control"  name="description" type="text" placeholder="Nieobowiązkowy" [(ngModel)]="organisationForm.description" #description="ngModel">
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success" (click)="createOrganisation()">Zapisz</button>
-        </div>
-      </div>
-    </ng-template>
   </div>
 </div>

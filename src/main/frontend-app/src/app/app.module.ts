@@ -35,6 +35,7 @@ import { TeamDashboardComponent } from './components/teams/team-dashboard/team-d
 import {MatCardModule} from "@angular/material/card";
 import { RoleFormComponent } from './components/teams/role-form/role-form.component';
 import {MatSelectModule} from "@angular/material/select";
+import { OrganisationFormComponent } from './components/organisation-form/organisation-form.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import {MatSelectModule} from "@angular/material/select";
     ProfileManagementComponent,
     MessengerWindowComponent,
     TeamDashboardComponent,
-    RoleFormComponent
+    RoleFormComponent,
+    OrganisationFormComponent
   ],
   imports: [
     BrowserModule,

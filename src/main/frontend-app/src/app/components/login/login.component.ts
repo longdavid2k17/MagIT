@@ -1,10 +1,10 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {AuthService} from "../../services/auth.service";
 import {DOCUMENT} from "@angular/common";
-import {ModalDismissReasons, NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {OrganisationFormComponent} from "../organisation-form/organisation-form.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-login',
@@ -32,8 +32,7 @@ export class LoginComponent implements OnInit {
               private authService: AuthService,
               private tokenStorage: TokenStorageService,
               private toastr:ToastrService,
-              private router: Router,
-              private modalService:NgbModal) { }
+              public dialog: MatDialog) { }
 
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
@@ -42,7 +41,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onSubmit(content:any): void {
+  onSubmit(): void {
     const { username, password } = this.form;
 
     this.authService.logUser(username, password).subscribe(
@@ -62,11 +61,14 @@ export class LoginComponent implements OnInit {
           },2000);
         }
         else {
-          this.orgCreation=true;
-          this.modalService.open( content,{ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-            this.closeResult = `Closed with: ${result}`;
-          }, (reason) => {
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+          const modalRef = this.dialog.open(OrganisationFormComponent, {
+            disableClose: true,
+            data:{login:this.login},
+          });
+          modalRef.afterClosed().subscribe(res=>{
+            setTimeout(() =>{
+              this.document.location.href = '/home';
+            },2000);
           });
         }
       },
@@ -78,30 +80,7 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
-  }
-
   reloadPage(): void {
     window.location.reload();
   }
-
-  createOrganisation():void {
-    const {name, description} = this.organisationForm;
-    this.authService.createOrganisation(this.login, name, description).subscribe(res => {
-      this.toastr.success(res.message,'Utworzono organizację!')
-      setTimeout(() =>{
-        this.document.location.href = '/home';
-      },2000);
-    },error => {
-      this.toastr.error(error.error,"Błąd podczas tworzenia organizacji!")
-    });
-  }
-
 }

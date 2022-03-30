@@ -65,4 +65,12 @@ export class AuthService {
       description
     }, httpOptions);
   }
+
+  createOrganisationFromForm(formValue: any,login:any) {
+    return this.http.post(AUTH_API + 'create-org', {
+      name:formValue.name,
+      description:formValue.description,
+      login:login
+    }, httpOptions);
+  }
 }
