@@ -12,6 +12,10 @@ import {
 import {OrganisationManagementComponent} from "./components/organisation-management/organisation-management.component";
 import {ProfileManagementComponent} from "./components/profile-management/profile-management.component";
 import {TeamDashboardComponent} from "./components/teams/team-dashboard/team-dashboard.component";
+import {RoleGuard} from "./core/role.guard";
+import {PerformanceComponent} from "./components/performance/performance.component";
+import {SolutionsLibraryComponent} from "./components/solutions-library/solutions-library.component";
+import {ProjectsComponent} from "./components/projects/projects/projects.component";
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -21,9 +25,31 @@ const routes: Routes = [
   { path: 'register-confirm', component: TokenComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'reset-confirm', component: ResetPasswordConfirmationComponent },
-  { path: 'organisation-management', component: OrganisationManagementComponent },
-  { path: 'profile', component: ProfileManagementComponent },
-  { path: 'teams', component: TeamDashboardComponent },
+  { path: 'solutions', component: SolutionsLibraryComponent },
+  {
+    path: 'projects',
+    component: ProjectsComponent,
+    canActivate:[RoleGuard],
+    data:{
+      expectedRoles:['ROLE_ADMIN']
+    }
+  },
+  {
+    path: 'performance',
+    component: PerformanceComponent,
+    canActivate:[RoleGuard],
+    data:{
+      expectedRoles:['ROLE_ADMIN']
+    }
+  },
+  {
+    path: 'teams',
+    component: TeamDashboardComponent,
+    canActivate:[RoleGuard],
+    data:{
+      expectedRoles:['ROLE_ADMIN']
+    }
+  },
   { path: '', redirectTo: 'start', pathMatch: 'full' }
 ];
 

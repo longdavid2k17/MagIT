@@ -37,6 +37,9 @@ import { RoleFormComponent } from './components/teams/role-form/role-form.compon
 import {MatSelectModule} from "@angular/material/select";
 import { OrganisationFormComponent } from './components/organisation-form/organisation-form.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { PerformanceComponent } from './components/performance/performance.component';
+import { SolutionsLibraryComponent } from './components/solutions-library/solutions-library.component';
+import { ProjectsComponent } from './components/projects/projects/projects.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +56,10 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     MessengerWindowComponent,
     TeamDashboardComponent,
     RoleFormComponent,
-    OrganisationFormComponent
+    OrganisationFormComponent,
+    PerformanceComponent,
+    SolutionsLibraryComponent,
+    ProjectsComponent
   ],
   imports: [
     BrowserModule,

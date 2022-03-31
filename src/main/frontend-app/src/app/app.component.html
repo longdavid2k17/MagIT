@@ -12,16 +12,16 @@
           <a class="nav-link" href="/home">Moje zadania</a>
         </li>
         <li class="nav-item" *ngIf="isLoggedIn">
-          <a class="nav-link" href="/home">Biblioteka</a>
+          <a class="nav-link" href="/solutions" routerLink="solutions">Biblioteka</a>
         </li>
         <li class="nav-item" *ngIf="isAdmin">
-          <a class="nav-link" href="/home">Projekty</a>
+          <a class="nav-link" href="/projects" routerLink="projects">Projekty</a>
         </li>
         <li class="nav-item" *ngIf="isAdmin">
           <a class="nav-link" href="/teams" routerLink="teams">Zespoły</a>
         </li>
         <li class="nav-item" *ngIf="isAdmin">
-          <a class="nav-link" href="/home">Wydajność</a>
+          <a class="nav-link" href="/performance" routerLink="performance">Wydajność</a>
         </li>
       </ul>
     </div>
