@@ -20,4 +20,9 @@ export class OrganisationRolesService {
     return this.http.post<any>(`${API}save`,
       role);
   }
+
+  saveToUser(roles:any,id:any):Observable<any> {
+    return this.http.post<any>(`${API}save-for-user/${id}`,
+      roles);
+  }
 }

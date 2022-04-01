@@ -9,9 +9,13 @@
         <mat-card-title>Użytkownicy</mat-card-title>
         <mat-card-content>
           <div *ngFor="let user of users">
-            <button mat-button class="menu-button" title="Zarządzaj">
+            <button mat-button class="menu-button" title="Zarządzaj" [mat-menu-trigger-for]="menu">
               <mat-icon>more_vert</mat-icon>
             </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="openRoleChooser(user)">Zarządzaj rolami</button>
+              <button mat-menu-item>Zarządzaj zespołami</button>
+            </mat-menu>
             <span>{{user.username}}</span>
           </div>
         </mat-card-content>

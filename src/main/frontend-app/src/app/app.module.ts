@@ -40,6 +40,10 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { PerformanceComponent } from './components/performance/performance.component';
 import { SolutionsLibraryComponent } from './components/solutions-library/solutions-library.component';
 import { ProjectsComponent } from './components/projects/projects/projects.component';
+import { OrganisationRoleChooserComponent } from './components/organisation-role-chooser/organisation-role-chooser.component';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -59,7 +63,8 @@ import { ProjectsComponent } from './components/projects/projects/projects.compo
     OrganisationFormComponent,
     PerformanceComponent,
     SolutionsLibraryComponent,
-    ProjectsComponent
+    ProjectsComponent,
+    OrganisationRoleChooserComponent
   ],
   imports: [
     BrowserModule,
@@ -91,7 +96,10 @@ import { ProjectsComponent } from './components/projects/projects/projects.compo
     MatCardModule,
     MatSelectModule,
     MatOptionModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSlideToggleModule,
+    MatMenuModule,
+    MatCheckboxModule
   ],
   providers: [
     MatDatepickerModule,

@@ -6,6 +6,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {TeamsService} from "../../../services/teams.service";
 import {OrganisationRolesService} from "../../../services/organisation-roles.service";
 import {RoleFormComponent} from "../role-form/role-form.component";
+import {OrganisationRoleChooserComponent} from "../../organisation-role-chooser/organisation-role-chooser.component";
 
 @Component({
   selector: 'app-team-dashboard',
@@ -72,5 +73,16 @@ export class TeamDashboardComponent implements OnInit {
 
   refresh(): void {
     window.location.reload();
+  }
+
+  openRoleChooser(user: any)
+  {
+    const modalRef = this.dialog.open(OrganisationRoleChooserComponent, {
+      disableClose: true,
+      data:{user:user},
+    });
+    modalRef.afterClosed().subscribe(res => {
+      this.refresh();
+    });
   }
 }
