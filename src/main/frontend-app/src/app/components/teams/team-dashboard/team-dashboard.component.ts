@@ -7,6 +7,7 @@ import {TeamsService} from "../../../services/teams.service";
 import {OrganisationRolesService} from "../../../services/organisation-roles.service";
 import {RoleFormComponent} from "../role-form/role-form.component";
 import {OrganisationRoleChooserComponent} from "../../organisation-role-chooser/organisation-role-chooser.component";
+import {PageEvent} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-team-dashboard',
@@ -19,6 +20,9 @@ export class TeamDashboardComponent implements OnInit {
   teams:any[] = [];
   roles:any[] = [];
   organisation:any;
+  totalRolesElements: number = 0;
+  totalUsersElements: number = 0;
+  user:any;
 
   constructor(private userService:UserService,
               private teamsService:TeamsService,
@@ -28,25 +32,32 @@ export class TeamDashboardComponent implements OnInit {
               public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    const user = this.tokenStorageService.getUser();
-    if(user?.organisation)
+    this.user = this.tokenStorageService.getUser();
+    if(this.user?.organisation)
     {
-      this.organisation = user.organisation;
-      this.userService.getByOrganisationId(user.organisation.id).subscribe(res=>{
-        this.users=res;
-      },error => {
-        this.toastr.error(error.error,"Błąd pobierania użytkowników!")
-      });
-      this.teamsService.getByOrganisationId(user.organisation.id).subscribe(res=>{
+      this.organisation = this.user.organisation;
+
+      const usersRequest = {};
+      // @ts-ignore
+      usersRequest['page'] = 0;
+      // @ts-ignore
+      usersRequest['size'] = 10;
+      this.getUsersData(this.user,usersRequest);
+
+
+      this.teamsService.getByOrganisationId(this.user.organisation.id).subscribe(res=>{
         this.teams=res;
       },error => {
         this.toastr.error(error.error,"Błąd pobierania zespołów!")
       });
-      this.roleService.getByOrganisationId(user.organisation.id).subscribe(res=>{
-        this.roles=res;
-      },error => {
-        this.toastr.error(error.error,"Błąd pobierania ról!")
-      });
+
+      const roleRequest = {};
+      // @ts-ignore
+      roleRequest['page'] = 0;
+      // @ts-ignore
+      roleRequest['size'] = 10;
+      this.getRolesData(this.user,roleRequest);
+
     }
   }
 
@@ -84,5 +95,45 @@ export class TeamDashboardComponent implements OnInit {
     modalRef.afterClosed().subscribe(res => {
       this.refresh();
     });
+  }
+
+  nextRolesPage(event: PageEvent) {
+    const request = {};
+    // @ts-ignore
+    request['page'] = event.pageIndex.toString();
+    // @ts-ignore
+    request['size'] = event.pageSize.toString();
+    this.getRolesData(this.user, request);
+  }
+
+  private getRolesData(user:any,request: any) {
+    this.roleService.getByOrganisationId(user.organisation.id,request).subscribe(res=>{
+      // @ts-ignore
+      this.roles = res['content'];
+      // @ts-ignore
+      this.totalRolesElements = res['totalElements'];
+    },error => {
+      this.toastr.error(error.error,"Błąd pobierania ról!")
+    });
+  }
+
+  private getUsersData(user:any,request: any) {
+    this.userService.getByOrganisationId(user.organisation.id,request).subscribe(res=>{
+      // @ts-ignore
+      this.users = res['content'];
+      // @ts-ignore
+      this.totalUsersElements = res['totalElements'];
+    },error => {
+      this.toastr.error(error.error,"Błąd pobierania użytkowników!")
+    });
+  }
+
+  nextUsersPage(event: PageEvent) {
+    const request = {};
+    // @ts-ignore
+    request['page'] = event.pageIndex.toString();
+    // @ts-ignore
+    request['size'] = event.pageSize.toString();
+    this.getUsersData(this.user, request);
   }
 }

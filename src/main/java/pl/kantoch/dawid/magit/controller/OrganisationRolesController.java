@@ -1,5 +1,6 @@
 package pl.kantoch.dawid.magit.controller;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.kantoch.dawid.magit.models.OrganisationRole;
@@ -19,9 +20,9 @@ public class OrganisationRolesController
     }
 
     @GetMapping("/organisation/{id}")
-    public ResponseEntity<?> getRolesForOrganisation(@PathVariable Long id)
+    public ResponseEntity<?> getRolesForOrganisation(@PathVariable Long id, Pageable pageable)
     {
-        return organisationRolesService.getRolesForOrganisation(id);
+        return organisationRolesService.getRolesForOrganisation(id,pageable);
     }
 
     @PostMapping("/save")

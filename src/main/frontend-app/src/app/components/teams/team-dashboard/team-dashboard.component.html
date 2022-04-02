@@ -18,6 +18,7 @@
             </mat-menu>
             <span>{{user.username}}</span>
           </div>
+          <mat-paginator [pageSizeOptions]="[5, 10, 25]" [pageSize]="10" [length]="totalUsersElements" (page)="nextUsersPage($event)"> </mat-paginator>
         </mat-card-content>
       </mat-card>
     </div>
@@ -47,6 +48,7 @@
             </button>
             <span>{{role.name}} - <mat-icon>{{role.iconName}}</mat-icon></span>
           </div>
+          <mat-paginator [pageSizeOptions]="[5, 10, 25]" [pageSize]="10" [length]="totalRolesElements" (page)="nextRolesPage($event)"> </mat-paginator>
         </mat-card-content>
         <mat-card-actions align="end">
           <button mat-button title="Dodaj" (click)="openRoleForm()"><mat-icon>add</mat-icon></button>

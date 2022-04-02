@@ -1,5 +1,6 @@
 package pl.kantoch.dawid.magit.controller;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.kantoch.dawid.magit.security.user.User;
@@ -29,8 +30,8 @@ public class ProfilesController
     }
 
     @GetMapping("/by-organisation/{id}")
-    public ResponseEntity<?> getByOrganisationId(@PathVariable Long id)
+    public ResponseEntity<?> getByOrganisationId(@PathVariable Long id, Pageable pageable)
     {
-        return profileService.getByOrganisationId(id);
+        return profileService.getByOrganisationId(id,pageable);
     }
 }

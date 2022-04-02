@@ -2,6 +2,8 @@ package pl.kantoch.dawid.magit.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -63,12 +65,12 @@ public class ProfileService
         }
     }
 
-    public ResponseEntity<?> getByOrganisationId(Long id)
+    public ResponseEntity<?> getByOrganisationId(Long id, Pageable pageable)
     {
         try
         {
-            List<User> user = userRepository.findAllByOrganisation_Id(id);
-            return ResponseEntity.ok().body(user);
+            Page<User> users = userRepository.findAllByOrganisation_Id(id,pageable);
+            return ResponseEntity.ok().body(users);
         }
         catch (Exception e)
         {

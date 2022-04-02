@@ -1,5 +1,7 @@
 package pl.kantoch.dawid.magit.security.user.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pl.kantoch.dawid.magit.security.user.User;
@@ -15,4 +17,5 @@ public interface UserRepository extends JpaRepository<User,Long>
     User findByEmail(String email);
 
     List<User> findAllByOrganisation_Id(Long id);
+    Page<User> findAllByOrganisation_Id(Long id, Pageable pageable);
 }

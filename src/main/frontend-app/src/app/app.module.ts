@@ -44,6 +44,7 @@ import { OrganisationRoleChooserComponent } from './components/organisation-role
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -66,41 +67,42 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     ProjectsComponent,
     OrganisationRoleChooserComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    NgMultiSelectDropDownModule.forRoot(),
-    MatTabsModule,
-    MatDialogModule,
-    ToastrModule.forRoot({
-        timeOut: 5000,
-        progressBar: true,
-        progressAnimation: 'increasing',
-        preventDuplicates: true,
-        positionClass: 'toast-top-right'
-      }
-    ),
-    NgbModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    BrowserAnimationsModule,
-    DragDropModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatInputModule,
-    MatIconModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    ClipboardModule,
-    MatCardModule,
-    MatSelectModule,
-    MatOptionModule,
-    MatProgressSpinnerModule,
-    MatSlideToggleModule,
-    MatMenuModule,
-    MatCheckboxModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        NgMultiSelectDropDownModule.forRoot(),
+        MatTabsModule,
+        MatDialogModule,
+        ToastrModule.forRoot({
+                timeOut: 5000,
+                progressBar: true,
+                progressAnimation: 'increasing',
+                preventDuplicates: true,
+                positionClass: 'toast-top-right'
+            }
+        ),
+        NgbModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        DragDropModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatInputModule,
+        MatIconModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        ClipboardModule,
+        MatCardModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatProgressSpinnerModule,
+        MatSlideToggleModule,
+        MatMenuModule,
+        MatCheckboxModule,
+        MatPaginatorModule
+    ],
   providers: [
     MatDatepickerModule,
     { provide: HTTP_INTERCEPTORS, useClass: UserEmulationInterceptor, multi: true },
