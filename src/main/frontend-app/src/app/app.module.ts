@@ -47,6 +47,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import { TeamFormComponent } from './components/teams/team-form/team-form.component';
 import {MatTableModule} from "@angular/material/table";
+import { ProjectFormComponent } from './components/projects/project-form/project-form.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import {MatTableModule} from "@angular/material/table";
     SolutionsLibraryComponent,
     ProjectsComponent,
     OrganisationRoleChooserComponent,
-    TeamFormComponent
+    TeamFormComponent,
+    ProjectFormComponent
   ],
     imports: [
         BrowserModule,
