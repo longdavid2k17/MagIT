@@ -138,4 +138,16 @@ public class AuthorizationController
         }
         return ResponseEntity.ok().body(new SimpleApiResponse(true, AppConstants.SUCCESS));
     }
+
+    @GetMapping("/grant-pm/{id}")
+    public ResponseEntity<?> grantPmRole(@PathVariable Long id)
+    {
+        return userService.grantPmRole(id);
+    }
+
+    @GetMapping("/remove-pm/{id}")
+    public ResponseEntity<?> removePmRole(@PathVariable Long id)
+    {
+        return userService.removePmRole(id);
+    }
 }

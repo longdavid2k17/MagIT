@@ -89,6 +89,12 @@ public class UserService implements IUserService
                         roles.add(adminRole);
 
                         break;
+                    case "pm":
+                        Role pmRole = roleRepository.findByName(ERole.ROLE_PM)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(pmRole);
+
+                        break;
                     default:
                         Role userRole = roleRepository.findByName(ERole.ROLE_USER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -104,6 +110,60 @@ public class UserService implements IUserService
         }
         user.setRoles(roles);
         return userRepository.save(user);
+    }
+
+    @Transactional
+    public ResponseEntity<?> grantPmRole(Long id)
+    {
+        try
+        {
+            Optional<User> optionalUser = userRepository.findById(id);
+            if(optionalUser.isEmpty())
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Nie znaleziono użytkownika o ID="+id);
+            User user = optionalUser.get();
+            Role pmRole = roleRepository.findByName(ERole.ROLE_PM)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            if(!user.getRoles().contains(pmRole))
+            {
+                Set<Role> userRoles = user.getRoles();
+                userRoles.add(pmRole);
+                user.setRoles(userRoles);
+                userRepository.save(user);
+            }
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wystąpił błąd podczas próby dodania nowej roli uzytkownikowi o ID="+id+"! Komunikat: "+e.getMessage());
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<?> removePmRole(Long id)
+    {
+        try
+        {
+            Optional<User> optionalUser = userRepository.findById(id);
+            if(optionalUser.isEmpty())
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Nie znaleziono użytkownika o ID="+id);
+            User user = optionalUser.get();
+            Role pmRole = roleRepository.findByName(ERole.ROLE_PM)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            if(user.getRoles().contains(pmRole))
+            {
+                Set<Role> userRoles = user.getRoles();
+                userRoles.remove(pmRole);
+                user.setRoles(userRoles);
+                userRepository.save(user);
+            }
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wystąpił błąd podczas próby usunięcia roli PM uzytkownikowi o ID="+id+"! Komunikat: "+e.getMessage());
+        }
     }
 
     @Override

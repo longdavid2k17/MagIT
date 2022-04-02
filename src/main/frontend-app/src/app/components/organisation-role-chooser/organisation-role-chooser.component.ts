@@ -3,6 +3,7 @@ import {FormArray, FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {OrganisationRolesService} from "../../services/organisation-roles.service";
 import {ToastrService} from "ngx-toastr";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-organisation-role-chooser',
@@ -13,16 +14,28 @@ export class OrganisationRoleChooserComponent implements OnInit {
   form: FormGroup;
   availableRoles:any[] = [];
   user:any;
+  isAdmin = false;
+  isPM = false;
+  private secRoles: string[] = [];
 
   constructor(public dialogRef: MatDialogRef<OrganisationRoleChooserComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private rolesService:OrganisationRolesService,
+              private authService:AuthService,
               private fb:FormBuilder,
               private toastr:ToastrService) {
     this.form = this.fb.group({
       organisationRoles: new FormArray([])
     });
     this.user = data.user;
+    this.secRoles = this.user.roles.map((val: { name: any; }) => val.name);
+    if(this.secRoles.includes("ROLE_ADMIN"))
+      this.isAdmin = true;
+    if(this.secRoles.includes("ROLE_PM"))
+      this.isPM = true;
+
+    console.log(this.secRoles)
+    console.log(this.isAdmin)
     this.rolesService.getByOrganisationIdToList(this.user.organisation.id).subscribe(res=>{
       this.availableRoles=res;
       this.addCheckboxesToForm();
@@ -69,5 +82,21 @@ export class OrganisationRoleChooserComponent implements OnInit {
     },error => {
       this.toastr.error(error.error,"Błąd podczas zapisywania!")
     })
+  }
+
+  grantPmRole() {
+    this.authService.grantPmRole(this.user.id).subscribe(()=>{
+      this.dialogRef.close();
+    },error => {
+      this.toastr.error(error.error,"Błąd podczas nadawania roli!")
+    });
+  }
+
+  removePmRole() {
+    this.authService.removePmRole(this.user.id).subscribe(()=>{
+      this.dialogRef.close();
+    },error => {
+      this.toastr.error(error.error,"Błąd podczas usuwania roli!")
+    });
   }
 }

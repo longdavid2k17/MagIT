@@ -71,6 +71,7 @@ export class AppComponent {
     const modalRef = this.dialog.open(OrganisationManagementComponent, {
       disableClose: true,
       data:{userId:this.userId},
+      hasBackdrop: true
     });
     modalRef.afterClosed().subscribe();
   }
@@ -79,6 +80,7 @@ export class AppComponent {
     const modalRef = this.dialog.open(ProfileManagementComponent, {
       disableClose: true,
       data:{userId:this.userId},
+      hasBackdrop: true
     });
     modalRef.afterClosed().subscribe();
   }

@@ -63,4 +63,12 @@ export class AuthService {
       login:login
     }, httpOptions);
   }
+
+  grantPmRole(userId:any) {
+    return this.http.get(AUTH_API + `grant-pm/${userId}`);
+  }
+
+  removePmRole(userId:any) {
+    return this.http.get(AUTH_API + `remove-pm/${userId}`);
+  }
 }

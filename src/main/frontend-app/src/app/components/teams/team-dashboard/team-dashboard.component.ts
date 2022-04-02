@@ -66,6 +66,7 @@ export class TeamDashboardComponent implements OnInit {
     const modalRef = this.dialog.open(RoleFormComponent, {
       disableClose: true,
       data:{organisationId:this.organisation.id},
+      hasBackdrop: true
     });
     modalRef.afterClosed().subscribe(res =>{
       this.refresh();
@@ -77,6 +78,7 @@ export class TeamDashboardComponent implements OnInit {
     const modalRef = this.dialog.open(RoleFormComponent, {
       disableClose: true,
       data:{role:role},
+      hasBackdrop: true
     });
     modalRef.afterClosed().subscribe(res => {
       this.refresh();
@@ -92,6 +94,7 @@ export class TeamDashboardComponent implements OnInit {
     const modalRef = this.dialog.open(OrganisationRoleChooserComponent, {
       disableClose: true,
       data:{user:user},
+      hasBackdrop: true
     });
     modalRef.afterClosed().subscribe(res => {
       this.refresh();
@@ -143,6 +146,7 @@ export class TeamDashboardComponent implements OnInit {
     const modalRef = this.dialog.open(TeamFormComponent, {
       disableClose: true,
       data:{organisationId:this.organisation.id},
+      hasBackdrop: true
     });
     modalRef.afterClosed().subscribe(res =>{
       this.refresh();

@@ -16,6 +16,7 @@ import pl.kantoch.dawid.magit.security.user.repositories.RoleRepository;
 import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
 import pl.kantoch.dawid.magit.utils.RandomStringGenerator;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
@@ -61,8 +62,9 @@ public class OrganisationsService
                 if(saved.getId() != null && user!=null)
                 {
                     Set<Role> userRoles = user.getRoles();
-                    Role userRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Błąd: nie znaleziono takiej roli!"));
-                    userRoles.add(userRole);
+                    Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Błąd: nie znaleziono takiej roli!"));
+                    Role pmRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Błąd: nie znaleziono takiej roli!"));
+                    userRoles.addAll(Arrays.asList(adminRole,pmRole));
                     user.setRoles(userRoles);
                     user.setOrganisation(saved);
                     userRepository.save(user);

@@ -65,6 +65,7 @@ export class LoginComponent implements OnInit {
           const modalRef = this.dialog.open(OrganisationFormComponent, {
             disableClose: true,
             data:{login:this.login},
+            hasBackdrop: true
           });
           modalRef.afterClosed().subscribe(res=>{
             setTimeout(() =>{

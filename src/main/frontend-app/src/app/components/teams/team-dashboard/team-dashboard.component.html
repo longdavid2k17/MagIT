@@ -43,9 +43,13 @@
             <span>Brak zdefiniowanych ról w twojej organizacji! Dodaj je, klikając +</span>
           </div>
           <div *ngFor="let role of roles">
-            <button mat-button class="menu-button" title="Zarządzaj" (click)="editRoleForm(role)">
-              <mat-icon>edit</mat-icon>
+            <button mat-button class="menu-button" title="Zarządzaj" [mat-menu-trigger-for]="roleMenu">
+              <mat-icon>more_vert</mat-icon>
             </button>
+            <mat-menu #roleMenu="matMenu">
+              <button mat-menu-item (click)="editRoleForm(role)">Edytuj</button>
+              <button mat-menu-item>Usuń</button>
+            </mat-menu>
             <span>{{role.name}} - <mat-icon>{{role.iconName}}</mat-icon></span>
           </div>
           <mat-paginator [pageSizeOptions]="[5, 10, 25]" [pageSize]="10" [length]="totalRolesElements" (page)="nextRolesPage($event)"> </mat-paginator>

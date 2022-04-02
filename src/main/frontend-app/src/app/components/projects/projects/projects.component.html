@@ -7,7 +7,7 @@
   justify-content: space-between;">
       <div style="text-align: left">
         <mat-form-field>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Szukaj">
+          <input matInput (keyup.enter)="applyFilter($event)" placeholder="Szukaj">
         </mat-form-field>
       </div>
       <div style="text-align: right; margin-right: 15px">
