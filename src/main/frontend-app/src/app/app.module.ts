@@ -45,6 +45,8 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import { TeamFormComponent } from './components/teams/team-form/team-form.component';
+import {MatTableModule} from "@angular/material/table";
 
 @NgModule({
   declarations: [
@@ -65,7 +67,8 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     PerformanceComponent,
     SolutionsLibraryComponent,
     ProjectsComponent,
-    OrganisationRoleChooserComponent
+    OrganisationRoleChooserComponent,
+    TeamFormComponent
   ],
     imports: [
         BrowserModule,
@@ -101,7 +104,8 @@ import {MatPaginatorModule} from "@angular/material/paginator";
         MatSlideToggleModule,
         MatMenuModule,
         MatCheckboxModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatTableModule
     ],
   providers: [
     MatDatepickerModule,

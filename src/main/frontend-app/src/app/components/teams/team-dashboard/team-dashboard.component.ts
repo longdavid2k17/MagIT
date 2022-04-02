@@ -8,6 +8,7 @@ import {OrganisationRolesService} from "../../../services/organisation-roles.ser
 import {RoleFormComponent} from "../role-form/role-form.component";
 import {OrganisationRoleChooserComponent} from "../../organisation-role-chooser/organisation-role-chooser.component";
 import {PageEvent} from "@angular/material/paginator";
+import {TeamFormComponent} from "../team-form/team-form.component";
 
 @Component({
   selector: 'app-team-dashboard',
@@ -135,5 +136,16 @@ export class TeamDashboardComponent implements OnInit {
     // @ts-ignore
     request['size'] = event.pageSize.toString();
     this.getUsersData(this.user, request);
+  }
+
+
+  openTeamForm() {
+    const modalRef = this.dialog.open(TeamFormComponent, {
+      disableClose: true,
+      data:{organisationId:this.organisation.id},
+    });
+    modalRef.afterClosed().subscribe(res =>{
+      this.refresh();
+    });
   }
 }
