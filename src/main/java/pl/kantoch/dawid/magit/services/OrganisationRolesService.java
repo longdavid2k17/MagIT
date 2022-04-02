@@ -45,6 +45,20 @@ public class OrganisationRolesService
         }
     }
 
+    public ResponseEntity<?> getRolesForOrganisation(Long id)
+    {
+        try
+        {
+            List<OrganisationRole> roles = organisationRolesRepository.findAllByOrganisationId(id);
+            return ResponseEntity.ok().body(roles);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in OrganisationRolesService.getRolesForOrganisation for id {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd podczas pobierania ról organizacji! Komunikat: "+e.getMessage());
+        }
+    }
+
     @Transactional
     public ResponseEntity<?> save(OrganisationRole role)
     {

@@ -15,6 +15,10 @@ export class OrganisationRolesService {
     return this.http.get<any[]>(`${API}organisation/${orgId}`,{params});
   }
 
+  getByOrganisationIdToList(orgId:any):Observable<any[]>{
+    return this.http.get<any[]>(`${API}organisation-list/${orgId}`);
+  }
+
   save(role:any):Observable<any>
   {
     return this.http.post<any>(`${API}save`,

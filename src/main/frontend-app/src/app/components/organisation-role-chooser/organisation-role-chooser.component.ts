@@ -23,7 +23,7 @@ export class OrganisationRoleChooserComponent implements OnInit {
       organisationRoles: new FormArray([])
     });
     this.user = data.user;
-    this.rolesService.getByOrganisationId(this.user.organisation.id).subscribe(res=>{
+    this.rolesService.getByOrganisationIdToList(this.user.organisation.id).subscribe(res=>{
       this.availableRoles=res;
       this.addCheckboxesToForm();
       if(this.user?.organisationRoles)

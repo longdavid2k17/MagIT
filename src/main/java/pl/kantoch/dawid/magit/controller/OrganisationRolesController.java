@@ -25,6 +25,12 @@ public class OrganisationRolesController
         return organisationRolesService.getRolesForOrganisation(id,pageable);
     }
 
+    @GetMapping("/organisation-list/{id}")
+    public ResponseEntity<?> getRolesForOrganisationList(@PathVariable Long id)
+    {
+        return organisationRolesService.getRolesForOrganisation(id);
+    }
+
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody OrganisationRole role)
     {
