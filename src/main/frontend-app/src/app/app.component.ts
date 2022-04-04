@@ -6,6 +6,7 @@ import {MessengerWindowComponent} from "./components/messenger-window/messenger-
 import {MatDialog} from "@angular/material/dialog";
 import {OrganisationManagementComponent} from "./components/organisation-management/organisation-management.component";
 import {ProfileManagementComponent} from "./components/profile-management/profile-management.component";
+import {RxStompService} from "./services/rx-stomp.service";
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,8 @@ export class AppComponent {
   constructor(private tokenStorageService:TokenStorageService,
               private toastr:ToastrService,
               private messengerService:MessengerService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private rxStompService: RxStompService) {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
 
     if (this.isLoggedIn) {
@@ -36,11 +38,14 @@ export class AppComponent {
       {
         this.isAdmin = true;
       }
-      this.messengerService.getAll(user.id).subscribe(res =>{
-        this.messengerInstantions=res;
+      this.messengerService.getAll(user.id).subscribe(response =>{
+        this.rxStompService.watch('/messenger').subscribe((res:any) => {
+          this.messengerInstantions.push(res.body);
+        });
       },error => {
         this.toastr.error(error.error,"Błąd pobierania wiadomości!")
-      })
+      });
+
     }
   }
 

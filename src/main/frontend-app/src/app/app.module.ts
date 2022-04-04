@@ -48,6 +48,8 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import { TeamFormComponent } from './components/teams/team-form/team-form.component';
 import {MatTableModule} from "@angular/material/table";
 import { ProjectFormComponent } from './components/projects/project-form/project-form.component';
+import {RxStompService} from "./services/rx-stomp.service";
+import {rxStompServiceFactory} from "./rxStompServiceFactory";
 
 @NgModule({
   declarations: [
@@ -110,6 +112,10 @@ import { ProjectFormComponent } from './components/projects/project-form/project
         MatTableModule
     ],
   providers: [
+    {
+      provide: RxStompService,
+      useFactory: rxStompServiceFactory,
+    },
     MatDatepickerModule,
     { provide: HTTP_INTERCEPTORS, useClass: UserEmulationInterceptor, multi: true },
     DatePipe,
