@@ -13,7 +13,7 @@ public class OrganisationRole
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 20)
+    @Column(length = 40)
     private String name;
 
     @Column(name = "icon_name")

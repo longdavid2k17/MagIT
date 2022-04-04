@@ -1,5 +1,6 @@
 package pl.kantoch.dawid.magit.services;
 
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,8 @@ public class OrganisationRolesService
     private final OrganisationRolesRepository organisationRolesRepository;
     private final UserRepository userRepository;
 
+    private static final Gson gson = new Gson();
+
     public OrganisationRolesService(OrganisationRolesRepository organisationRolesRepository, UserRepository userRepository)
     {
         this.organisationRolesRepository = organisationRolesRepository;
@@ -41,7 +44,7 @@ public class OrganisationRolesService
         catch (Exception e)
         {
             LOGGER.error("Error in OrganisationRolesService.getRolesForOrganisation for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd podczas pobierania ról organizacji! Komunikat: "+e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania ról organizacji! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -55,7 +58,7 @@ public class OrganisationRolesService
         catch (Exception e)
         {
             LOGGER.error("Error in OrganisationRolesService.getRolesForOrganisation for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd podczas pobierania ról organizacji! Komunikat: "+e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania ról organizacji! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -70,7 +73,7 @@ public class OrganisationRolesService
         catch (Exception e)
         {
             LOGGER.error("Error in OrganisationRolesService.save for entity {}. Message: {}",role.toString(),e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd podczas zapisu roli! Komunikat: "+e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas zapisu roli! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -81,18 +84,18 @@ public class OrganisationRolesService
         {
             Optional<User> optionalUser = userRepository.findById(id);
             if(optionalUser.isEmpty())
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd podczas walidacji! Nie znaleziono użytkownika o ID="+id);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas walidacji! Nie znaleziono użytkownika o ID="+id));
             if(roles.stream().anyMatch(e -> e.getId() == null))
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd podczas walidacji! Wybrano nieprawidłowe role do zapisu!");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas walidacji! Wybrano nieprawidłowe role do zapisu!"));
             User user = optionalUser.get();
             user.setOrganisationRoles(new HashSet<>(roles));
             userRepository.save(user);
-            return ResponseEntity.ok().body("Poprawnie zapisano role!");
+            return ResponseEntity.ok().body(gson.toJson("Poprawnie zapisano role!"));
         }
         catch (Exception e)
         {
             LOGGER.error("Error in OrganisationRolesService.saveForUser for id = {} and roles = {}. Message: {}",id,roles.toString(),e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd podczas zapisu ról! Komunikat: "+e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas zapisu ról! Komunikat: "+e.getMessage()));
         }
     }
 }
