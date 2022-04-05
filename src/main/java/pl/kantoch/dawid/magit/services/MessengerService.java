@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kantoch.dawid.magit.models.Message;
@@ -28,12 +29,12 @@ public class MessengerService
 
     private final MessagesRepository messagesRepository;
     private final UserRepository userRepository;
-    private final SimpMessageSendingOperations messagingTemplate;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public MessengerService(MessagesRepository messagesRepository, UserRepository userRepository, SimpMessageSendingOperations messagingTemplate) {
+    public MessengerService(MessagesRepository messagesRepository, UserRepository userRepository, SimpMessagingTemplate simpMessagingTemplate) {
         this.messagesRepository = messagesRepository;
         this.userRepository = userRepository;
-        this.messagingTemplate = messagingTemplate;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     public ResponseEntity<?> getAllContacts(Long id)
@@ -42,7 +43,7 @@ public class MessengerService
         {
             List<Message> messages = messagesRepository.findAllByAuthorUserIdOrTargetUserId(id,id);
             MessageWrapper wrapper = getWrapper(messages,id);
-            messagingTemplate.convertAndSend("/messenger",wrapper);
+            simpMessagingTemplate.convertAndSend("/messenger",wrapper);
             return ResponseEntity.ok().build();
         }
         catch (Exception e)
