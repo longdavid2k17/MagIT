@@ -1,5 +1,6 @@
 package pl.kantoch.dawid.magit.security.user.services;
 
+import com.google.gson.Gson;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,8 @@ public class UserService implements IUserService
     private final PasswordEncoder encoder;
     private final ApplicationEventPublisher eventPublisher;
     private final OrganisationsRepository organisationsRepository;
+
+    private static final Gson gson = new Gson();
 
 
     public UserService(UserRepository userRepository, RoleRepository roleRepository, VerificationTokenRepository tokenRepository,
@@ -122,7 +125,7 @@ public class UserService implements IUserService
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Nie znaleziono użytkownika o ID="+id);
             User user = optionalUser.get();
             Role pmRole = roleRepository.findByName(ERole.ROLE_PM)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    .orElseThrow(() -> new RuntimeException("Nie znaleziono roli PM w bazie danych."));
             if(!user.getRoles().contains(pmRole))
             {
                 Set<Role> userRoles = user.getRoles();
@@ -135,7 +138,7 @@ public class UserService implements IUserService
         catch (Exception e)
         {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wystąpił błąd podczas próby dodania nowej roli uzytkownikowi o ID="+id+"! Komunikat: "+e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby dodania nowej roli uzytkownikowi o ID="+id+"! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -149,7 +152,7 @@ public class UserService implements IUserService
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Nie znaleziono użytkownika o ID="+id);
             User user = optionalUser.get();
             Role pmRole = roleRepository.findByName(ERole.ROLE_PM)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    .orElseThrow(() -> new RuntimeException("Nie znaleziono roli PM w bazie danych."));
             if(user.getRoles().contains(pmRole))
             {
                 Set<Role> userRoles = user.getRoles();
@@ -162,7 +165,7 @@ public class UserService implements IUserService
         catch (Exception e)
         {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wystąpił błąd podczas próby usunięcia roli PM uzytkownikowi o ID="+id+"! Komunikat: "+e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby usunięcia roli PM uzytkownikowi o ID="+id+"! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -236,7 +239,7 @@ public class UserService implements IUserService
             eventPublisher.publishEvent(new OnPasswordResetRequestEvent(optionalUser));
             return ResponseEntity.ok().build();
         }
-        else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Nie znaleziono użytkownika z adresem email "+email);
+        else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Nie znaleziono użytkownika z adresem email "+email));
     }
 
     @Transactional
@@ -268,18 +271,19 @@ public class UserService implements IUserService
                 {
                     List<PasswordResetToken> allTokens = passwordResetTokenRepository.findAllByUser_Id(resetToken.getUser().getId());
                     passwordResetTokenRepository.deleteAll(allTokens);
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Link stracił ważność! Spróbuj ponownie zresetować hasło!");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Link stracił ważność! Spróbuj ponownie zresetować hasło!"));
                 }
             }
-            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wystąpił błąd podczas próby resetowania hasła! Przesłano niepoprawne żądanie!");
+            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby resetowania hasła! Przesłano niepoprawne żądanie!"));
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wystąpił błąd podczas próby resetowania hasła! Komunikat: "+e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby resetowania hasła! Komunikat: "+e.getMessage()));
         }
     }
 
+    @Transactional
     public void updateLastLoggedDateForUser(String username)
     {
         try

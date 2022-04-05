@@ -1,5 +1,6 @@
 package pl.kantoch.dawid.magit.services;
 
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,8 @@ public class OrganisationsService
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
+    private static final Gson gson = new Gson();
+
     public OrganisationsService(OrganisationsRepository organisationsRepository, UserRepository userRepository,
                                 RoleRepository roleRepository)
     {
@@ -38,7 +41,7 @@ public class OrganisationsService
     }
 
     @Transactional
-    public ResponseEntity<?> createOrganisation(CreateOrganisationRequest request)
+    public ResponseEntity<String> createOrganisation(CreateOrganisationRequest request)
     {
         try
         {
@@ -63,21 +66,21 @@ public class OrganisationsService
                 {
                     Set<Role> userRoles = user.getRoles();
                     Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Błąd: nie znaleziono takiej roli!"));
-                    Role pmRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Błąd: nie znaleziono takiej roli!"));
+                    Role pmRole = roleRepository.findByName(ERole.ROLE_PM).orElseThrow(() -> new RuntimeException("Błąd: nie znaleziono takiej roli!"));
                     userRoles.addAll(Arrays.asList(adminRole,pmRole));
                     user.setRoles(userRoles);
                     user.setOrganisation(saved);
                     userRepository.save(user);
                 }
 
-                return ResponseEntity.ok().body("Utworzono organizację!");
+                return ResponseEntity.ok().body(gson.toJson("Utworzono organizację!"));
             }
-            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Brak danych!");
+            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak danych!"));
         }
         catch (Exception exception)
         {
             LOGGER.error("Error: {} in OrganisationsService.createOrganisation()",exception.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Wystąpił błąd podczas tworzenia nowej organizacji! Komunikat: "+exception.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas tworzenia nowej organizacji! Komunikat: "+exception.getMessage()));
         }
     }
 
