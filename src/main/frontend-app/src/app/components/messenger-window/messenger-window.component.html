@@ -7,7 +7,7 @@
   </button>
 </div>
   <div mat-dialog-content>
-    <div *ngFor="let message of data.messengerInstance.messages" class="messages">
+    <div *ngFor="let message of greetings" class="messages">
       <div class="message">
         <b *ngIf="message.authorUserId!=data.messengerInstance.interlocutor.id">Ty : </b>
         <b *ngIf="message.authorUserId==data.messengerInstance.interlocutor.id">{{data.messengerInstance.interlocutor.name}} : </b>

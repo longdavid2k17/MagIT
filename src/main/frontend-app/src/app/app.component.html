@@ -53,9 +53,14 @@
         <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary" *ngIf="messengerInstantions?.allUnread>0">+{{messengerInstantions.allUnread}}</span>
       </button>
       <div ngbDropdownMenu aria-labelledby="messengerDropdown" class="dropdown-content">
-        <div *ngFor="let inst of messengerInstantions?.entityList">
-          <a *ngIf="inst.messages[inst.messages.length-1].read!=true" (click)="openMessenger(inst)"><b><i>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</i></b> {{inst.messages[inst.messages.length-1].text}}</a>
-          <a *ngIf="inst.messages[inst.messages.length-1].read==true" (click)="openMessenger(inst)"><i>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</i> {{inst.messages[inst.messages.length-1].text}}</a>
+        <div *ngIf="messengerInstantions">
+          <div *ngFor="let inst of messengerInstantions?.entityList">
+            <a *ngIf="inst.messages[inst.messages.length-1].read!=true" (click)="openMessenger(inst)"><b><i>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</i></b> {{inst.messages[inst.messages.length-1].text}}</a>
+            <a *ngIf="inst.messages[inst.messages.length-1].read==true" (click)="openMessenger(inst)"><i>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</i> {{inst.messages[inst.messages.length-1].text}}</a>
+          </div>
+        </div>
+        <div *ngIf="!messengerInstantions">
+          <a><i>Brakuje członków organizacji :( Zaproś jakichś!</i></a>
         </div>
       </div>
     </div>

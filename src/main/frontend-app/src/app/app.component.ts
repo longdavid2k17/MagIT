@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TokenStorageService} from "./services/token-storage.service";
 import {ToastrService} from "ngx-toastr";
 import {MessengerService} from "./services/messenger.service";
@@ -6,14 +6,14 @@ import {MessengerWindowComponent} from "./components/messenger-window/messenger-
 import {MatDialog} from "@angular/material/dialog";
 import {OrganisationManagementComponent} from "./components/organisation-management/organisation-management.component";
 import {ProfileManagementComponent} from "./components/profile-management/profile-management.component";
-import {RxStompService} from "./services/rx-stomp.service";
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent{
   title = 'frontend-app';
   private roles: string[] = [];
   isLoggedIn = false;
@@ -22,11 +22,11 @@ export class AppComponent {
   login='';
   messengerInstantions:any;
 
+
   constructor(private tokenStorageService:TokenStorageService,
               private toastr:ToastrService,
               private messengerService:MessengerService,
-              public dialog: MatDialog,
-              private rxStompService: RxStompService) {
+              public dialog: MatDialog) {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
 
     if (this.isLoggedIn) {
@@ -39,13 +39,10 @@ export class AppComponent {
         this.isAdmin = true;
       }
       this.messengerService.getAll(user.id).subscribe(response =>{
-        this.rxStompService.watch('/messenger').subscribe((res:any) => {
-          this.messengerInstantions.push(res.body);
-        });
+        this.messengerInstantions=response;
       },error => {
         this.toastr.error(error.error,"Błąd pobierania wiadomości!")
       });
-
     }
   }
 

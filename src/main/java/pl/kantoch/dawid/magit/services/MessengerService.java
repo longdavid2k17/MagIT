@@ -43,8 +43,7 @@ public class MessengerService
         {
             List<Message> messages = messagesRepository.findAllByAuthorUserIdOrTargetUserId(id,id);
             MessageWrapper wrapper = getWrapper(messages,id);
-            simpMessagingTemplate.convertAndSend("/messenger",wrapper);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(wrapper);
         }
         catch (Exception e)
         {
