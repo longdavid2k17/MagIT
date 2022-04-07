@@ -1,7 +1,8 @@
 
 <div mat-dialog-title class="dialog-title" cdkDrag
      cdkDragRootElement=".cdk-overlay-pane"
-     cdkDragHandle  style="display: inline-block">
+     cdkDragHandle  style="display: inline-block"
+     cdkDragBoundary=".cdk-overlay-container">
   <h3><b>Utwórz zespół</b></h3>
 </div>
 <form [formGroup]="form" (submit)="onSubmit()">

@@ -1,6 +1,10 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
+import {MessengerWindowComponent} from "../../messenger-window/messenger-window.component";
+import {ToastrService} from "ngx-toastr";
+import {MatDialog} from "@angular/material/dialog";
+import {ProjectFormComponent} from "../project-form/project-form.component";
 
 @Component({
   selector: 'app-projects',
@@ -18,7 +22,8 @@ export class ProjectsComponent implements OnInit,AfterViewInit  {
     this.dataSource.paginator = this.paginator;
   }
 
-  constructor() { }
+  constructor(private toastr:ToastrService,
+              public dialog: MatDialog) { }
 
   ngOnInit(): void {
   }
@@ -33,7 +38,11 @@ export class ProjectsComponent implements OnInit,AfterViewInit  {
   }
 
   addProject() {
-
+    this.dialog.open(ProjectFormComponent, {
+      autoFocus: false,
+      disableClose: true,
+      hasBackdrop: true
+    });
   }
 
   applyFilter(x: any) {

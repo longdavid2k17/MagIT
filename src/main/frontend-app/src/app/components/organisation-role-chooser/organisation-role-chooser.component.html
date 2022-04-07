@@ -1,7 +1,8 @@
 
 <div mat-dialog-title class="dialog-title" cdkDrag
      cdkDragRootElement=".cdk-overlay-pane"
-     cdkDragHandle  style="display: inline-block">
+     cdkDragHandle  style="display: inline-block"
+     cdkDragBoundary=".cdk-overlay-container">
   <span>Wybierz role dla użytkownika {{user.username}}</span>
 </div>
 <form [formGroup]="form" (ngSubmit)="onSubmit()">

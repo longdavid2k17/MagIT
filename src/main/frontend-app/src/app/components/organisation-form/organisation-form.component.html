@@ -1,7 +1,8 @@
 
 <div mat-dialog-title class="dialog-title" cdkDrag
        cdkDragRootElement=".cdk-overlay-pane"
-       cdkDragHandle  style="display: inline-block">
+       cdkDragHandle  style="display: inline-block"
+     cdkDragBoundary=".cdk-overlay-container">
   <h6>Użytkownik {{login}} nie posiada przypisanej organizacji. Utwórz własną!</h6>
   </div>
   <form [formGroup]="form" (submit)="onSubmit()">

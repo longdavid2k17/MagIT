@@ -1,7 +1,8 @@
 
   <div mat-dialog-title class="dialog-title" cdkDrag
        cdkDragRootElement=".cdk-overlay-pane"
-       cdkDragHandle  style="display: inline-block">
+       cdkDragHandle  style="display: inline-block"
+       cdkDragBoundary=".cdk-overlay-container">
     <span *ngIf="editMode">Edytuj rolę</span>
     <span *ngIf="!editMode">Dodaj rolę</span>
   </div>

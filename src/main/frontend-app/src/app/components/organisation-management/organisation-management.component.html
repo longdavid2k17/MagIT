@@ -1,7 +1,8 @@
 <div *ngIf="dataExist">
   <div mat-dialog-title class="dialog-title" cdkDrag
        cdkDragRootElement=".cdk-overlay-pane"
-       cdkDragHandle  style="display: inline-block">
+       cdkDragHandle  style="display: inline-block"
+       cdkDragBoundary=".cdk-overlay-container">
     Edytuj organizację
   </div>
     <form [formGroup]="form" (submit)="onSubmit()">
