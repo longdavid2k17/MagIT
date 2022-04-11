@@ -38,7 +38,7 @@
     <div class="form-group">
       <mat-form-field appearance="fill" class="example-full-width">
         <mat-label>Project Manager</mat-label>
-        <mat-select formControlName="projectManager" required >
+        <mat-select formControlName="projectManager" >
           <mat-option *ngFor="let user of pmUsers" [value]="user">
             {{user.name}} {{user.surname}}
           </mat-option>
@@ -51,7 +51,7 @@
     <div class="form-group" *ngIf="isChecked">
       <mat-form-field appearance="fill" class="example-full-width">
         <mat-label>Nazwa dysku</mat-label>
-        <input matInput name="driveName" formControlName="driveName" required>
+        <input matInput name="driveName" formControlName="driveName">
       </mat-form-field>
     </div>
   </div>
