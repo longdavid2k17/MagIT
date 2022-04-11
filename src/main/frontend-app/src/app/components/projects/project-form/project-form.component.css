@@ -1,8 +1,7 @@
-input {
+.example-full-width {
   width: 100%;
 }
-span {
-  display: block;
-  overflow: hidden;
-  padding-right:10px;
+
+#parent > * {
+  margin: 30px 0;
 }

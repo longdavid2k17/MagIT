@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {Observable} from "rxjs";
 
 const AUTH_API = 'http://localhost:8080/api/auth/';
+const PROJ_API = 'http://localhost:8080/api/projects/';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -70,5 +71,9 @@ export class AuthService {
 
   removePmRole(userId:any) {
     return this.http.get(AUTH_API + `remove-pm/${userId}`);
+  }
+
+  getAllPMsFromOrg(orgId:any): Observable<any> {
+    return this.http.get(PROJ_API + `get-all-pms/${orgId}`);
   }
 }
