@@ -20,6 +20,14 @@ export class ProjectsService {
     return this.http.get(PROJ_API + `get-all/${orgId}`);
   }
 
+  archiveProject(projId:any): Observable<any> {
+    return this.http.get(PROJ_API + `archive/${projId}`);
+  }
+
+  deleteProject(projId:any): Observable<any> {
+    return this.http.delete(PROJ_API + `delete/${projId}`);
+  }
+
   save(formVal:any): Observable<any> {
     return this.http.post(PROJ_API + `save`,formVal);
   }

@@ -27,6 +27,18 @@ public class ProjectsController
         return projectsService.getAllProjectsForOrg(id);
     }
 
+    @GetMapping("/archive/{id}")
+    public ResponseEntity<?> archiveProject(@PathVariable Long id)
+    {
+        return projectsService.archiveProject(id);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteProject(@PathVariable Long id)
+    {
+        return projectsService.deleteProject(id);
+    }
+
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody Project project)
     {

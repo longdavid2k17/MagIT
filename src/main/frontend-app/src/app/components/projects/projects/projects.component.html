@@ -56,7 +56,8 @@
             <button mat-icon-button color="primary" (click)="showTasks(row)" title="Dashboard"><mat-icon>dashboard</mat-icon></button>
             <button mat-icon-button color="primary" (click)="showTasks(row)" title="Otwórz rejestr zadań"><mat-icon>preview</mat-icon></button>
             <button mat-icon-button color="primary" (click)="editProject(row)" title="Edytuj"><mat-icon>edit</mat-icon></button>
-            <button mat-icon-button color="primary" (click)="editProject(row)" title="Archiwizuj projekt"><mat-icon>archive</mat-icon></button>
+            <button mat-icon-button color="primary" (click)="archiveProject(row)" title="Archiwizuj projekt"><mat-icon>archive</mat-icon></button>
+            <button mat-icon-button color="primary" (click)="deleteProject(row)" title="Usuń projekt"><mat-icon>delete</mat-icon></button>
           </td>
         <tr>
       </ng-container>
@@ -66,7 +67,7 @@
     </table>
     <mat-paginator [pageSizeOptions]="[5, 10, 20]"
                    showFirstLastButtons
-                   aria-label="Select page of periodic elements">
+                   aria-label="Wybierz ilość elementów">
     </mat-paginator>
   </div>
 </div>

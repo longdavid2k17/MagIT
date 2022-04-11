@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.kantoch.dawid.magit.models.Project;
 import pl.kantoch.dawid.magit.repositories.ProjectsRepository;
 import pl.kantoch.dawid.magit.security.user.ERole;
@@ -56,6 +57,7 @@ public class ProjectsService
         }
     }
 
+    @Transactional
     public ResponseEntity<?> save(Project project)
     {
         try
@@ -96,6 +98,46 @@ public class ProjectsService
         {
             LOGGER.error("Error in ProjectsService.getAllProjectsForOrg for id {}. Message: {}",id,e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania projektów. Komunikat: "+e.getMessage()));
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<?> archiveProject(Long id) {
+        try
+        {
+            Optional<Project> optionalProject = projectsRepository.findById(id);
+            if(optionalProject.isPresent())
+            {
+                Project project = optionalProject.get();
+                project.setArchived(true);
+                projectsRepository.save(project);
+            }
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in ProjectsService.archiveProject for id {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas archiwizowania projektu o ID="+id+". Komunikat: "+e.getMessage()));
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<?> deleteProject(Long id) {
+        try
+        {
+            Optional<Project> optionalProject = projectsRepository.findById(id);
+            if(optionalProject.isPresent())
+            {
+                Project project = optionalProject.get();
+                project.setDeleted(true);
+                projectsRepository.save(project);
+            }
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in ProjectsService.delete for id {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas usuwania projektu o ID="+id+". Komunikat: "+e.getMessage()));
         }
     }
 }

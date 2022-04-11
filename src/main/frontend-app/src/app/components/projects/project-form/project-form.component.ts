@@ -16,6 +16,7 @@ export class ProjectFormComponent implements OnInit {
   form: FormGroup;
   pmUsers:any[] =[];
   isChecked:boolean=false;
+  existData:boolean=false;
   organisation:any;
 
   constructor(public dialogRef: MatDialogRef<ProjectFormComponent>,
@@ -32,17 +33,27 @@ export class ProjectFormComponent implements OnInit {
       organisation:[null],
       startDate: [null],
       endDate: [null],
+      createDate: [null],
+      modificationDate: [null],
       id: [null],
     });
-  }
-
-  ngOnInit(): void {
     this.organisation = this.tokenStorage.getUser().organisation;
     if(this.organisation?.id){
       this.projectService.getAllPMsFromOrg(this.organisation.id).subscribe(res=>{
         this.pmUsers = res;
       });
     }
+
+    if(this.data?.existingProj){
+      this.existData=true;
+      this.form.patchValue(this.data?.existingProj);
+      if(this.data.existingProj?.driveName)
+        this.isChecked = true;
+    }
+  }
+
+  ngOnInit(): void {
+
   }
 
   onSubmit() {
@@ -52,9 +63,11 @@ export class ProjectFormComponent implements OnInit {
     let formVal = this.form.value;
     if(this.organisation)
       formVal.organisation = this.organisation;
+    if(!this.isChecked)
+      formVal.driveName = null;
 
     this.projectService.save(formVal).subscribe(res=>{
-      this.toastr.success("Zapisano!")
+      this.dialogRef.close();
     },error => {
       this.toastr.error(error,"Błąd");
     });
@@ -62,5 +75,9 @@ export class ProjectFormComponent implements OnInit {
 
   onDriveChange(event: MatSlideToggleChange) {
     this.isChecked = event.checked;
+  }
+
+  compareFn(c1: any, c2: any): boolean {
+    return c1 && c2 ? c1.id === c2.id : c1 === c2;
   }
 }

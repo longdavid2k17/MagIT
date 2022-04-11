@@ -45,19 +45,29 @@ export class ProjectsComponent implements OnInit,AfterViewInit  {
   }
 
 
-  editProject(row : PeriodicElement) {
-
+  editProject(row : any) {
+    this.dialog.open(ProjectFormComponent, {
+      autoFocus: false,
+      disableClose: true,
+      data:{
+        existingProj:row
+      },
+      hasBackdrop: true
+    });
   }
 
-  showTasks(row : PeriodicElement) {
+  showTasks(row : any) {
 
   }
 
   addProject() {
-    this.dialog.open(ProjectFormComponent, {
+    const dialogRef = this.dialog.open(ProjectFormComponent, {
       autoFocus: false,
       disableClose: true,
       hasBackdrop: true
+    });
+    dialogRef.afterClosed().subscribe(res =>{
+      this.refresh();
     });
   }
 
@@ -65,10 +75,20 @@ export class ProjectsComponent implements OnInit,AfterViewInit  {
     const searchString = x.target.value;
     console.log(searchString);
   }
-}
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
+
+  deleteProject(row: any) {
+    if(confirm("Czy jesteś pewny, że chcesz usunąć ten projekt?")) {
+      console.log("Implement delete functionality here");
+    }
+  }
+
+  archiveProject(row: any) {
+    if(confirm("Czy jesteś pewny, że chcesz zarchiwizować ten projekt?")) {
+      console.log("Implement archive functionality here");
+    }
+  }
+
+  refresh(): void {
+    window.location.reload();
+  }
 }
