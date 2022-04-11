@@ -52,6 +52,11 @@ public class Project
     @Column(name = "modification_date")
     private Date modificationDate;
 
+    @Transient
+    private String todayTasks;
+    @Transient
+    private String allTasks;
+
     public Project() {
     }
 
@@ -177,6 +182,22 @@ public class Project
 
     public void setModificationDate(Date modificationDate) {
         this.modificationDate = modificationDate;
+    }
+
+    public String getTodayTasks() {
+        return todayTasks;
+    }
+
+    public void setTodayTasks(String todayTasks) {
+        this.todayTasks = todayTasks;
+    }
+
+    public String getAllTasks() {
+        return allTasks;
+    }
+
+    public void setAllTasks(String allTasks) {
+        this.allTasks = allTasks;
     }
 
     @Override

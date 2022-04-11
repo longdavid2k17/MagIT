@@ -21,6 +21,12 @@ public class ProjectsController
         return projectsService.getAllPMsForOrg(id);
     }
 
+    @GetMapping("/get-all/{id}")
+    public ResponseEntity<?> getAllProjectsForOrg(@PathVariable Long id)
+    {
+        return projectsService.getAllProjectsForOrg(id);
+    }
+
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody Project project)
     {

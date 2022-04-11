@@ -80,4 +80,22 @@ public class ProjectsService
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas zapisu projektu! Komunikat: "+e.getMessage()));
         }
     }
+
+    public ResponseEntity<?> getAllProjectsForOrg(Long id)
+    {
+        try
+        {
+            List<Project> projects = projectsRepository.findAllByOrganisation_IdAndDeletedFalse(id);
+            projects.forEach(e->{
+                e.setAllTasks("79/112");
+                e.setTodayTasks("2/5");
+            });
+            return ResponseEntity.ok().body(projects);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in ProjectsService.getAllProjectsForOrg for id {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania projektów. Komunikat: "+e.getMessage()));
+        }
+    }
 }

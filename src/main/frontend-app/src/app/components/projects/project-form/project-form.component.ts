@@ -1,7 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {ToastrService} from "ngx-toastr";
-import {AuthService} from "../../../services/auth.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {TokenStorageService} from "../../../services/token-storage.service";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
@@ -22,7 +21,6 @@ export class ProjectFormComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<ProjectFormComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private toastr:ToastrService,
-              private authService:AuthService,
               private projectService:ProjectsService,
               private fb: FormBuilder,
               private tokenStorage: TokenStorageService) {
