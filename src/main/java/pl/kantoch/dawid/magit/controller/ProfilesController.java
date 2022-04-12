@@ -34,4 +34,10 @@ public class ProfilesController
     {
         return profileService.getByOrganisationId(id,pageable);
     }
+
+    @GetMapping("/by-organisation-nopage/{id}")
+    public ResponseEntity<?> getByOrganisationIdNoPage(@PathVariable Long id)
+    {
+        return profileService.getByOrganisationId(id);
+    }
 }

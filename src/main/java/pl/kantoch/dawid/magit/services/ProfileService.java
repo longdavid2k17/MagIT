@@ -81,4 +81,18 @@ public class ProfileService
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania użytkowników dla organizacji o ID="+id+". Komunikat: "+e.getMessage()));
         }
     }
+
+    public ResponseEntity<?> getByOrganisationId(Long id)
+    {
+        try
+        {
+            List<User> users = userRepository.findAllByOrganisation_Id(id);
+            return ResponseEntity.ok().body(users);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in ProfileService.getByCompanyId for id={}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania użytkowników dla organizacji o ID="+id+". Komunikat: "+e.getMessage()));
+        }
+    }
 }

@@ -49,6 +49,7 @@ import { TeamFormComponent } from './components/teams/team-form/team-form.compon
 import {MatTableModule} from "@angular/material/table";
 import { ProjectFormComponent } from './components/projects/project-form/project-form.component';
 import { ConfirmationDialogComponent } from './components/general/confirmation-dialog/confirmation-dialog.component';
+import {MatStepperModule} from "@angular/material/stepper";
 
 @NgModule({
   declarations: [
@@ -74,43 +75,44 @@ import { ConfirmationDialogComponent } from './components/general/confirmation-d
     ProjectFormComponent,
     ConfirmationDialogComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        NgMultiSelectDropDownModule.forRoot(),
-        MatTabsModule,
-        MatDialogModule,
-        ToastrModule.forRoot({
-                timeOut: 5000,
-                progressBar: true,
-                progressAnimation: 'increasing',
-                preventDuplicates: true,
-                positionClass: 'toast-top-right'
-            }
-        ),
-        NgbModule,
-        HttpClientModule,
-        ReactiveFormsModule,
-        FormsModule,
-        BrowserAnimationsModule,
-        DragDropModule,
-        MatFormFieldModule,
-        MatButtonModule,
-        MatInputModule,
-        MatIconModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        ClipboardModule,
-        MatCardModule,
-        MatSelectModule,
-        MatOptionModule,
-        MatProgressSpinnerModule,
-        MatSlideToggleModule,
-        MatMenuModule,
-        MatCheckboxModule,
-        MatPaginatorModule,
-        MatTableModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    NgMultiSelectDropDownModule.forRoot(),
+    MatTabsModule,
+    MatDialogModule,
+    ToastrModule.forRoot({
+        timeOut: 5000,
+        progressBar: true,
+        progressAnimation: 'increasing',
+        preventDuplicates: true,
+        positionClass: 'toast-top-right'
+      }
+    ),
+    NgbModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    DragDropModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatInputModule,
+    MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ClipboardModule,
+    MatCardModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatProgressSpinnerModule,
+    MatSlideToggleModule,
+    MatMenuModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatStepperModule
+  ],
   providers: [
     MatDatepickerModule,
     { provide: HTTP_INTERCEPTORS, useClass: UserEmulationInterceptor, multi: true },

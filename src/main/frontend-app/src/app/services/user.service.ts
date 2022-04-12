@@ -20,6 +20,9 @@ export class UserService {
       params
     });
   }
+  getByOrganisationIdNoPage(orgId:any):Observable<any[]>{
+    return this.http.get<any[]>(`${API}by-organisation-nopage/${orgId}`);
+  }
 
   save(profile: any) {
     return this.http.put<any>(`${API}save`,
