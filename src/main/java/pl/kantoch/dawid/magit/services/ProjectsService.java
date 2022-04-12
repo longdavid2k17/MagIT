@@ -17,6 +17,7 @@ import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -138,6 +139,25 @@ public class ProjectsService
         {
             LOGGER.error("Error in ProjectsService.delete for id {}. Message: {}",id,e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas usuwania projektu o ID="+id+". Komunikat: "+e.getMessage()));
+        }
+    }
+
+    public ResponseEntity<?> getFilteredProjectsForOrg(Long id, String searchedString)
+    {
+        try
+        {
+            String keyword = "%"+searchedString.toLowerCase(Locale.ROOT)+"%";
+            List<Project> projects = projectsRepository.findBySearchKeyword(id,keyword);
+            projects.forEach(e->{
+                e.setAllTasks("79/112");
+                e.setTodayTasks("2/5");
+            });
+            return ResponseEntity.ok().body(projects);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in ProjectsService.getAllProjectsForOrg for id {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania projektów. Komunikat: "+e.getMessage()));
         }
     }
 }

@@ -48,6 +48,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import { TeamFormComponent } from './components/teams/team-form/team-form.component';
 import {MatTableModule} from "@angular/material/table";
 import { ProjectFormComponent } from './components/projects/project-form/project-form.component';
+import { ConfirmationDialogComponent } from './components/general/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { ProjectFormComponent } from './components/projects/project-form/project
     ProjectsComponent,
     OrganisationRoleChooserComponent,
     TeamFormComponent,
-    ProjectFormComponent
+    ProjectFormComponent,
+    ConfirmationDialogComponent
   ],
     imports: [
         BrowserModule,

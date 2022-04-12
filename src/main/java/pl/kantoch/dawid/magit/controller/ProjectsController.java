@@ -1,15 +1,22 @@
 package pl.kantoch.dawid.magit.controller;
 
+import com.google.gson.Gson;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import pl.kantoch.dawid.magit.models.Project;
 import pl.kantoch.dawid.magit.services.ProjectsService;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectsController
 {
     private final ProjectsService projectsService;
+
+    private final Gson gson = new Gson();
 
     public ProjectsController(ProjectsService projectsService) {
         this.projectsService = projectsService;
@@ -21,10 +28,19 @@ public class ProjectsController
         return projectsService.getAllPMsForOrg(id);
     }
 
-    @GetMapping("/get-all/{id}")
-    public ResponseEntity<?> getAllProjectsForOrg(@PathVariable Long id)
+    @GetMapping("/get-all")
+    public ResponseEntity<?> getAllProjectsForOrg(@RequestParam MultiValueMap<String, String> params)
     {
-        return projectsService.getAllProjectsForOrg(id);
+        String searchedString = Optional.ofNullable(params.getFirst("search")).orElse(null);
+        String idStr = Optional.ofNullable(params.getFirst("id")).orElse(null);
+        if(idStr==null)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak parametru ID w zapytaniu!"));
+        Long id = Long.valueOf(idStr);
+        if(searchedString!=null)
+        {
+            return projectsService.getFilteredProjectsForOrg(id,searchedString);
+        }
+        else return projectsService.getAllProjectsForOrg(id);
     }
 
     @GetMapping("/archive/{id}")

@@ -16,8 +16,15 @@ export class ProjectsService {
     return this.http.get(PROJ_API + `get-all-pms/${orgId}`);
   }
 
-  getAllProjectsForOrg(orgId:any): Observable<any> {
-    return this.http.get(PROJ_API + `get-all/${orgId}`);
+  getAllProjectsForOrg(orgId:any,search?:any): Observable<any> {
+    let params = { id:orgId};
+    if(search)
+      { // @ts-ignore
+        params = {id:orgId, search : search };
+      }
+    return this.http.get(PROJ_API + `get-all`,{
+      params:params
+    });
   }
 
   archiveProject(projId:any): Observable<any> {
