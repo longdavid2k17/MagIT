@@ -27,11 +27,12 @@
         <mat-card-title>Zespoły</mat-card-title>
         <mat-card-content>
           <div *ngFor="let team of teams">
-            <button>{{team}}</button>
+            <span>{{team.name}} - {{team.description}}</span>
           </div>
+          <mat-paginator [pageSizeOptions]="[5, 10, 25]" [pageSize]="10" [length]="totalTeamsElements" (page)="nextTeamsPage($event)"> </mat-paginator>
         </mat-card-content>
         <mat-card-actions align="end">
-          <button mat-button title="Dodaj" (click)="openTeamForm()"><mat-icon>add</mat-icon></button>
+          <button mat-button title="Dodaj nowy zespół" (click)="openTeamForm()"><mat-icon>add</mat-icon></button>
         </mat-card-actions>
       </mat-card>
     </div>

@@ -3,27 +3,28 @@
      cdkDragRootElement=".cdk-overlay-pane"
      cdkDragHandle  style="display: inline-block"
      cdkDragBoundary=".cdk-overlay-container">
-  <h3><b>Utwórz zespół</b></h3>
+  <button class="close" mat-button mat-dialog-close><mat-icon>close</mat-icon></button>
+  <h2><b>Utwórz zespół</b></h2>
 </div>
 <mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
   <mat-step [stepControl]="form">
-    <form [formGroup]="form" (submit)="onSubmit()">
+    <form [formGroup]="form">
       <ng-template matStepLabel>Podstawowe dane</ng-template>
       <div mat-dialog-content>
         <div class="form-group">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" class="example-full-width">
             <mat-label>Nazwa zespołu</mat-label>
             <input matInput name="name" formControlName="name" required>
           </mat-form-field>
         </div>
         <div class="form-group">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" class="example-full-width">
             <mat-label>Opis</mat-label>
-            <input matInput name="description" formControlName="description" required>
+            <input matInput name="description" formControlName="description">
           </mat-form-field>
         </div>
         <div class="form-group">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" class="example-full-width">
             <mat-label>Team leader</mat-label>
             <mat-select formControlName="teamLeader" >
               <mat-option *ngFor="let user of users" [value]="user">
@@ -33,7 +34,7 @@
           </mat-form-field>
         </div>
         <div class="form-group">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" class="example-full-width">
             <mat-label>Domyślny projekt</mat-label>
             <mat-select formControlName="defaultProject" >
               <mat-option *ngFor="let project of projects" [value]="project">
@@ -43,7 +44,7 @@
           </mat-form-field>
         </div>
       </div>
-      <div>
+      <div style="text-align: right;float: right">
         <button mat-button matStepperNext>Dalej</button>
       </div>
     </form>
@@ -53,51 +54,44 @@
       <ng-template matStepLabel>Wybierz członków zespołu</ng-template>
       <div mat-dialog-content>
         <div class="form-group">
-          <mat-form-field appearance="fill">
-            <mat-label>Nazwa zespołu</mat-label>
-            <input matInput name="name" formControlName="name" required>
-          </mat-form-field>
+          <div *ngFor="let member of teamMembers">
+            <div>
+              <button mat-icon-button title="Usuń tego użytkownika" (click)="remove(member)"><mat-icon>remove</mat-icon></button>
+              <span>{{member.role.name}} - {{member.user.name}} {{member.user.surname}}</span>
+            </div>
+          </div>
         </div>
         <div class="form-group">
-          <mat-form-field appearance="fill">
-            <mat-label>Opis</mat-label>
-            <input matInput name="description" formControlName="description" required>
-          </mat-form-field>
+          <div style="float: left; margin-right: 15px">
+            <mat-form-field appearance="fill">
+              <mat-label>Rola</mat-label>
+              <mat-select (selectionChange)="onRoleChange($event)">
+                <mat-option *ngFor="let role of roles" [value]="role">
+                  {{role.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div style="float: left; margin-right: 15px">
+            <mat-form-field appearance="fill">
+              <mat-label>Użytkownik</mat-label>
+              <mat-select (selectionChange)="onUserChange($event)">
+                <mat-option *ngFor="let user of roleUsers" [value]="user">
+                  {{user.name}} {{user.surname}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div style="float: left">
+            <button mat-button (click)="addTeamMember()" type="button"><mat-icon>add</mat-icon></button>
+          </div>
         </div>
-        <div class="form-group">
-          <mat-form-field appearance="fill">
-            <mat-label>Team leader</mat-label>
-            <mat-select formControlName="teamLeader" >
-              <mat-option *ngFor="let user of users" [value]="user">
-                {{user.name}} {{user.surname}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div style="text-align: right;float: right; margin-top: 10px">
+          <button mat-button matStepperPrevious>Cofnij</button>
+          <button mat-raised-button type="submit" *ngIf="teamMembers && teamMembers.length>0">Utwórz</button>
+          <button mat-raised-button type="submit" *ngIf="!teamMembers || teamMembers.length<=0" disabled>Utwórz</button>
         </div>
-        <div class="form-group">
-          <mat-form-field appearance="fill">
-            <mat-label>Domyślny projekt</mat-label>
-            <mat-select formControlName="defaultProject" >
-              <mat-option *ngFor="let project of projects" [value]="project">
-                {{project.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <div>
-        <button mat-button matStepperPrevious>Cofnij</button>
-        <button mat-button matStepperNext>Dalej</button>
       </div>
     </form>
   </mat-step>
 </mat-stepper>
-  <mat-dialog-actions align="end">
-    <button mat-raised-button title="Zapisz" type="submit">
-      Zapisz
-    </button>
-    <button mat-button mat-dialog-close>
-      Anuluj
-    </button>
-  </mat-dialog-actions>
-

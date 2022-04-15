@@ -40,4 +40,10 @@ public class ProfilesController
     {
         return profileService.getByOrganisationId(id);
     }
+
+    @GetMapping("/by-organisation-and-role-nopage/{orgId}/{roleId}")
+    public ResponseEntity<?> getByOrganisationIdAndRoleIdNoPage(@PathVariable Long orgId,@PathVariable Long roleId)
+    {
+        return profileService.getByOrganisationIdAndRoleId(orgId,roleId);
+    }
 }

@@ -24,6 +24,10 @@ export class UserService {
     return this.http.get<any[]>(`${API}by-organisation-nopage/${orgId}`);
   }
 
+  getByOrganisationIdAndRoleIdNoPage(orgId:any,roleId:any):Observable<any[]>{
+    return this.http.get<any[]>(`${API}by-organisation-and-role-nopage/${orgId}/${roleId}`);
+  }
+
   save(profile: any) {
     return this.http.put<any>(`${API}save`,
       profile);

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.kantoch.dawid.magit.models.OrganisationRole;
+import pl.kantoch.dawid.magit.repositories.OrganisationRolesRepository;
 import pl.kantoch.dawid.magit.security.user.User;
 import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
 
@@ -21,13 +23,17 @@ public class ProfileService
     private final Logger LOGGER = LoggerFactory.getLogger(ProfileService.class);
 
     private final UserRepository userRepository;
+    private final OrganisationRolesRepository organisationRolesRepository;
     private final PasswordEncoder encoder;
 
     private static final Gson gson = new Gson();
 
-    public ProfileService(UserRepository userRepository, PasswordEncoder encoder)
+    public ProfileService(UserRepository userRepository,
+                          OrganisationRolesRepository organisationRolesRepository,
+                          PasswordEncoder encoder)
     {
         this.userRepository = userRepository;
+        this.organisationRolesRepository = organisationRolesRepository;
         this.encoder = encoder;
     }
 
@@ -93,6 +99,25 @@ public class ProfileService
         {
             LOGGER.error("Error in ProfileService.getByCompanyId for id={}. Message: {}",id,e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania użytkowników dla organizacji o ID="+id+". Komunikat: "+e.getMessage()));
+        }
+    }
+
+    public ResponseEntity<?> getByOrganisationIdAndRoleId(Long orgId,Long roleId)
+    {
+        try
+        {
+            Optional<OrganisationRole> optional = organisationRolesRepository.findById(roleId);
+            if(optional.isPresent())
+            {
+                List<User> allRoleUsers = userRepository.findAllByOrganisation_IdAndOrganisationRolesContains(orgId,optional.get());
+                return ResponseEntity.ok().body(allRoleUsers);
+            }
+            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Nie znaleziono wskazanej roli!"));
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in ProfileService.getByOrganisationIdAndRoleId for orgId {} and roleId {}. Message: {}",orgId,roleId,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania użytkowników z rolą o ID="+roleId+". Komunikat: "+e.getMessage()));
         }
     }
 }

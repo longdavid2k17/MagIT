@@ -23,6 +23,7 @@ export class TeamDashboardComponent implements OnInit {
   organisation:any;
   totalRolesElements: number = 0;
   totalUsersElements: number = 0;
+  totalTeamsElements: number = 0;
   user:any;
 
   constructor(private userService:UserService,
@@ -46,11 +47,12 @@ export class TeamDashboardComponent implements OnInit {
       this.getUsersData(this.user,usersRequest);
 
 
-      this.teamsService.getByOrganisationId(this.user.organisation.id).subscribe(res=>{
-        this.teams=res;
-      },error => {
-        this.toastr.error(error.error,"Błąd pobierania zespołów!")
-      });
+      const teamsRequest = {};
+      // @ts-ignore
+      teamsRequest['page'] = 0;
+      // @ts-ignore
+      teamsRequest['size'] = 10;
+      this.getTeams(this.organisation.id,teamsRequest);
 
       const roleRequest = {};
       // @ts-ignore
@@ -132,6 +134,17 @@ export class TeamDashboardComponent implements OnInit {
     });
   }
 
+  private getTeams(organisationId:any,request: any) {
+    this.teamsService.getByOrganisationId(organisationId,request).subscribe(res=>{
+      // @ts-ignore
+      this.teams = res['content'];
+      // @ts-ignore
+      this.totalTeamsElements = res['totalElements'];
+    },error => {
+      this.toastr.error(error.error,"Błąd pobierania zespołów!")
+    });
+  }
+
   nextUsersPage(event: PageEvent) {
     const request = {};
     // @ts-ignore
@@ -146,10 +159,20 @@ export class TeamDashboardComponent implements OnInit {
     const modalRef = this.dialog.open(TeamFormComponent, {
       disableClose: true,
       data:{organisationId:this.organisation.id},
-      hasBackdrop: true
+      hasBackdrop: true,
+      panelClass: 'my-dialog',
     });
     modalRef.afterClosed().subscribe(res =>{
       this.refresh();
     });
+  }
+
+  nextTeamsPage(event: PageEvent) {
+    const request = {};
+    // @ts-ignore
+    request['page'] = event.pageIndex.toString();
+    // @ts-ignore
+    request['size'] = event.pageSize.toString();
+    this.getTeams(this.user.organisation.id, request);
   }
 }

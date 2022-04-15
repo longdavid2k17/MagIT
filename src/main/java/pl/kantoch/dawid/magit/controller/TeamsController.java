@@ -1,10 +1,9 @@
 package pl.kantoch.dawid.magit.controller;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pl.kantoch.dawid.magit.models.payloads.requests.CreateTeamRequest;
 import pl.kantoch.dawid.magit.services.TeamsService;
 
 @RestController
@@ -19,8 +18,14 @@ public class TeamsController
     }
 
     @GetMapping("/organisation/{id}")
-    public ResponseEntity<?> getAllTeamsInOrganisation(@PathVariable Long id)
+    public ResponseEntity<?> getAllTeamsInOrganisation(@PathVariable Long id, Pageable pageable)
     {
-        return teamsService.getAllTeamsInOrganisation(id);
+        return teamsService.getAllTeamsInOrganisation(id,pageable);
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<?> createNewTeam(@RequestBody CreateTeamRequest request)
+    {
+        return teamsService.save(request);
     }
 }
