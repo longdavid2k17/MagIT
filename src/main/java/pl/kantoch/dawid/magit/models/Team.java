@@ -29,16 +29,26 @@ public class Team
     @Column(name = "organisation_id")
     private Long organisationId;
 
+    @Column(name = "deleted")
+    private Boolean deleted;
+
+    @Transient
+    private String teamTasks;
+
+    @Transient
+    private String individualTasks;
+
     public Team() {
     }
 
-    public Team(Long id, String name, String description, User teamLeader, Project defaultProject, Long organisationId) {
+    public Team(Long id, String name, String description, User teamLeader, Project defaultProject, Long organisationId, Boolean deleted) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.teamLeader = teamLeader;
         this.defaultProject = defaultProject;
         this.organisationId = organisationId;
+        this.deleted = deleted;
     }
 
     public Long getId() {
@@ -89,6 +99,30 @@ public class Team
         this.organisationId = organisationId;
     }
 
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public String getTeamTasks() {
+        return teamTasks;
+    }
+
+    public void setTeamTasks(String teamTasks) {
+        this.teamTasks = teamTasks;
+    }
+
+    public String getIndividualTasks() {
+        return individualTasks;
+    }
+
+    public void setIndividualTasks(String individualTasks) {
+        this.individualTasks = individualTasks;
+    }
+
     @Override
     public String toString() {
         return "Team{" +
@@ -98,6 +132,7 @@ public class Team
                 ", teamLeader=" + teamLeader +
                 ", defaultProject=" + defaultProject +
                 ", organisationId=" + organisationId +
+                ", deleted=" + deleted +
                 '}';
     }
 }

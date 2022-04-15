@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {UserService} from "../../../services/user.service";
 import {TokenStorageService} from "../../../services/token-storage.service";
 import {ToastrService} from "ngx-toastr";
@@ -7,15 +7,25 @@ import {TeamsService} from "../../../services/teams.service";
 import {OrganisationRolesService} from "../../../services/organisation-roles.service";
 import {RoleFormComponent} from "../role-form/role-form.component";
 import {OrganisationRoleChooserComponent} from "../../organisation-role-chooser/organisation-role-chooser.component";
-import {PageEvent} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {TeamFormComponent} from "../team-form/team-form.component";
+import {MatTableDataSource} from "@angular/material/table";
+import {
+  ConfirmationDialogComponent,
+  ConfirmDialogModel
+} from "../../general/confirmation-dialog/confirmation-dialog.component";
+import {ErrorMessageClass} from "../../projects/projects/projects.component";
 
 @Component({
   selector: 'app-team-dashboard',
   templateUrl: './team-dashboard.component.html',
   styleUrls: ['./team-dashboard.component.css']
 })
-export class TeamDashboardComponent implements OnInit {
+export class TeamDashboardComponent implements OnInit,AfterViewInit {
+  displayedColumns: string[] = ['action','name', 'defaultProject','teamLeader','teamTasks', 'individualTasks'];
+  dataSource = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  isLoading:boolean=false;
 
   users:any[] = [];
   teams:any[] = [];
@@ -62,6 +72,10 @@ export class TeamDashboardComponent implements OnInit {
       this.getRolesData(this.user,roleRequest);
 
     }
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
 
   openRoleForm() {
@@ -135,14 +149,19 @@ export class TeamDashboardComponent implements OnInit {
   }
 
   private getTeams(organisationId:any,request: any) {
+    this.isLoading=true;
     this.teamsService.getByOrganisationId(organisationId,request).subscribe(res=>{
       // @ts-ignore
       this.teams = res['content'];
       // @ts-ignore
       this.totalTeamsElements = res['totalElements'];
+      // @ts-ignore
+      this.dataSource = new MatTableDataSource(res['content']);
+      this.dataSource.paginator = this.paginator;
     },error => {
       this.toastr.error(error.error,"Błąd pobierania zespołów!")
     });
+    this.isLoading=false;
   }
 
   nextUsersPage(event: PageEvent) {
@@ -174,5 +193,32 @@ export class TeamDashboardComponent implements OnInit {
     // @ts-ignore
     request['size'] = event.pageSize.toString();
     this.getTeams(this.user.organisation.id, request);
+  }
+
+  deleteTeam(row: any) {
+    const message = `Czy jesteś pewny że chcesz usunąć ten zespół?`;
+    const dialogData = new ConfirmDialogModel("Wymagane potwierdzenie", message);
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      maxWidth: "400px",
+      data: dialogData,
+      hasBackdrop: true,
+      disableClose:true
+    });
+
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult)
+      {
+        this.teamsService.deleteTeam(row.id).subscribe(res=>{
+          this.toastr.success("Usunięto projekt!")
+        },error => {
+          const errorMessage = ErrorMessageClass.getErrorMessage(error);
+          this.toastr.error(errorMessage,"Błąd!");
+        });
+      }
+    });
+  }
+
+  editTeam(row: any) {
+
   }
 }

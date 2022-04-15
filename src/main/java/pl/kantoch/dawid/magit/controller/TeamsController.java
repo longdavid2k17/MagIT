@@ -23,9 +23,20 @@ public class TeamsController
         return teamsService.getAllTeamsInOrganisation(id,pageable);
     }
 
+    @GetMapping("/organisation-nopage/{id}")
+    public ResponseEntity<?> getAllTeamsInOrganisationNoPage(@PathVariable Long id)
+    {
+        return teamsService.getAllTeamsInOrganisation(id);
+    }
+
     @PostMapping("/save")
     public ResponseEntity<?> createNewTeam(@RequestBody CreateTeamRequest request)
     {
         return teamsService.save(request);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteTeam(@PathVariable Long id){
+        return teamsService.deleteTeam(id);
     }
 }

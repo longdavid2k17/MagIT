@@ -51,7 +51,21 @@ public class TeamsService
     {
         try
         {
-            Page<Team> teams = teamsRepository.findAllByOrganisationId(id,pageable);
+            Page<Team> teams = teamsRepository.findAllByDeletedFalseAndOrganisationId(id,pageable);
+            return ResponseEntity.ok().body(teams);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in TeamsService.getAllTeamsInOrganisation for ID {}. Error message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas pobierania zespołów! Komunikat: "+e.getMessage()));
+        }
+    }
+
+    public ResponseEntity<?> getAllTeamsInOrganisation(Long id)
+    {
+        try
+        {
+            List<Team> teams = teamsRepository.findAllByDeletedFalseAndOrganisationId(id);
             return ResponseEntity.ok().body(teams);
         }
         catch (Exception e)
@@ -78,6 +92,7 @@ public class TeamsService
             team.setName(request.getTeam().getName());
             team.setDescription(request.getTeam().getDescription());
             team.setOrganisationId(optionalTeam.get().getId());
+            team.setDeleted(false);
             if(request.getTeam().getTeamLeader()!=null){
                 Optional<User> optionalUser = userRepository.findById(request.getTeam().getTeamLeader().getId());
                 if(optionalUser.isEmpty())
@@ -120,6 +135,27 @@ public class TeamsService
         catch (Exception e){
             LOGGER.error("Error in TeamsService.saveTeamMembers(). Error message: {}",e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby zapisu członków zespołu! Komunikat: "+e.getMessage()));
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<?> deleteTeam(Long id)
+    {
+        try
+        {
+            Optional<Team> optionalTeam = teamsRepository.findById(id);
+            if(optionalTeam.isPresent())
+            {
+                Team team = optionalTeam.get();
+                team.setDeleted(true);
+                teamsRepository.save(team);
+            }
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in TeamsService.deleteTeam for id {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas usuwania zespołu o ID="+id+". Komunikat: "+e.getMessage()));
         }
     }
 }

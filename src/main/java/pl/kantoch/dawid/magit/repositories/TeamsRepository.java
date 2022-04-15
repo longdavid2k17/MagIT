@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface TeamsRepository extends JpaRepository<Team,Long> {
-    List<Team> findAllByOrganisationId(Long id);
-    Page<Team> findAllByOrganisationId(Long id, Pageable pageable);
+    List<Team> findAllByDeletedFalseAndOrganisationId(Long id);
+    Page<Team> findAllByDeletedFalseAndOrganisationId(Long id, Pageable pageable);
 }
