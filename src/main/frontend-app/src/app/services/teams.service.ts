@@ -21,6 +21,10 @@ export class TeamsService {
     return this.http.get<any[]>(`${API}organisation-nopage/${orgId}`);
   }
 
+  getAllUserTeams(userId:any):Observable<any[]>{
+    return this.http.get<any[]>(`${API}all-user-teams-nopage/${userId}`)
+  }
+
   getTeamMembersByTeamId(teamId:any):Observable<any[]>{
     return this.http.get<any[]>(`${API}teammembers-nopage/${teamId}`);
   }

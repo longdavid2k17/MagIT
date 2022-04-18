@@ -1,0 +1,57 @@
+<div mat-dialog-title class="dialog-title" cdkDrag
+     cdkDragRootElement=".cdk-overlay-pane"
+     cdkDragHandle  style="display: inline-block"
+     cdkDragBoundary=".cdk-overlay-container">
+  <button class="close" mat-button mat-dialog-close><mat-icon>close</mat-icon></button>
+  <h2><b>Edytuj członkostwo użytownika</b></h2>
+</div>
+<div mat-dialog-content>
+  <div class="row" style="margin: 10px">
+    <div class="col-sm-5">
+      <h3>Dostępne zespoły</h3>
+      <mat-card>
+        <div *ngIf="availableTeams">
+          <div *ngFor="let team of availableTeams">
+            <button mat-button (click)="setSelection(team)">{{team.name}}</button>
+          </div>
+        </div>
+        <div *ngIf="!availableTeams || availableTeams.length==0">
+          <span>Brak dostępnych opcji</span>
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="col-sm-2" style="padding: 10px">
+      <button mat-icon-button type="button" class="btn btn-block" *ngIf="availableTeams && availableTeams.length>0" title="Dodaj wszystkie"><mat-icon>arrow_forward</mat-icon></button>
+      <button mat-icon-button type="button" class="btn btn-block" *ngIf="!availableTeams || availableTeams.length==0" disabled title="Dodaj wszystkie"><mat-icon>arrow_forward</mat-icon></button>
+      <button mat-icon-button type="button" class="btn btn-block" *ngIf="availableTeams && availableTeams.length>0" title="Dodaj zaznaczone"><mat-icon>keyboard_arrow_right</mat-icon></button>
+      <button mat-icon-button type="button" class="btn btn-block" *ngIf="!availableTeams || availableTeams.length==0" disabled title="Dodaj zaznaczone"><mat-icon>keyboard_arrow_right</mat-icon></button>
+      <button mat-icon-button type="button" class="btn btn-block" *ngIf="selectedTeams && selectedTeams.length>0" title="Usuń zaznacznone"><mat-icon>keyboard_arrow_left</mat-icon></button>
+      <button mat-icon-button type="button" class="btn btn-block" *ngIf="!selectedTeams || selectedTeams.length==0" title="Usuń zaznaczone" disabled><mat-icon>keyboard_arrow_left</mat-icon></button>
+      <button mat-icon-button type="button" class="btn btn-block" *ngIf="selectedTeams && selectedTeams.length>0" title="Usuń wszystkie"><mat-icon>arrow_backward</mat-icon></button>
+      <button mat-icon-button type="button" class="btn btn-block" *ngIf="!selectedTeams || selectedTeams.length==0" title="Usuń wszystkie" disabled><mat-icon>arrow_backward</mat-icon></button>
+    </div>
+
+    <div class="col-sm-5">
+      <h3>Zespoły użytkownika</h3>
+      <mat-card>
+        <div *ngIf="selectedTeams">
+          <div *ngFor="let team of selectedTeams">
+            <button mat-button (click)="setSelection(team)">{{team.name}}</button>
+          </div>
+        </div>
+        <div *ngIf="!selectedTeams || selectedTeams.length==0">
+          <span>Brak dostępnych opcji</span>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<mat-dialog-actions align="end">
+  <button mat-raised-button mat-dialog-close>
+    Anuluj
+  </button>
+  <button mat-button title="Zapisz" type="submit" (click)="save()">
+    Zapisz
+  </button>
+</mat-dialog-actions>

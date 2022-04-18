@@ -31,6 +31,12 @@ public class TeamsController
         return teamsService.getAllTeamsInOrganisation(id);
     }
 
+    @GetMapping("/all-user-teams-nopage/{id}")
+    public ResponseEntity<?> getAllUserTeamsNoPage(@PathVariable Long id)
+    {
+        return teamsService.getAllUserTeamsNoPage(id);
+    }
+
     @GetMapping("/teammembers-nopage/{id}")
     public ResponseEntity<?> getAllTeamMembersNoPage(@PathVariable Long id)
     {

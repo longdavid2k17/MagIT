@@ -76,6 +76,19 @@ public class TeamsService
         }
     }
 
+    public ResponseEntity<?> getAllUserTeamsNoPage(Long id){
+        try
+        {
+            List<Team> teams = teamsRepository.findForUser(id);
+            return ResponseEntity.ok().body(teams);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in TeamsService.getAllUserTeamsNoPage for ID {}. Error message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas pobierania zespołów użytkownika! Komunikat: "+e.getMessage()));
+        }
+    }
+
     @Transactional
     public ResponseEntity<?> save(CreateTeamRequest request)
     {

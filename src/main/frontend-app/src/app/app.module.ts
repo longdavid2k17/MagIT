@@ -52,6 +52,7 @@ import { ConfirmationDialogComponent } from './components/general/confirmation-d
 import {MatStepperModule} from "@angular/material/stepper";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import { TeamEditFormComponent } from './components/teams/team-edit-form/team-edit-form.component';
+import { ManageTeamMembershipComponent } from './components/teams/manage-team-membership/manage-team-membership.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { TeamEditFormComponent } from './components/teams/team-edit-form/team-ed
     TeamFormComponent,
     ProjectFormComponent,
     ConfirmationDialogComponent,
-    TeamEditFormComponent
+    TeamEditFormComponent,
+    ManageTeamMembershipComponent
   ],
     imports: [
         BrowserModule,
