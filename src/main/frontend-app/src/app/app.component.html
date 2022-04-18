@@ -8,8 +8,15 @@
         <li class="nav-item">
           <a class="nav-link" href="#">O aplikacji</a>
         </li>
-        <li class="nav-item" *ngIf="isLoggedIn">
+        <li class="nav-item" *ngIf="isLoggedIn && !isAdmin">
           <a class="nav-link" href="/home">Moje zadania</a>
+        </li>
+        <li class="nav-item" *ngIf="isAdmin" ngbDropdown >
+          <a class="nav-link" id="navBarTasks" ngbDropdownToggle style="float:right;">Zadania</a>
+          <div ngbDropdownMenu aria-labelledby="navBarTasks" class="dropdown-menu dropdown-menu-right" *ngIf="isLoggedIn" style="padding: 0;float: right;">
+            <a ngbDropdownItem href="/tasks">Rejestr zadań</a>
+            <a ngbDropdownItem href="/home">Moje zadania</a>
+          </div>
         </li>
         <li class="nav-item" *ngIf="isLoggedIn">
           <a class="nav-link" href="/solutions" routerLink="solutions">Biblioteka</a>
