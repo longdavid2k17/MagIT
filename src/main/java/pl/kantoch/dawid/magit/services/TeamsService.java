@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kantoch.dawid.magit.models.*;
 import pl.kantoch.dawid.magit.models.payloads.requests.CreateTeamRequest;
+import pl.kantoch.dawid.magit.models.payloads.requests.EditTeamRequest;
 import pl.kantoch.dawid.magit.repositories.*;
 import pl.kantoch.dawid.magit.security.user.User;
 import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
@@ -139,6 +140,47 @@ public class TeamsService
     }
 
     @Transactional
+    public ResponseEntity<?> edit(EditTeamRequest request)
+    {
+        try {
+            if(request.getTeam()==null || request.getTeamMembers()==null || request.getTeamMembers().isEmpty())
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Nie można zapisać zmian! Przesłane żądanie jest błędne!"));
+            request.getTeam().setDeleted(false);
+            Team edited = teamsRepository.save(request.getTeam());
+            return editTeamMembers(request,edited);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in TeamsService.edit(). Error message: {}",e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby zapisu zespołu! Komunikat: "+e.getMessage()));
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<?> editTeamMembers(EditTeamRequest request, Team savedTeam) {
+        try {
+            List<TeamMember> toSave = new ArrayList<>();
+            request.getTeamMembers().forEach(e->{
+                if(e.getId()==null){
+                    TeamMember member = new TeamMember();
+                    member.setTeam(savedTeam);
+                    Optional<OrganisationRole> roleOptional = organisationRolesRepository.findById(e.getRole().getId());
+                    roleOptional.ifPresent(member::setRole);
+                    Optional<User> userOptional = userRepository.findById(e.getUser().getId());
+                    userOptional.ifPresent(member::setUser);
+                    toSave.add(member);
+                }
+            });
+            teamMembersRepository.saveAll(toSave);
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e){
+            LOGGER.error("Error in TeamsService.editTeamMembers(). Error message: {}",e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby zapisu członków zespołu! Komunikat: "+e.getMessage()));
+        }
+    }
+
+    @Transactional
     public ResponseEntity<?> deleteTeam(Long id)
     {
         try
@@ -156,6 +198,18 @@ public class TeamsService
         {
             LOGGER.error("Error in TeamsService.deleteTeam for id {}. Message: {}",id,e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas usuwania zespołu o ID="+id+". Komunikat: "+e.getMessage()));
+        }
+    }
+
+    public ResponseEntity<?> getAllTeamMembersNoPage(Long id) {
+        try {
+            List<TeamMember> teamMembers = teamMembersRepository.findAllByTeam_Id(id);
+            return ResponseEntity.ok().body(teamMembers);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error("Error in TeamsService.getAllTeamMembersNoPage for id {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania członków zespołu o ID="+id+". Komunikat: "+e.getMessage()));
         }
     }
 }

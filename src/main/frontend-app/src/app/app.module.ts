@@ -51,6 +51,7 @@ import { ProjectFormComponent } from './components/projects/project-form/project
 import { ConfirmationDialogComponent } from './components/general/confirmation-dialog/confirmation-dialog.component';
 import {MatStepperModule} from "@angular/material/stepper";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import { TeamEditFormComponent } from './components/teams/team-edit-form/team-edit-form.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
     OrganisationRoleChooserComponent,
     TeamFormComponent,
     ProjectFormComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    TeamEditFormComponent
   ],
     imports: [
         BrowserModule,

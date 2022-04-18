@@ -15,6 +15,7 @@ import {
   ConfirmDialogModel
 } from "../../general/confirmation-dialog/confirmation-dialog.component";
 import {ErrorMessageClass} from "../../projects/projects/projects.component";
+import {TeamEditFormComponent} from "../team-edit-form/team-edit-form.component";
 
 @Component({
   selector: 'app-team-dashboard',
@@ -219,6 +220,14 @@ export class TeamDashboardComponent implements OnInit,AfterViewInit {
   }
 
   editTeam(row: any) {
-
+    const modalRef = this.dialog.open(TeamEditFormComponent, {
+      disableClose: true,
+      data:{team:row},
+      hasBackdrop: true,
+      panelClass: 'my-dialog',
+    });
+    modalRef.afterClosed().subscribe(res =>{
+      this.refresh();
+    });
   }
 }

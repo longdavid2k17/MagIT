@@ -21,6 +21,10 @@ export class TeamsService {
     return this.http.get<any[]>(`${API}organisation-nopage/${orgId}`);
   }
 
+  getTeamMembersByTeamId(teamId:any):Observable<any[]>{
+    return this.http.get<any[]>(`${API}teammembers-nopage/${teamId}`);
+  }
+
   deleteTeam(teamId:any): Observable<any> {
     return this.http.delete(API + `delete/${teamId}`);
   }
@@ -28,6 +32,13 @@ export class TeamsService {
   save(formVal:any,teamMembers:any[]): Observable<any> {
     return this.http.post(`${API}save`,{
       team:formVal,
+      teamMembers:teamMembers
+    });
+  }
+
+  edit(form: any, teamMembers: any[]): Observable<any> {
+    return this.http.patch(`${API}edit`,{
+      team:form,
       teamMembers:teamMembers
     });
   }
