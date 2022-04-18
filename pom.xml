@@ -10,7 +10,7 @@
     </parent>
     <groupId>pl.kantoch.dawid</groupId>
     <artifactId>MagIT</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
     <name>MagIT</name>
     <description>MagIT</description>
     <properties>
