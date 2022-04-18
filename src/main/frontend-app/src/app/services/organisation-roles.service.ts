@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpResponse} from "@angular/common/http";
 import {Observable} from "rxjs";
 
 const API = 'http://localhost:8080/api/organisation-roles/';
@@ -13,6 +13,14 @@ export class OrganisationRolesService {
 
   getByOrganisationId(orgId:any,params?:any):Observable<any[]>{
     return this.http.get<any[]>(`${API}organisation/${orgId}`,{params});
+  }
+
+  checkRoleDeletion(roleId:any):Observable<any>{
+    return this.http.get<any>(`${API}check-for-deletion/${roleId}`);
+  }
+
+  deleteRole(roleId:any):Observable<any>{
+    return this.http.delete<any>(`${API}delete/${roleId}`);
   }
 
   getByOrganisationIdToList(orgId:any):Observable<any[]>{

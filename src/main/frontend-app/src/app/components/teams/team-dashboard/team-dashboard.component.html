@@ -96,7 +96,7 @@
             </button>
             <mat-menu #roleMenu="matMenu">
               <button mat-menu-item (click)="editRoleForm(role)">Edytuj</button>
-              <button mat-menu-item>Usuń</button>
+              <button mat-menu-item (click)="deleteRole(role)">Usuń</button>
             </mat-menu>
             <span>{{role.name}} - <mat-icon>{{role.iconName}}</mat-icon></span>
           </div>

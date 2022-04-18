@@ -211,7 +211,7 @@ export class TeamDashboardComponent implements OnInit,AfterViewInit {
       if(dialogResult)
       {
         this.teamsService.deleteTeam(row.id).subscribe(res=>{
-          this.toastr.success("Usunięto projekt!")
+          this.toastr.success("Usunięto zespół!")
         },error => {
           this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd!");
         });
@@ -240,6 +240,41 @@ export class TeamDashboardComponent implements OnInit,AfterViewInit {
     });
     modalRef.afterClosed().subscribe(res =>{
       this.refresh();
+    });
+  }
+
+  deleteRole(role: any) {
+    this.roleService.checkRoleDeletion(role.id).subscribe(res=>{
+      let checkSum = res;
+      let message = '';
+      if(checkSum==0 || (checkSum>=0 && checkSum<=5)){
+        message="Operacja usunięcia jest względnie bezpieczna. Czy chcesz ją przeprowadzić?";
+      }else message = "Operacja usunięcia roli jest niezalecana - " +
+        "jej użycie jest odnotowane w "+checkSum+" przypadkach! " +
+        "Przed usunięciem zaleca się przejrzenie rejestru zespołów i sprawdzenie tych pozycji." +
+        " Czy chcesz ją przeprowadzić mimo wszystko? ";
+      const dialogData = new ConfirmDialogModel("Wymagane potwierdzenie", message);
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        maxWidth: "400px",
+        data: dialogData,
+        hasBackdrop: true,
+        disableClose:true
+      });
+      dialogRef.afterClosed().subscribe(dialogResult => {
+        if(dialogResult)
+        {
+          this.roleService.deleteRole(role.id).subscribe(res=>{
+            this.toastr.success("Usunięto rolę!")
+            setTimeout(() =>{
+              window.location.reload();
+            },3000);
+          },error => {
+            this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd!");
+          });
+        }
+      });
+      },error =>{
+      this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Nie można przeprowadzić tej operacji!");
     });
   }
 }

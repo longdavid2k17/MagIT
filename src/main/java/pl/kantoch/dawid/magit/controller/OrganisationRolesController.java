@@ -25,6 +25,12 @@ public class OrganisationRolesController
         return organisationRolesService.getRolesForOrganisation(id,pageable);
     }
 
+    @GetMapping("/check-for-deletion/{id}")
+    public ResponseEntity<?> checkForDeletion(@PathVariable Long id)
+    {
+        return organisationRolesService.checkForDeletion(id);
+    }
+
     @GetMapping("/organisation-list/{id}")
     public ResponseEntity<?> getRolesForOrganisationList(@PathVariable Long id)
     {
@@ -41,5 +47,11 @@ public class OrganisationRolesController
     public ResponseEntity<?> save(@PathVariable Long id,@RequestBody List<OrganisationRole> roles)
     {
         return organisationRolesService.saveForUser(id,roles);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id)
+    {
+        return organisationRolesService.delete(id);
     }
 }

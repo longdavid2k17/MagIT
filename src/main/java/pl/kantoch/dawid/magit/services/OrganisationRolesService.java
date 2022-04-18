@@ -10,13 +10,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kantoch.dawid.magit.models.OrganisationRole;
+import pl.kantoch.dawid.magit.models.TeamMember;
 import pl.kantoch.dawid.magit.repositories.OrganisationRolesRepository;
+import pl.kantoch.dawid.magit.repositories.TeamMembersRepository;
 import pl.kantoch.dawid.magit.security.user.User;
 import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class OrganisationRolesService
@@ -25,13 +28,17 @@ public class OrganisationRolesService
 
     private final OrganisationRolesRepository organisationRolesRepository;
     private final UserRepository userRepository;
+    private final TeamMembersRepository teamMembersRepository;
 
     private static final Gson gson = new Gson();
 
-    public OrganisationRolesService(OrganisationRolesRepository organisationRolesRepository, UserRepository userRepository)
+    public OrganisationRolesService(OrganisationRolesRepository organisationRolesRepository,
+                                    UserRepository userRepository,
+                                    TeamMembersRepository teamMembersRepository)
     {
         this.organisationRolesRepository = organisationRolesRepository;
         this.userRepository = userRepository;
+        this.teamMembersRepository = teamMembersRepository;
     }
 
     public ResponseEntity<?> getRolesForOrganisation(Long id, Pageable pageable)
@@ -97,5 +104,47 @@ public class OrganisationRolesService
             LOGGER.error("Error in OrganisationRolesService.saveForUser for id = {} and roles = {}. Message: {}",id,roles.toString(),e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas zapisu ról! Komunikat: "+e.getMessage()));
         }
+    }
+
+    public ResponseEntity<?> checkForDeletion(Long id)
+    {
+        try {
+            List<TeamMember> allWithRole = getAllMembersWithRole(id);
+            return ResponseEntity.ok().body(allWithRole.size());
+        }
+        catch (Exception e){
+            LOGGER.error("Error in OrganisationRolesService.checkForDeletion for id = {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas próby sprawdzenia usunięcia roli w organizacji! Komunikat: "+e.getMessage()));
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<?> delete(Long id)
+    {
+        try {
+            List<TeamMember> allWithRole = getAllMembersWithRole(id);
+            teamMembersRepository.deleteAll(allWithRole);
+            Optional<OrganisationRole> organisationRole = organisationRolesRepository.findById(id);
+            if(organisationRole.isEmpty()) throw new Exception("Nie znaleziono roli o ID="+id);
+            List<User> allUsersWithRole = userRepository.findAllByOrganisationRolesContains(organisationRole.get());
+            allUsersWithRole.forEach(e->{
+                Set<OrganisationRole> organisationRoleSet = e.getOrganisationRoles();
+                organisationRoleSet.remove(organisationRole.get());
+            });
+            userRepository.saveAll(allUsersWithRole);
+            organisationRolesRepository.delete(organisationRole.get());
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e){
+            LOGGER.error("Error in OrganisationRolesService.delete for id = {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas próby usunięcia roli w organizacji! Komunikat: "+e.getMessage()));
+        }
+    }
+
+    public List<TeamMember> getAllMembersWithRole(Long id) throws Exception {
+        Optional<OrganisationRole> roleOptional = organisationRolesRepository.findById(id);
+        if(roleOptional.isEmpty()) throw new Exception("Nie znaleziono roli o ID="+id);
+        OrganisationRole role = roleOptional.get();
+        return teamMembersRepository.findAllByRole(role);
     }
 }
