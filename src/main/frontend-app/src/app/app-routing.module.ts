@@ -16,6 +16,7 @@ import {RoleGuard} from "./core/role.guard";
 import {PerformanceComponent} from "./components/performance/performance.component";
 import {SolutionsLibraryComponent} from "./components/solutions-library/solutions-library.component";
 import {ProjectsComponent} from "./components/projects/projects/projects.component";
+import {TasksRegisterComponent} from "./components/tasks/tasks-register/tasks-register.component";
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -48,6 +49,14 @@ const routes: Routes = [
     canActivate:[RoleGuard],
     data:{
       expectedRoles:['ROLE_ADMIN']
+    }
+  },
+  {
+    path: 'tasks',
+    component: TasksRegisterComponent,
+    canActivate:[RoleGuard],
+    data:{
+      expectedRoles:['ROLE_ADMIN','ROLE_PM']
     }
   },
   { path: '', redirectTo: 'start', pathMatch: 'full' }

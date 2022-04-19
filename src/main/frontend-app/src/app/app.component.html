@@ -14,8 +14,8 @@
         <li class="nav-item" *ngIf="isAdmin" ngbDropdown >
           <a class="nav-link" id="navBarTasks" ngbDropdownToggle style="float:right;">Zadania</a>
           <div ngbDropdownMenu aria-labelledby="navBarTasks" class="dropdown-menu dropdown-menu-right" *ngIf="isAdmin" style="padding: 0;float: right;">
-            <a ngbDropdownItem href="/tasks">Rejestr zadań</a>
-            <a ngbDropdownItem href="/home">Moje zadania</a>
+            <a ngbDropdownItem href="/tasks" routerLink="tasks">Rejestr zadań</a>
+            <a ngbDropdownItem href="/home" routerLink="home">Moje zadania</a>
           </div>
         </li>
         <li class="nav-item" *ngIf="isLoggedIn">
