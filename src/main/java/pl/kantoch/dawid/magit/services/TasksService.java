@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.kantoch.dawid.magit.models.Organisation;
 import pl.kantoch.dawid.magit.models.Project;
 import pl.kantoch.dawid.magit.models.Task;
 import pl.kantoch.dawid.magit.models.Team;
+import pl.kantoch.dawid.magit.repositories.OrganisationsRepository;
 import pl.kantoch.dawid.magit.repositories.ProjectsRepository;
 import pl.kantoch.dawid.magit.repositories.TasksRepository;
 import pl.kantoch.dawid.magit.repositories.TeamsRepository;
@@ -28,15 +30,18 @@ public class TasksService
     private final TasksRepository tasksRepository;
     private final TeamsRepository teamsRepository;
     private final ProjectsRepository projectsRepository;
+    private final OrganisationsRepository organisationsRepository;
 
     private final Gson gson = new Gson();
 
     public TasksService(TasksRepository tasksRepository,
                         TeamsRepository teamsRepository,
-                        ProjectsRepository projectsRepository) {
+                        ProjectsRepository projectsRepository,
+                        OrganisationsRepository organisationsRepository) {
         this.tasksRepository = tasksRepository;
         this.teamsRepository = teamsRepository;
         this.projectsRepository = projectsRepository;
+        this.organisationsRepository = organisationsRepository;
     }
 
     @Transactional
@@ -107,6 +112,34 @@ public class TasksService
         }
         catch (Exception e){
             LOGGER.error("Error in TasksService.getForTeamPageable for id {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
+        }
+    }
+
+    public ResponseEntity<?> getForOrganisationNoPage(Long id){
+        try {
+            Optional<Organisation> optionalOrganisation = organisationsRepository.findById(id);
+            if(optionalOrganisation.isEmpty())
+                throw new Exception("Nie znaleziono organizacji o ID="+id);
+            List<Task> list = tasksRepository.findAllByDeletedFalseAndOrganisation(optionalOrganisation.get());
+            return ResponseEntity.ok().body(list);
+        }
+        catch (Exception e){
+            LOGGER.error("Error in TasksService.getForOrganisationNoPage for id {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
+        }
+    }
+
+    public ResponseEntity<?> getForOrganisationPageable(Long id, Pageable pageable){
+        try {
+            Optional<Organisation> optionalOrganisation = organisationsRepository.findById(id);
+            if(optionalOrganisation.isEmpty())
+                throw new Exception("Nie znaleziono organizacji o ID="+id);
+            Page<Task> page = tasksRepository.findAllByDeletedFalseAndOrganisation(optionalOrganisation.get(),pageable);
+            return ResponseEntity.ok().body(page);
+        }
+        catch (Exception e){
+            LOGGER.error("Error in TasksService.getForOrganisationPageable for id {}. Message: {}",id,e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
         }
     }

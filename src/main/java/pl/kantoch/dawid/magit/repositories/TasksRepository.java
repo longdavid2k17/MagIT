@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import pl.kantoch.dawid.magit.models.Organisation;
 import pl.kantoch.dawid.magit.models.Project;
 import pl.kantoch.dawid.magit.models.Task;
 import pl.kantoch.dawid.magit.models.Team;
@@ -19,10 +20,12 @@ public interface TasksRepository extends JpaRepository<Task,Long> {
     List<Task> findAllByDeletedFalseAndProject(Project project);
     List<Task> findAllByDeletedFalseAndTeam(Team team);
     List<Task> findAllByDeletedFalseAndUser(User user);
+    List<Task> findAllByDeletedFalseAndOrganisation(Organisation organisation);
 
     Page<Task> findAllByDeletedFalseAndProject(Project project, Pageable pageable);
     Page<Task> findAllByDeletedFalseAndTeam(Team team, Pageable pageable);
     Page<Task> findAllByDeletedFalseAndUser(User user, Pageable pageable);
+    Page<Task> findAllByDeletedFalseAndOrganisation(Organisation organisation, Pageable pageable);
 
     @Modifying
     @Query("update Task set deleted=true where id=:id")

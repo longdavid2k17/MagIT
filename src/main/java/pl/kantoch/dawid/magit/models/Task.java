@@ -59,10 +59,14 @@ public class Task
     @Column(name = "is_deleted")
     private Boolean deleted;
 
+    @ManyToOne
+    @JoinColumn(name = "organisation_id")
+    private Organisation organisation;
+
     public Task() {
     }
 
-    public Task(Long id, String title, String description, Team team, Project project, User user, Task parentTask, String gitHubUrl, String status, Boolean completed, Date creationDate, Date modificationDate, Boolean deleted) {
+    public Task(Long id, String title, String description, Team team, Project project, User user, Task parentTask, String gitHubUrl, String status, Boolean completed, Date creationDate, Date modificationDate, Boolean deleted, Organisation organisation) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -76,6 +80,7 @@ public class Task
         this.creationDate = creationDate;
         this.modificationDate = modificationDate;
         this.deleted = deleted;
+        this.organisation = organisation;
     }
 
     public Long getId() {
@@ -198,6 +203,7 @@ public class Task
                 ", creationDate=" + creationDate +
                 ", modificationDate=" + modificationDate +
                 ", deleted=" + deleted +
+                ", organisation=" + organisation +
                 '}';
     }
 }

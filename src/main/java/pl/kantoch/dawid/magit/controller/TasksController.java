@@ -37,6 +37,9 @@ public class TasksController
             case "team":
                 response = tasksService.getForTeamNoPage(id);
                 break;
+            case "organisation":
+                response = tasksService.getForOrganisationNoPage(id);
+                break;
             default:
                 response = ResponseEntity.ok().build();
                 break;
@@ -55,6 +58,9 @@ public class TasksController
                 break;
             case "team":
                 response = tasksService.getForTeamPageable(id,pageable);
+                break;
+            case "organisation":
+                response = tasksService.getForOrganisationPageable(id,pageable);
                 break;
             default:
                 response = ResponseEntity.ok().build();
