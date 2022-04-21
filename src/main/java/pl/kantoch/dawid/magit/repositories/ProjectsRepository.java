@@ -7,10 +7,14 @@ import org.springframework.stereotype.Repository;
 import pl.kantoch.dawid.magit.models.Project;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProjectsRepository extends JpaRepository<Project,Long> {
     List<Project> findAllByOrganisation_IdAndDeletedFalse(Long id);
+
+    Optional<Project> findByIdAndDeletedIsFalseAndArchivedIsFalse(Long id);
+    Optional<Project> findByIdAndDeletedIsFalseAndArchivedIsTrue(Long id);
 
     @Query("select project from Project project where project.deleted = false and project.organisation.id=:id " +
             "and ((lower(project.name) like :keyword or :keyword is null) "+

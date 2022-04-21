@@ -9,9 +9,13 @@ import org.springframework.stereotype.Repository;
 import pl.kantoch.dawid.magit.models.Team;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TeamsRepository extends JpaRepository<Team,Long> {
+
+    Optional<Team> findByDeletedFalseAndId(Long id);
+
     List<Team> findAllByDeletedFalseAndOrganisationId(Long id);
     Page<Team> findAllByDeletedFalseAndOrganisationId(Long id, Pageable pageable);
 
