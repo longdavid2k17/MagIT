@@ -5,6 +5,8 @@ import {TokenStorageService} from "../../../services/token-storage.service";
 import {ErrorMessageClass} from "../../projects/projects/projects.component";
 import {TaskService} from "../../../services/task.service";
 import {ToastrService} from "ngx-toastr";
+import {MatDialog} from "@angular/material/dialog";
+import {CreateTaskFormComponent} from "../create-task-form/create-task-form.component";
 
 @Component({
   selector: 'app-tasks-register',
@@ -22,7 +24,8 @@ export class TasksRegisterComponent implements OnInit,AfterViewInit {
 
   constructor(private tokenStorage: TokenStorageService,
               private tasksService: TaskService,
-              private toastr: ToastrService) { }
+              private toastr: ToastrService,
+              public dialog: MatDialog,) { }
 
   ngOnInit(): void {
     this.user = this.tokenStorage.getUser();
@@ -66,6 +69,11 @@ export class TasksRegisterComponent implements OnInit,AfterViewInit {
   }
 
   addTask() {
-
+    this.dialog.open(CreateTaskFormComponent, {
+      data:{organisationId:this.user.organisation.id},
+      autoFocus: false,
+      disableClose: true,
+      hasBackdrop: true
+    });
   }
 }

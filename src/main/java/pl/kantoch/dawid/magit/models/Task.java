@@ -56,6 +56,12 @@ public class Task
     @Column(name = "modification_date")
     private Date modificationDate;
 
+    @Column(name = "start_date")
+    private Date startDate;
+
+    @Column(name = "deadline_date")
+    private Date deadlineDate;
+
     @Column(name = "is_deleted")
     private Boolean deleted;
 
@@ -66,7 +72,7 @@ public class Task
     public Task() {
     }
 
-    public Task(Long id, String title, String description, Team team, Project project, User user, Task parentTask, String gitHubUrl, String status, Boolean completed, Date creationDate, Date modificationDate, Boolean deleted, Organisation organisation) {
+    public Task(Long id, String title, String description, Team team, Project project, User user, Task parentTask, String gitHubUrl, String status, Boolean completed, Date creationDate, Date modificationDate, Date startDate, Date deadlineDate, Boolean deleted, Organisation organisation) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -79,7 +85,37 @@ public class Task
         this.completed = completed;
         this.creationDate = creationDate;
         this.modificationDate = modificationDate;
+        this.startDate = startDate;
+        this.deadlineDate = deadlineDate;
         this.deleted = deleted;
+        this.organisation = organisation;
+    }
+
+    public Boolean getCompleted() {
+        return completed;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getDeadlineDate() {
+        return deadlineDate;
+    }
+
+    public void setDeadlineDate(Date deadlineDate) {
+        this.deadlineDate = deadlineDate;
+    }
+
+    public Organisation getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
     }
 
@@ -202,6 +238,8 @@ public class Task
                 ", completed=" + completed +
                 ", creationDate=" + creationDate +
                 ", modificationDate=" + modificationDate +
+                ", startDate=" + startDate +
+                ", deadlineDate=" + deadlineDate +
                 ", deleted=" + deleted +
                 ", organisation=" + organisation +
                 '}';

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kantoch.dawid.magit.models.Project;
 import pl.kantoch.dawid.magit.repositories.ProjectsRepository;
+import pl.kantoch.dawid.magit.repositories.TasksRepository;
 import pl.kantoch.dawid.magit.security.user.ERole;
 import pl.kantoch.dawid.magit.security.user.Role;
 import pl.kantoch.dawid.magit.security.user.User;
@@ -28,15 +29,21 @@ public class ProjectsService
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ProjectsRepository projectsRepository;
+    private final TasksRepository tasksRepository;
+    private final MemoryDirectoriesService memoryDirectoriesService;
 
     private final Gson gson = new Gson();
 
     public ProjectsService(UserRepository userRepository,
                            RoleRepository roleRepository,
-                           ProjectsRepository projectsRepository) {
+                           ProjectsRepository projectsRepository,
+                           TasksRepository tasksRepository,
+                           MemoryDirectoriesService memoryDirectoriesService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.projectsRepository = projectsRepository;
+        this.tasksRepository = tasksRepository;
+        this.memoryDirectoriesService = memoryDirectoriesService;
     }
 
     public ResponseEntity<?> getAllPMsForOrg(Long id)
@@ -61,6 +68,7 @@ public class ProjectsService
     @Transactional
     public ResponseEntity<?> save(Project project)
     {
+        boolean creation = false;
         try
         {
             if(project.getArchived()==null)
@@ -71,10 +79,16 @@ public class ProjectsService
                 project.setModificationDate(new Date());
             if(project.getId()==null)
             {
+                creation=true;
                 project.setCreateDate(new Date());
                 project.setModificationDate(new Date());
             }
             Project saved = projectsRepository.save(project);
+            if(creation && saved.getDriveName()!=null)
+            {
+                if(!memoryDirectoriesService.createNAS(saved))
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił problem podczas tworzenia przestrzeni dyskowej i nie została ona utworzona!"));
+            }
             return ResponseEntity.ok().body(saved);
         }
         catch (Exception e)
@@ -90,8 +104,12 @@ public class ProjectsService
         {
             List<Project> projects = projectsRepository.findAllByOrganisation_IdAndDeletedFalse(id);
             projects.forEach(e->{
-                e.setAllTasks("79/112");
-                e.setTodayTasks("2/5");
+                long completedTasks = tasksRepository.countAllByCompletedTrueAndDeletedFalseAndProject(e);
+                long allTasks = tasksRepository.countAllByDeletedFalseAndProject(e);
+                long completedTasksToday = 0l;
+                long allTasksToday = 0l;
+                e.setAllTasks(completedTasks+"/"+allTasks);
+                e.setTodayTasks(completedTasksToday+"/"+allTasksToday);
             });
             return ResponseEntity.ok().body(projects);
         }

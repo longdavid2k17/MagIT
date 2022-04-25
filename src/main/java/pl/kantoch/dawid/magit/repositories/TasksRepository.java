@@ -27,6 +27,9 @@ public interface TasksRepository extends JpaRepository<Task,Long> {
     Page<Task> findAllByDeletedFalseAndUser(User user, Pageable pageable);
     Page<Task> findAllByDeletedFalseAndOrganisation(Organisation organisation, Pageable pageable);
 
+    Long countAllByCompletedTrueAndDeletedFalseAndProject(Project project);
+    Long countAllByDeletedFalseAndProject(Project project);
+
     @Modifying
     @Query("update Task set deleted=true where id=:id")
     void setAsDeleted(@Param("id") Long id);

@@ -54,6 +54,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 import { TeamEditFormComponent } from './components/teams/team-edit-form/team-edit-form.component';
 import { ManageTeamMembershipComponent } from './components/teams/manage-team-membership/manage-team-membership.component';
 import { TasksRegisterComponent } from './components/tasks/tasks-register/tasks-register.component';
+import { CreateTaskFormComponent } from './components/tasks/create-task-form/create-task-form.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { TasksRegisterComponent } from './components/tasks/tasks-register/tasks-
     ConfirmationDialogComponent,
     TeamEditFormComponent,
     ManageTeamMembershipComponent,
-    TasksRegisterComponent
+    TasksRegisterComponent,
+    CreateTaskFormComponent
   ],
     imports: [
         BrowserModule,
