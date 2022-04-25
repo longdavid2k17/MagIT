@@ -38,4 +38,8 @@ export class TaskService {
     return this.http.post<any>(`${API}save-subtasks`,
       tasks);
   }
+
+  delete(id:any):Observable<any> {
+    return this.http.delete<any>(`${API}delete/${id}`);
+  }
 }

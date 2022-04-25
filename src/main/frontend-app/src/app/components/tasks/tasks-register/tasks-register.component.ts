@@ -7,6 +7,10 @@ import {TaskService} from "../../../services/task.service";
 import {ToastrService} from "ngx-toastr";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateTaskFormComponent} from "../create-task-form/create-task-form.component";
+import {
+  ConfirmationDialogComponent,
+  ConfirmDialogModel
+} from "../../general/confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-tasks-register',
@@ -74,6 +78,28 @@ export class TasksRegisterComponent implements OnInit,AfterViewInit {
       autoFocus: false,
       disableClose: true,
       hasBackdrop: true
+    });
+  }
+
+  delete(row:any) {
+    const message = `Czy jesteś pewny że chcesz usunąć te zadanie?`;
+    const dialogData = new ConfirmDialogModel("Wymagane potwierdzenie", message);
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      maxWidth: "400px",
+      data: dialogData,
+      hasBackdrop: true,
+      disableClose:true
+    });
+
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult)
+      {
+        this.tasksService.delete(row.id).subscribe(res=>{
+          this.toastr.success("Usunięto zadanie!")
+        },error => {
+          this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd!");
+        });
+      }
     });
   }
 }

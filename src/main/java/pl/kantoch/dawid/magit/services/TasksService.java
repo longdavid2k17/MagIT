@@ -47,20 +47,25 @@ public class TasksService
     @Transactional
     public ResponseEntity<?> save(Task task){
         try {
+            if(task.getDeadlineDate()==null) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak zdefiniowanej daty zakończenia!"));
+            if(task.getTeam()==null && task.getUser()==null) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak zdefiniowanego osoby/zespołu odpowiedzialnego za realizację!"));
+            if(task.getOrganisation()==null) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak danych organizacji w żądaniu!"));
             if(task.getId()==null){
                 task.setCreationDate(new Date());
                 task.setDeleted(false);
                 task.setStatus("NOWY");
             } else task.setModificationDate(new Date());
-            if(task.getStartTime()!=null){
-                String[] parts = task.getStartTime().split(":");
-                int hour = Integer.parseInt(parts[0]);
-                int minutes = Integer.parseInt(parts[1]);
-                Date startTime = task.getStartDate();
-                startTime.setHours(hour);
-                startTime.setMinutes(minutes);
-                task.setStartDate(startTime);
-            }
+            if(task.getStartDate()!=null){
+                if(task.getStartTime()!=null){
+                    String[] parts = task.getStartTime().split(":");
+                    int hour = Integer.parseInt(parts[0]);
+                    int minutes = Integer.parseInt(parts[1]);
+                    Date startTime = task.getStartDate();
+                    startTime.setHours(hour);
+                    startTime.setMinutes(minutes);
+                    task.setStartDate(startTime);
+                }
+            } else task.setStartDate(new Date());
             if(task.getDeadlineTime()!=null){
                 String[] parts = task.getDeadlineTime().split(":");
                 int hour = Integer.parseInt(parts[0]);
@@ -169,7 +174,11 @@ public class TasksService
             Optional<Task> optionalTask = tasksRepository.findById(id);
             if(optionalTask.isEmpty())
                 throw new Exception("Nie znaleziono zadania o ID="+id);
-            tasksRepository.setAsDeleted(id);
+            Task task = optionalTask.get();
+            task.setDeleted(true);
+            task.setStatus("USUNIĘTO");
+            task.setModificationDate(new Date());
+            tasksRepository.save(task);
             return ResponseEntity.ok().build();
         }
         catch (Exception e){
@@ -194,7 +203,7 @@ public class TasksService
                 e.setCreationDate(new Date());
             });
             tasksRepository.saveAll(tasks);
-           return ResponseEntity.ok().build();
+            return ResponseEntity.ok().build();
         }
         catch (Exception e){
             LOGGER.error("Error in TasksService.saveSubtasks for entities {}. Message: {}",tasks,e.getMessage());
