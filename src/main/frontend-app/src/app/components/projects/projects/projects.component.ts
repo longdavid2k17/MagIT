@@ -133,8 +133,6 @@ export class ProjectsComponent implements OnInit,AfterViewInit  {
   refresh(): void {
     window.location.reload();
   }
-
-
 }
 
 export class ErrorMessageClass {

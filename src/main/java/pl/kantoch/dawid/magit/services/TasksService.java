@@ -210,4 +210,16 @@ public class TasksService
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas zapisywania podzadań. Komunikat: "+e.getMessage()));
         }
     }
+
+    public ResponseEntity<?> getSubtasks(Long id)
+    {
+        try {
+            List<Task> list = tasksRepository.findAllByDeletedFalseAndParentTask_Id(id);
+            return ResponseEntity.ok().body(list);
+        }
+        catch (Exception e){
+            LOGGER.error("Error in TasksService.getSubtasks for ID {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania podzadań. Komunikat: "+e.getMessage()));
+        }
+    }
 }

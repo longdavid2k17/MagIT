@@ -1,1 +1,69 @@
-<p>task-preview works!</p>
+<div mat-dialog-title class="dialog-title">
+  <h3 mat-dialog-title><b>Zadanie #{{task.id}} - {{task.title}}</b></h3>
+  <button mat-icon-button aria-label="close dialog" mat-dialog-close title="Zamknij podgląd">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content style="text-align: center;">
+  <div>
+    <mat-card style="float: left; margin: 10px; text-align: left">
+      <mat-card-title>Treść zadania</mat-card-title>
+      <mat-card-content>
+        <div>
+          <span>Tytuł: <b>{{task.title}}</b></span><br/>
+          <span>Opis: <b>{{task.description}}</b></span><br/>
+          <span>Odpowiedzialny: <b>{{task?.user.name}} {{task?.user.surname}}</b></span><br/>
+          <span>Zespół: <b>{{task?.team.name}}</b></span><br/>
+        </div>
+        <hr style="width: 80%">
+        <div>
+          <h4><b>Załączniki</b></h4>
+          <div *ngIf="!taskResults || taskResults.length==0">
+            <span>Brak zasobów</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card style="float: left; margin: 10px; text-align: left">
+      <mat-card-title>Podzadania</mat-card-title>
+      <mat-card-content>
+        <div *ngIf="!subtasks || subtasks.length==0">
+          <span>Brak podzadań</span>
+        </div>
+        <div *ngFor="let subtask of subtasks">
+          <span>{{subtask.title}}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div style="clear:both;  margin: 10px; text-align: left">
+    <mat-card style="margin: 10px;">
+      <mat-card-title>Rezultat</mat-card-title>
+      <mat-card-content>
+        <div>
+          <div>
+            <h4><b>Zasoby</b></h4>
+            <div *ngIf="!taskResults || taskResults.length==0">
+              <span>Brak zasobów</span>
+            </div>
+          </div>
+          <hr style="width: 80%">
+          <div class="container">
+            <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target)">
+          </div>
+        <hr style="width: 80%">
+          <span>Status zadania: <b>{{task.status}}</b></span><br/>
+          <span>Zrealizowano:  <b><span *ngIf="task.completed">TAK</span><span *ngIf="!task.completed">NIE</span></b></span>
+          <div class="container" style="margin-top: 30px; border-top: 3px solid black; text-align: center">
+            <div style="padding: 10px">
+              <button mat-raised-button color="primary" title="Oznacza zadanie jako wykonane" type="button" (click)="setTaskAsCompleted()" *ngIf="!task.completed" style="margin: 5px">WYKONANE</button>
+              <button mat-raised-button color="primary" title="Oznacza zadanie jako wykonane" type="button" (click)="setTaskAsCompleted()" *ngIf="task.completed" disabled  style="margin: 5px">WYKONANE</button>
+              <button mat-raised-button color="warn" title="Oznacza zadanie jako w trakcie realizacji" type="button" (click)="setTaskAsCompleted()" *ngIf="!task.completed" disabled  style="margin: 5px">W REALIZACJI</button>
+              <button mat-raised-button color="warn" title="Oznacza zadanie jako w trakcie realizacji" type="button" (click)="setTaskAsCompleted()" *ngIf="task.completed"  style="margin: 5px">W REALIZACJI</button>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

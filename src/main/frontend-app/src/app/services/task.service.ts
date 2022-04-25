@@ -29,6 +29,10 @@ export class TaskService {
     });
   }
 
+  getSubtasks(parentTaskId:any):Observable<any[]>{
+    return this.http.get<any[]>(`${API}subtasks/${parentTaskId}`);
+  }
+
   save(task:any):Observable<any> {
     return this.http.post<any>(`${API}save`,
       task);

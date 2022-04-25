@@ -54,6 +54,13 @@ public class TasksController
         return response;
     }
 
+    @GetMapping("/subtasks/{id}")
+    public ResponseEntity<?> getSubtasks(@PathVariable Long id){
+        if(id==null)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak wymaganych parametrów do pobrania zasobów!"));
+        return tasksService.getSubtasks(id);
+    }
+
     @GetMapping("/pageable/{selectionMode}/{id}")
     public ResponseEntity<?> getTasksPageable(@PathVariable String selectionMode, @PathVariable Long id, Pageable pageable){
         if(selectionMode==null || id==null)

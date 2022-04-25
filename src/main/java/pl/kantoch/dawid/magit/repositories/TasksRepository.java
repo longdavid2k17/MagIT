@@ -27,6 +27,8 @@ public interface TasksRepository extends JpaRepository<Task,Long> {
     Page<Task> findAllByDeletedFalseAndUserAndParentTaskIsNull(User user, Pageable pageable);
     Page<Task> findAllByDeletedFalseAndOrganisationAndParentTaskIsNull(Organisation organisation, Pageable pageable);
 
+    List<Task> findAllByDeletedFalseAndParentTask_Id(Long id);
+
     Long countAllByCompletedTrueAndDeletedFalseAndProject(Project project);
     Long countAllByDeletedFalseAndProject(Project project);
 
