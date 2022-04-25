@@ -17,15 +17,15 @@ import java.util.List;
 
 @Repository
 public interface TasksRepository extends JpaRepository<Task,Long> {
-    List<Task> findAllByDeletedFalseAndProject(Project project);
-    List<Task> findAllByDeletedFalseAndTeam(Team team);
-    List<Task> findAllByDeletedFalseAndUser(User user);
-    List<Task> findAllByDeletedFalseAndOrganisation(Organisation organisation);
+    List<Task> findAllByDeletedFalseAndProjectAndParentTaskIsNull(Project project);
+    List<Task> findAllByDeletedFalseAndTeamAndParentTaskIsNull(Team team);
+    List<Task> findAllByDeletedFalseAndUserAndParentTaskIsNull(User user);
+    List<Task> findAllByDeletedFalseAndOrganisationAndParentTaskIsNull(Organisation organisation);
 
-    Page<Task> findAllByDeletedFalseAndProject(Project project, Pageable pageable);
-    Page<Task> findAllByDeletedFalseAndTeam(Team team, Pageable pageable);
-    Page<Task> findAllByDeletedFalseAndUser(User user, Pageable pageable);
-    Page<Task> findAllByDeletedFalseAndOrganisation(Organisation organisation, Pageable pageable);
+    Page<Task> findAllByDeletedFalseAndProjectAndParentTaskIsNull(Project project, Pageable pageable);
+    Page<Task> findAllByDeletedFalseAndTeamAndParentTaskIsNull(Team team, Pageable pageable);
+    Page<Task> findAllByDeletedFalseAndUserAndParentTaskIsNull(User user, Pageable pageable);
+    Page<Task> findAllByDeletedFalseAndOrganisationAndParentTaskIsNull(Organisation organisation, Pageable pageable);
 
     Long countAllByCompletedTrueAndDeletedFalseAndProject(Project project);
     Long countAllByDeletedFalseAndProject(Project project);

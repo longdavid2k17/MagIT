@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.kantoch.dawid.magit.models.Task;
 import pl.kantoch.dawid.magit.services.TasksService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/tasks")
 public class TasksController
@@ -23,6 +25,11 @@ public class TasksController
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody Task task){
         return tasksService.save(task);
+    }
+
+    @PostMapping("/save-subtasks")
+    public ResponseEntity<?> save(@RequestBody List<Task> tasks){
+        return tasksService.saveSubtasks(tasks);
     }
 
     @GetMapping("/{selectionMode}/{id}")

@@ -52,8 +52,26 @@ public class TasksService
                 task.setDeleted(false);
                 task.setStatus("NOWY");
             } else task.setModificationDate(new Date());
+            if(task.getStartTime()!=null){
+                String[] parts = task.getStartTime().split(":");
+                int hour = Integer.parseInt(parts[0]);
+                int minutes = Integer.parseInt(parts[1]);
+                Date startTime = task.getStartDate();
+                startTime.setHours(hour);
+                startTime.setMinutes(minutes);
+                task.setStartDate(startTime);
+            }
+            if(task.getDeadlineTime()!=null){
+                String[] parts = task.getDeadlineTime().split(":");
+                int hour = Integer.parseInt(parts[0]);
+                int minutes = Integer.parseInt(parts[1]);
+                Date endTime = task.getDeadlineDate();
+                endTime.setHours(hour);
+                endTime.setMinutes(minutes);
+                task.setDeadlineDate(endTime);
+            }
             Task saved = tasksRepository.save(task);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(saved);
+            return ResponseEntity.ok().body(saved);
         }
         catch (Exception e){
             LOGGER.error("Error in TasksService.save for entity {}. Message: {}",task,e.getMessage());
@@ -66,7 +84,7 @@ public class TasksService
             Optional<Project> optionalProject = projectsRepository.findByIdAndDeletedIsFalseAndArchivedIsFalse(id);
             if(optionalProject.isEmpty())
                 throw new Exception("Nie znaleziono projektu o ID="+id);
-            List<Task> list = tasksRepository.findAllByDeletedFalseAndProject(optionalProject.get());
+            List<Task> list = tasksRepository.findAllByDeletedFalseAndProjectAndParentTaskIsNull(optionalProject.get());
             return ResponseEntity.ok().body(list);
         }
         catch (Exception e){
@@ -80,7 +98,7 @@ public class TasksService
             Optional<Project> optionalProject = projectsRepository.findByIdAndDeletedIsFalseAndArchivedIsFalse(id);
             if(optionalProject.isEmpty())
                 throw new Exception("Nie znaleziono projektu o ID="+id);
-            Page<Task> page = tasksRepository.findAllByDeletedFalseAndProject(optionalProject.get(),pageable);
+            Page<Task> page = tasksRepository.findAllByDeletedFalseAndProjectAndParentTaskIsNull(optionalProject.get(),pageable);
             return ResponseEntity.ok().body(page);
         }
         catch (Exception e){
@@ -94,7 +112,7 @@ public class TasksService
             Optional<Team> optionalTeam = teamsRepository.findByDeletedFalseAndId(id);
             if(optionalTeam.isEmpty())
                 throw new Exception("Nie znaleziono zespołu o ID="+id);
-            List<Task> list = tasksRepository.findAllByDeletedFalseAndTeam(optionalTeam.get());
+            List<Task> list = tasksRepository.findAllByDeletedFalseAndTeamAndParentTaskIsNull(optionalTeam.get());
             return ResponseEntity.ok().body(list);
         }
         catch (Exception e){
@@ -108,7 +126,7 @@ public class TasksService
             Optional<Team> optionalTeam = teamsRepository.findByDeletedFalseAndId(id);
             if(optionalTeam.isEmpty())
                 throw new Exception("Nie znaleziono zespołu o ID="+id);
-            Page<Task> list = tasksRepository.findAllByDeletedFalseAndTeam(optionalTeam.get(),pageable);
+            Page<Task> list = tasksRepository.findAllByDeletedFalseAndTeamAndParentTaskIsNull(optionalTeam.get(),pageable);
             return ResponseEntity.ok().body(list);
         }
         catch (Exception e){
@@ -122,7 +140,7 @@ public class TasksService
             Optional<Organisation> optionalOrganisation = organisationsRepository.findById(id);
             if(optionalOrganisation.isEmpty())
                 throw new Exception("Nie znaleziono organizacji o ID="+id);
-            List<Task> list = tasksRepository.findAllByDeletedFalseAndOrganisation(optionalOrganisation.get());
+            List<Task> list = tasksRepository.findAllByDeletedFalseAndOrganisationAndParentTaskIsNull(optionalOrganisation.get());
             return ResponseEntity.ok().body(list);
         }
         catch (Exception e){
@@ -136,7 +154,7 @@ public class TasksService
             Optional<Organisation> optionalOrganisation = organisationsRepository.findById(id);
             if(optionalOrganisation.isEmpty())
                 throw new Exception("Nie znaleziono organizacji o ID="+id);
-            Page<Task> page = tasksRepository.findAllByDeletedFalseAndOrganisation(optionalOrganisation.get(),pageable);
+            Page<Task> page = tasksRepository.findAllByDeletedFalseAndOrganisationAndParentTaskIsNull(optionalOrganisation.get(),pageable);
             return ResponseEntity.ok().body(page);
         }
         catch (Exception e){
@@ -157,6 +175,30 @@ public class TasksService
         catch (Exception e){
             LOGGER.error("Error in TasksService.delete for id {}. Message: {}",id,e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas usuwania zadania. "+e.getMessage()));
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<?> saveSubtasks(List<Task> tasks)
+    {
+        try {
+            tasks.forEach(e->{
+                e.setDeleted(false);
+                e.setCompleted(false);
+                e.setDeadlineDate(e.getParentTask().getDeadlineDate());
+                e.setStartDate(e.getParentTask().getStartDate());
+                e.setTeam(e.getParentTask().getTeam());
+                e.setProject(e.getParentTask().getProject());
+                e.setGitHubUrl(e.getParentTask().getGitHubUrl());
+                e.setStatus(e.getParentTask().getStatus());
+                e.setCreationDate(new Date());
+            });
+            tasksRepository.saveAll(tasks);
+           return ResponseEntity.ok().build();
+        }
+        catch (Exception e){
+            LOGGER.error("Error in TasksService.saveSubtasks for entities {}. Message: {}",tasks,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas zapisywania podzadań. Komunikat: "+e.getMessage()));
         }
     }
 }

@@ -21,7 +21,6 @@ export class CreateTaskFormComponent implements OnInit {
   form: FormGroup;
   projects:any[] =[];
   users:any[] =[];
-  pmUsers:any[] =[];
   teams:any[] =[];
   subTasks:any[]=[];
   isLinear = true;
@@ -52,7 +51,9 @@ export class CreateTaskFormComponent implements OnInit {
       creationDate: [null],
       modificationDate: [null],
       startDate: [null],
+      startTime: [null],
       deadlineDate: [null],
+      deadlineTime: [null],
       gitHubUrl: [null],
       status: [null],
       id: [null],
@@ -87,7 +88,7 @@ export class CreateTaskFormComponent implements OnInit {
     let form = this.form.value;
     form.organisation = this.organisation;
     this.taskService.save(form).subscribe(res=>{
-      this.toastr.success("Utworzono zadanie!");
+      this.saveSubtasks(res);
     },error => {
       this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd!");
     });
@@ -106,6 +107,11 @@ export class CreateTaskFormComponent implements OnInit {
   addSubtask() {
     if(this.subtaskValue && this.userValue){
       let subtask ={
+        id:null,
+        organisation:this.organisation,
+        project:null,
+        team:null,
+        parentTask:null,
         user:this.userValue,
         title:this.subtaskValue
       }
@@ -122,5 +128,19 @@ export class CreateTaskFormComponent implements OnInit {
 
   onTitleChange(target: any) {
     this.subtaskValue = target.value;
+  }
+
+  private saveSubtasks(parentTask: any)
+  {
+   if(this.subTasks.length>0){
+     for(let i=0;i<this.subTasks.length;i++){
+       this.subTasks[i].parentTask = parentTask;
+     }
+     this.taskService.saveSubtasks(this.subTasks).subscribe(res=>{
+       this.dialogRef.close();
+     },error => {
+       this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd!")
+     });
+   } else this.dialogRef.close("SUCCESS");
   }
 }

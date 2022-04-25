@@ -70,7 +70,7 @@ export class TasksRegisterComponent implements OnInit,AfterViewInit {
 
   addTask() {
     this.dialog.open(CreateTaskFormComponent, {
-      data:{organisationId:this.user.organisation},
+      data:{organisation:this.user.organisation},
       autoFocus: false,
       disableClose: true,
       hasBackdrop: true

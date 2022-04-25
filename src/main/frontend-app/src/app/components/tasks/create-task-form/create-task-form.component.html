@@ -58,10 +58,20 @@
               <mat-datepicker #pickerStart></mat-datepicker>
             </mat-form-field>
             <mat-form-field appearance="fill">
+              <mat-label>Czas rozpoczęcia</mat-label>
+              <input matInput type="time" formControlName="startTime">
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <mat-form-field appearance="fill" style="margin:10px">
               <mat-label>Deadline</mat-label>
               <input matInput [matDatepicker]="pickerEnd" formControlName="deadlineDate">
               <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
               <mat-datepicker #pickerEnd></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Czas zakończenia</mat-label>
+              <input matInput type="time" formControlName="deadlineTime">
             </mat-form-field>
           </div>
         </div>
@@ -98,7 +108,7 @@
         <div class="form-group">
           <div *ngFor="let subTask of subTasks">
             <div>
-              <button mat-icon-button title="Usuń podzadanie" (click)="remove(subTask)"><mat-icon>remove</mat-icon></button>
+              <button mat-icon-button title="Usuń podzadanie" (click)="remove(subTask)"><mat-icon>delete</mat-icon></button>
               <span>{{subTask.title}} - {{subTask.user.name}} {{subTask.user.surname}}</span>
             </div>
           </div>

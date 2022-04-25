@@ -69,6 +69,11 @@ public class Task
     @JoinColumn(name = "organisation_id")
     private Organisation organisation;
 
+    @Transient
+    private String deadlineTime;
+    @Transient
+    private String startTime;
+
     public Task() {
     }
 
@@ -221,6 +226,22 @@ public class Task
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public String getDeadlineTime() {
+        return deadlineTime;
+    }
+
+    public void setDeadlineTime(String deadlineTime) {
+        this.deadlineTime = deadlineTime;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
     @Override
