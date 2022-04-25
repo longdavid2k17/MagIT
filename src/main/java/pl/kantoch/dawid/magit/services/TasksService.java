@@ -50,6 +50,7 @@ public class TasksService
             if(task.getId()==null){
                 task.setCreationDate(new Date());
                 task.setDeleted(false);
+                task.setStatus("NOWY");
             } else task.setModificationDate(new Date());
             Task saved = tasksRepository.save(task);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(saved);

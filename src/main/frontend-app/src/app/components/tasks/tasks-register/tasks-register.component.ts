@@ -14,7 +14,7 @@ import {CreateTaskFormComponent} from "../create-task-form/create-task-form.comp
   styleUrls: ['./tasks-register.component.css']
 })
 export class TasksRegisterComponent implements OnInit,AfterViewInit {
-  displayedColumns: string[] = ['action','name', 'project','endDate'];
+  displayedColumns: string[] = ['action','name', 'project','status','endDate','complete'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   isLoading:boolean=true;
@@ -70,7 +70,7 @@ export class TasksRegisterComponent implements OnInit,AfterViewInit {
 
   addTask() {
     this.dialog.open(CreateTaskFormComponent, {
-      data:{organisationId:this.user.organisation.id},
+      data:{organisationId:this.user.organisation},
       autoFocus: false,
       disableClose: true,
       hasBackdrop: true

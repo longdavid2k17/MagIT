@@ -7,6 +7,7 @@ import {UserService} from "../../../services/user.service";
 import {ErrorMessageClass} from "../../projects/projects/projects.component";
 import {TeamsService} from "../../../services/teams.service";
 import {MatSelectChange} from "@angular/material/select";
+import {TaskService} from "../../../services/task.service";
 
 @Component({
   selector: 'app-create-task-form',
@@ -16,7 +17,7 @@ import {MatSelectChange} from "@angular/material/select";
 export class CreateTaskFormComponent implements OnInit {
 
   @ViewChild('inputElement') input :ElementRef<HTMLInputElement>;
-  organisationId:any;
+  organisation:any;
   form: FormGroup;
   projects:any[] =[];
   users:any[] =[];
@@ -35,8 +36,9 @@ export class CreateTaskFormComponent implements OnInit {
               private userService:UserService,
               private fb: FormBuilder,
               private projectsService:ProjectsService,
-              private teamsService:TeamsService) {
-    this.organisationId = data.organisationId;
+              private teamsService:TeamsService,
+              private taskService:TaskService) {
+    this.organisation = data.organisation;
     this.form = this.fb.group({
       title: [null, [Validators.required, Validators.minLength(3)]],
       description: [null],
@@ -58,18 +60,18 @@ export class CreateTaskFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.organisationId){
-      this.userService.getByOrganisationIdNoPage(this.organisationId).subscribe(res=>{
+    if(this.organisation?.id){
+      this.userService.getByOrganisationIdNoPage(this.organisation.id).subscribe(res=>{
         this.users=res;
       },error => {
         this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd podczas pobierania danych!");
       });
-      this.projectsService.getAllProjectsForOrg(this.organisationId).subscribe(res=>{
+      this.projectsService.getAllProjectsForOrg(this.organisation.id).subscribe(res=>{
         this.projects=res;
       },error => {
         this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd podczas pobierania danych!");
       });
-      this.teamsService.getByOrganisationIdNoPage(this.organisationId).subscribe(res=>{
+      this.teamsService.getByOrganisationIdNoPage(this.organisation.id).subscribe(res=>{
         this.teams=res;
       },error => {
         this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd podczas pobierania danych!");
@@ -83,7 +85,12 @@ export class CreateTaskFormComponent implements OnInit {
       return;
     }
     let form = this.form.value;
-    form.organisationId = this.organisationId;
+    form.organisation = this.organisation;
+    this.taskService.save(form).subscribe(res=>{
+      this.toastr.success("Utworzono zadanie!");
+    },error => {
+      this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd!");
+    });
   }
 
   compareFn(c1: any, c2: any): boolean {
