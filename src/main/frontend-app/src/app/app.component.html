@@ -66,6 +66,17 @@
         </div>
       </div>
     </div>
+  <div id="taskAction"  *ngIf="isLoggedIn" ngbDropdown>
+    <button mat-icon-button type="button" class="btn btn-primary position-relative" style="border-radius: 10px;" ngbDropdownToggle title="Centrum akcji">
+      <mat-icon>notification_important</mat-icon>
+      <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary" *ngIf="messengerInstantions?.allUnread>0">+{{messengerInstantions.allUnread}}</span>
+    </button>
+    <div ngbDropdownMenu aria-labelledby="messengerDropdown" class="dropdown-content">
+      <a>Wykonane dzisiaj: 0/10 zadań</a>
+      <a>Zadania zespołu: 0/10</a>
+      <a>Aktualnie wykonujesz</a>
+    </div>
+  </div>
 </div>
 <footer class="bg-dark text-center text-white">
   <div class="copyright py-4 text-center text-white">

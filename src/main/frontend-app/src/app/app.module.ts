@@ -55,6 +55,7 @@ import { TeamEditFormComponent } from './components/teams/team-edit-form/team-ed
 import { ManageTeamMembershipComponent } from './components/teams/manage-team-membership/manage-team-membership.component';
 import { TasksRegisterComponent } from './components/tasks/tasks-register/tasks-register.component';
 import { CreateTaskFormComponent } from './components/tasks/create-task-form/create-task-form.component';
+import { TaskPreviewComponent } from './components/tasks/task-preview/task-preview.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { CreateTaskFormComponent } from './components/tasks/create-task-form/cre
     TeamEditFormComponent,
     ManageTeamMembershipComponent,
     TasksRegisterComponent,
-    CreateTaskFormComponent
+    CreateTaskFormComponent,
+    TaskPreviewComponent,
   ],
     imports: [
         BrowserModule,
