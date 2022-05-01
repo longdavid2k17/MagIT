@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
   isLoginFailed = false;
   errorMessage = '';
   roles: string[] = [];
+  isLoading:boolean=false;
 
   constructor(@Inject(DOCUMENT) private document: Document,
               private authService: AuthService,
@@ -56,7 +57,8 @@ export class LoginComponent implements OnInit {
         this.login = data.username;
         if(data.organisation)
         {
-          this.toastr.success('Zalogowano!')
+          this.isLoading=true;
+          this.toastr.success('Zaraz zostaniesz przekierowany',"Zalogowano!")
           setTimeout(() =>{
             this.document.location.href = '/home';
           },2000);
