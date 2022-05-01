@@ -1,6 +1,5 @@
 package pl.kantoch.dawid.magit.services;
 
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,6 +16,7 @@ import pl.kantoch.dawid.magit.repositories.OrganisationsRepository;
 import pl.kantoch.dawid.magit.repositories.ProjectsRepository;
 import pl.kantoch.dawid.magit.repositories.TasksRepository;
 import pl.kantoch.dawid.magit.repositories.TeamsRepository;
+import pl.kantoch.dawid.magit.utils.GsonInstance;
 
 import java.util.Date;
 import java.util.List;
@@ -32,8 +32,6 @@ public class TasksService
     private final ProjectsRepository projectsRepository;
     private final OrganisationsRepository organisationsRepository;
 
-    private final Gson gson = new Gson();
-
     public TasksService(TasksRepository tasksRepository,
                         TeamsRepository teamsRepository,
                         ProjectsRepository projectsRepository,
@@ -47,9 +45,9 @@ public class TasksService
     @Transactional
     public ResponseEntity<?> save(Task task){
         try {
-            if(task.getDeadlineDate()==null) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak zdefiniowanej daty zakończenia!"));
-            if(task.getTeam()==null && task.getUser()==null) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak zdefiniowanego osoby/zespołu odpowiedzialnego za realizację!"));
-            if(task.getOrganisation()==null) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak danych organizacji w żądaniu!"));
+            if(task.getDeadlineDate()==null) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak zdefiniowanej daty zakończenia!"));
+            if(task.getTeam()==null && task.getUser()==null) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak zdefiniowanego osoby/zespołu odpowiedzialnego za realizację!"));
+            if(task.getOrganisation()==null) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak danych organizacji w żądaniu!"));
             if(task.getId()==null){
                 task.setCreationDate(new Date());
                 task.setDeleted(false);
@@ -80,7 +78,7 @@ public class TasksService
         }
         catch (Exception e){
             LOGGER.error("Error in TasksService.save for entity {}. Message: {}",task,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas zapisywania zadania. Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas zapisywania zadania. Komunikat: "+e.getMessage()));
         }
     }
 
@@ -94,7 +92,7 @@ public class TasksService
         }
         catch (Exception e){
             LOGGER.error("Error in TasksService.getForProject for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
         }
     }
 
@@ -108,7 +106,7 @@ public class TasksService
         }
         catch (Exception e){
             LOGGER.error("Error in TasksService.getForProjectPageable for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
         }
     }
 
@@ -122,7 +120,7 @@ public class TasksService
         }
         catch (Exception e){
             LOGGER.error("Error in TasksService.getForTeamNoPage for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
         }
     }
 
@@ -136,7 +134,7 @@ public class TasksService
         }
         catch (Exception e){
             LOGGER.error("Error in TasksService.getForTeamPageable for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
         }
     }
 
@@ -150,7 +148,7 @@ public class TasksService
         }
         catch (Exception e){
             LOGGER.error("Error in TasksService.getForOrganisationNoPage for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
         }
     }
 
@@ -164,7 +162,7 @@ public class TasksService
         }
         catch (Exception e){
             LOGGER.error("Error in TasksService.getForOrganisationPageable for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania listy zadań. "+e.getMessage()));
         }
     }
 
@@ -183,7 +181,7 @@ public class TasksService
         }
         catch (Exception e){
             LOGGER.error("Error in TasksService.delete for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas usuwania zadania. "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas usuwania zadania. "+e.getMessage()));
         }
     }
 
@@ -207,7 +205,7 @@ public class TasksService
         }
         catch (Exception e){
             LOGGER.error("Error in TasksService.saveSubtasks for entities {}. Message: {}",tasks,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas zapisywania podzadań. Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas zapisywania podzadań. Komunikat: "+e.getMessage()));
         }
     }
 
@@ -219,7 +217,7 @@ public class TasksService
         }
         catch (Exception e){
             LOGGER.error("Error in TasksService.getSubtasks for ID {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania podzadań. Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania podzadań. Komunikat: "+e.getMessage()));
         }
     }
 }

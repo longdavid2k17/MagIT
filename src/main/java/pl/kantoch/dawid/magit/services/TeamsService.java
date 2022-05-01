@@ -1,6 +1,5 @@
 package pl.kantoch.dawid.magit.services;
 
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,6 +14,7 @@ import pl.kantoch.dawid.magit.models.payloads.requests.EditTeamRequest;
 import pl.kantoch.dawid.magit.repositories.*;
 import pl.kantoch.dawid.magit.security.user.User;
 import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
+import pl.kantoch.dawid.magit.utils.GsonInstance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +31,6 @@ public class TeamsService
     private final UserRepository userRepository;
     private final OrganisationRolesRepository organisationRolesRepository;
     private final ProjectsRepository projectsRepository;
-
-    private final Gson gson = new Gson();
 
     public TeamsService(TeamsRepository teamsRepository,
                         TeamMembersRepository teamMembersRepository,
@@ -58,7 +56,7 @@ public class TeamsService
         catch (Exception e)
         {
             LOGGER.error("Error in TeamsService.getAllTeamsInOrganisation for ID {}. Error message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas pobierania zespołów! Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Wystąpił błąd podczas pobierania zespołów! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -72,7 +70,7 @@ public class TeamsService
         catch (Exception e)
         {
             LOGGER.error("Error in TeamsService.getAllTeamsInOrganisation for ID {}. Error message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas pobierania zespołów! Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Wystąpił błąd podczas pobierania zespołów! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -85,7 +83,7 @@ public class TeamsService
         catch (Exception e)
         {
             LOGGER.error("Error in TeamsService.getAllUserTeamsNoPage for ID {}. Error message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas pobierania zespołów użytkownika! Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Wystąpił błąd podczas pobierania zespołów użytkownika! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -95,12 +93,12 @@ public class TeamsService
         try
         {
             if(request.getTeam()==null || request.getTeamMembers()==null)
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błędne zapytanie zapisu!"));
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błędne zapytanie zapisu!"));
             if(request.getTeam().getOrganisationId()==null)
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak informacji o organizacji!"));
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak informacji o organizacji!"));
             Optional<Organisation> optionalTeam = organisationsRepository.findById(request.getTeam().getOrganisationId());
             if(optionalTeam.isEmpty())
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Nie znaleziono wskazanej organizacji!"));
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono wskazanej organizacji!"));
 
             Team team = new Team();
             team.setName(request.getTeam().getName());
@@ -110,13 +108,13 @@ public class TeamsService
             if(request.getTeam().getTeamLeader()!=null){
                 Optional<User> optionalUser = userRepository.findById(request.getTeam().getTeamLeader().getId());
                 if(optionalUser.isEmpty())
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Nie znaleziono wskazanej organizacji!"));
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono wskazanej organizacji!"));
                 team.setTeamLeader(optionalUser.get());
             }
             if(request.getTeam().getDefaultProject()!=null){
                 Optional<Project> optionalProject = projectsRepository.findById(request.getTeam().getDefaultProject().getId());
                 if(optionalProject.isEmpty())
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Nie znaleziono wskazanego projektu!"));
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono wskazanego projektu!"));
                 team.setDefaultProject(optionalProject.get());
             }
             Team saved = teamsRepository.save(team);
@@ -126,7 +124,7 @@ public class TeamsService
         }
         catch (Exception e){
             LOGGER.error("Error in TeamsService.save(). Error message: {}",e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby zapisu zespołu! Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Wystąpił błąd podczas próby zapisu zespołu! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -148,7 +146,7 @@ public class TeamsService
         }
         catch (Exception e){
             LOGGER.error("Error in TeamsService.saveTeamMembers(). Error message: {}",e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby zapisu członków zespołu! Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Wystąpił błąd podczas próby zapisu członków zespołu! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -157,7 +155,7 @@ public class TeamsService
     {
         try {
             if(request.getTeam()==null || request.getTeamMembers()==null || request.getTeamMembers().isEmpty())
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Nie można zapisać zmian! Przesłane żądanie jest błędne!"));
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie można zapisać zmian! Przesłane żądanie jest błędne!"));
             request.getTeam().setDeleted(false);
             Team edited = teamsRepository.save(request.getTeam());
             return editTeamMembers(request,edited);
@@ -165,7 +163,7 @@ public class TeamsService
         catch (Exception e)
         {
             LOGGER.error("Error in TeamsService.edit(). Error message: {}",e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby zapisu zespołu! Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Wystąpił błąd podczas próby zapisu zespołu! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -189,7 +187,7 @@ public class TeamsService
         }
         catch (Exception e){
             LOGGER.error("Error in TeamsService.editTeamMembers(). Error message: {}",e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby zapisu członków zespołu! Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Wystąpił błąd podczas próby zapisu członków zespołu! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -210,7 +208,7 @@ public class TeamsService
         catch (Exception e)
         {
             LOGGER.error("Error in TeamsService.deleteTeam for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas usuwania zespołu o ID="+id+". Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas usuwania zespołu o ID="+id+". Komunikat: "+e.getMessage()));
         }
     }
 
@@ -222,7 +220,7 @@ public class TeamsService
         catch (Exception e)
         {
             LOGGER.error("Error in TeamsService.getAllTeamMembersNoPage for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania członków zespołu o ID="+id+". Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania członków zespołu o ID="+id+". Komunikat: "+e.getMessage()));
         }
     }
 }

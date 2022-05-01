@@ -1,12 +1,12 @@
 package pl.kantoch.dawid.magit.controller;
 
-import com.google.gson.Gson;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.kantoch.dawid.magit.models.Task;
 import pl.kantoch.dawid.magit.services.TasksService;
+import pl.kantoch.dawid.magit.utils.GsonInstance;
 
 import java.util.List;
 
@@ -15,8 +15,6 @@ import java.util.List;
 public class TasksController
 {
     private final TasksService tasksService;
-
-    private final Gson gson = new Gson();
 
     public TasksController(TasksService tasksService) {
         this.tasksService = tasksService;
@@ -35,7 +33,7 @@ public class TasksController
     @GetMapping("/{selectionMode}/{id}")
     public ResponseEntity<?> getTasksNoPage(@PathVariable String selectionMode,@PathVariable Long id){
         if(selectionMode==null || id==null)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak wymaganych parametrów do pobrania zasobów!"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak wymaganych parametrów do pobrania zasobów!"));
         ResponseEntity<?> response;
         switch (selectionMode){
             case "project":
@@ -57,14 +55,14 @@ public class TasksController
     @GetMapping("/subtasks/{id}")
     public ResponseEntity<?> getSubtasks(@PathVariable Long id){
         if(id==null)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak wymaganych parametrów do pobrania zasobów!"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak wymaganych parametrów do pobrania zasobów!"));
         return tasksService.getSubtasks(id);
     }
 
     @GetMapping("/pageable/{selectionMode}/{id}")
     public ResponseEntity<?> getTasksPageable(@PathVariable String selectionMode, @PathVariable Long id, Pageable pageable){
         if(selectionMode==null || id==null)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak wymaganych parametrów do pobrania zasobów!"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak wymaganych parametrów do pobrania zasobów!"));
         ResponseEntity<?> response;
         switch (selectionMode){
             case "project":

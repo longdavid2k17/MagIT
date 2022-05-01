@@ -1,6 +1,5 @@
 package pl.kantoch.dawid.magit.services;
 
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -13,6 +12,7 @@ import pl.kantoch.dawid.magit.models.OrganisationRole;
 import pl.kantoch.dawid.magit.repositories.OrganisationRolesRepository;
 import pl.kantoch.dawid.magit.security.user.User;
 import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
+import pl.kantoch.dawid.magit.utils.GsonInstance;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +25,6 @@ public class ProfileService
     private final UserRepository userRepository;
     private final OrganisationRolesRepository organisationRolesRepository;
     private final PasswordEncoder encoder;
-
-    private static final Gson gson = new Gson();
 
     public ProfileService(UserRepository userRepository,
                           OrganisationRolesRepository organisationRolesRepository,
@@ -44,12 +42,12 @@ public class ProfileService
             Optional<User> user = userRepository.findById(id);
             if(user.isPresent())
                 return ResponseEntity.ok().body(user);
-            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Nie znaleziono użytkownika o ID="+id));
+            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono użytkownika o ID="+id));
         }
         catch (Exception e)
         {
             LOGGER.error("Error in ProfileService.getUserById for id={}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania danych użytkownika dla ID="+id+". Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania danych użytkownika dla ID="+id+". Komunikat: "+e.getMessage()));
         }
     }
 
@@ -65,12 +63,12 @@ public class ProfileService
                 User saved = userRepository.save(user);
                 return ResponseEntity.ok().body(saved);
             }
-            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Nie znaleziono użytkownika!"));
+            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono użytkownika!"));
         }
         catch (Exception e)
         {
             LOGGER.error("Error in ProfileService.save for entity {}. Message: {}",user.toString(),e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas zapisu profilu! Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas zapisu profilu! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -84,7 +82,7 @@ public class ProfileService
         catch (Exception e)
         {
             LOGGER.error("Error in ProfileService.getByCompanyId for id={}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania użytkowników dla organizacji o ID="+id+". Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania użytkowników dla organizacji o ID="+id+". Komunikat: "+e.getMessage()));
         }
     }
 
@@ -98,7 +96,7 @@ public class ProfileService
         catch (Exception e)
         {
             LOGGER.error("Error in ProfileService.getByCompanyId for id={}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania użytkowników dla organizacji o ID="+id+". Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania użytkowników dla organizacji o ID="+id+". Komunikat: "+e.getMessage()));
         }
     }
 
@@ -112,12 +110,12 @@ public class ProfileService
                 List<User> allRoleUsers = userRepository.findAllByOrganisation_IdAndOrganisationRolesContains(orgId,optional.get());
                 return ResponseEntity.ok().body(allRoleUsers);
             }
-            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Nie znaleziono wskazanej roli!"));
+            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono wskazanej roli!"));
         }
         catch (Exception e)
         {
             LOGGER.error("Error in ProfileService.getByOrganisationIdAndRoleId for orgId {} and roleId {}. Message: {}",orgId,roleId,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania użytkowników z rolą o ID="+roleId+". Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania użytkowników z rolą o ID="+roleId+". Komunikat: "+e.getMessage()));
         }
     }
 }

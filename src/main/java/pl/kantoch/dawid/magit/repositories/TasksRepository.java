@@ -14,6 +14,7 @@ import pl.kantoch.dawid.magit.models.Team;
 import pl.kantoch.dawid.magit.security.user.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TasksRepository extends JpaRepository<Task,Long> {
@@ -31,6 +32,8 @@ public interface TasksRepository extends JpaRepository<Task,Long> {
 
     Long countAllByCompletedTrueAndDeletedFalseAndProject(Project project);
     Long countAllByDeletedFalseAndProject(Project project);
+
+    Optional<Task> findByIdAndDeletedFalseAndCompletedFalse(Long id);
 
     @Modifying
     @Query("update Task set deleted=true where id=:id")

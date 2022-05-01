@@ -1,6 +1,5 @@
 package pl.kantoch.dawid.magit.services;
 
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import pl.kantoch.dawid.magit.security.user.Role;
 import pl.kantoch.dawid.magit.security.user.User;
 import pl.kantoch.dawid.magit.security.user.repositories.RoleRepository;
 import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
+import pl.kantoch.dawid.magit.utils.GsonInstance;
 
 import java.util.Date;
 import java.util.List;
@@ -31,8 +31,6 @@ public class ProjectsService
     private final ProjectsRepository projectsRepository;
     private final TasksRepository tasksRepository;
     private final MemoryDirectoriesService memoryDirectoriesService;
-
-    private final Gson gson = new Gson();
 
     public ProjectsService(UserRepository userRepository,
                            RoleRepository roleRepository,
@@ -56,12 +54,12 @@ public class ProjectsService
                 List<User> allPmUsers = userRepository.findAllByOrganisation_IdAndRolesContains(id,optional.get());
                 return ResponseEntity.ok().body(allPmUsers);
             }
-            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak użytkowników z rolą PM w twojej organizacji"));
+            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak użytkowników z rolą PM w twojej organizacji"));
         }
         catch (Exception e)
         {
             LOGGER.error("Error in ProjectsService.getAllPMsForOrg for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania użytkowników z rolą PM. Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania użytkowników z rolą PM. Komunikat: "+e.getMessage()));
         }
     }
 
@@ -87,14 +85,14 @@ public class ProjectsService
             if(creation && saved.getDriveName()!=null)
             {
                 if(!memoryDirectoriesService.createNAS(saved))
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił problem podczas tworzenia przestrzeni dyskowej i nie została ona utworzona!"));
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Wystąpił problem podczas tworzenia przestrzeni dyskowej i nie została ona utworzona!"));
             }
             return ResponseEntity.ok().body(saved);
         }
         catch (Exception e)
         {
             LOGGER.error("Error in ProjectsService.save for entity {}. Message: {}",project,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas zapisu projektu! Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas zapisu projektu! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -116,7 +114,7 @@ public class ProjectsService
         catch (Exception e)
         {
             LOGGER.error("Error in ProjectsService.getAllProjectsForOrg for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania projektów. Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania projektów. Komunikat: "+e.getMessage()));
         }
     }
 
@@ -136,7 +134,7 @@ public class ProjectsService
         catch (Exception e)
         {
             LOGGER.error("Error in ProjectsService.archiveProject for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas archiwizowania projektu o ID="+id+". Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas archiwizowania projektu o ID="+id+". Komunikat: "+e.getMessage()));
         }
     }
 
@@ -156,7 +154,7 @@ public class ProjectsService
         catch (Exception e)
         {
             LOGGER.error("Error in ProjectsService.delete for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas usuwania projektu o ID="+id+". Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas usuwania projektu o ID="+id+". Komunikat: "+e.getMessage()));
         }
     }
 
@@ -167,15 +165,19 @@ public class ProjectsService
             String keyword = "%"+searchedString.toLowerCase(Locale.ROOT)+"%";
             List<Project> projects = projectsRepository.findBySearchKeyword(id,keyword);
             projects.forEach(e->{
-                e.setAllTasks("79/112");
-                e.setTodayTasks("2/5");
+                long completedTasks = tasksRepository.countAllByCompletedTrueAndDeletedFalseAndProject(e);
+                long allTasks = tasksRepository.countAllByDeletedFalseAndProject(e);
+                long completedTasksToday = 0l;
+                long allTasksToday = 0l;
+                e.setAllTasks(completedTasks+"/"+allTasks);
+                e.setTodayTasks(completedTasksToday+"/"+allTasksToday);
             });
             return ResponseEntity.ok().body(projects);
         }
         catch (Exception e)
         {
             LOGGER.error("Error in ProjectsService.getAllProjectsForOrg for id {}. Message: {}",id,e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Błąd podczas pobierania projektów. Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania projektów. Komunikat: "+e.getMessage()));
         }
     }
 }

@@ -1,6 +1,5 @@
 package pl.kantoch.dawid.magit.services;
 
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import pl.kantoch.dawid.magit.security.user.Role;
 import pl.kantoch.dawid.magit.security.user.User;
 import pl.kantoch.dawid.magit.security.user.repositories.RoleRepository;
 import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
+import pl.kantoch.dawid.magit.utils.GsonInstance;
 import pl.kantoch.dawid.magit.utils.RandomStringGenerator;
 
 import java.util.Arrays;
@@ -29,8 +29,6 @@ public class OrganisationsService
     private final OrganisationsRepository organisationsRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
-    private static final Gson gson = new Gson();
 
     public OrganisationsService(OrganisationsRepository organisationsRepository, UserRepository userRepository,
                                 RoleRepository roleRepository)
@@ -73,14 +71,14 @@ public class OrganisationsService
                     userRepository.save(user);
                 }
 
-                return ResponseEntity.ok().body(gson.toJson("Utworzono organizację!"));
+                return ResponseEntity.ok().body(GsonInstance.get().toJson("Utworzono organizację!"));
             }
-            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak danych!"));
+            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak danych!"));
         }
         catch (Exception exception)
         {
             LOGGER.error("Error: {} in OrganisationsService.createOrganisation()",exception.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas tworzenia nowej organizacji! Komunikat: "+exception.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Wystąpił błąd podczas tworzenia nowej organizacji! Komunikat: "+exception.getMessage()));
         }
     }
 

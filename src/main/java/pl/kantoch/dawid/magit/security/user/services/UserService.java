@@ -23,6 +23,7 @@ import pl.kantoch.dawid.magit.security.user.Role;
 import pl.kantoch.dawid.magit.security.user.User;
 import pl.kantoch.dawid.magit.security.user.repositories.RoleRepository;
 import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
+import pl.kantoch.dawid.magit.utils.GsonInstance;
 
 import java.util.*;
 
@@ -36,8 +37,6 @@ public class UserService implements IUserService
     private final PasswordEncoder encoder;
     private final ApplicationEventPublisher eventPublisher;
     private final OrganisationsRepository organisationsRepository;
-
-    private static final Gson gson = new Gson();
 
 
     public UserService(UserRepository userRepository, RoleRepository roleRepository, VerificationTokenRepository tokenRepository,
@@ -138,7 +137,7 @@ public class UserService implements IUserService
         catch (Exception e)
         {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby dodania nowej roli uzytkownikowi o ID="+id+"! Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Wystąpił błąd podczas próby dodania nowej roli uzytkownikowi o ID="+id+"! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -165,7 +164,7 @@ public class UserService implements IUserService
         catch (Exception e)
         {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby usunięcia roli PM uzytkownikowi o ID="+id+"! Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Wystąpił błąd podczas próby usunięcia roli PM uzytkownikowi o ID="+id+"! Komunikat: "+e.getMessage()));
         }
     }
 
@@ -239,7 +238,7 @@ public class UserService implements IUserService
             eventPublisher.publishEvent(new OnPasswordResetRequestEvent(optionalUser));
             return ResponseEntity.ok().build();
         }
-        else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Nie znaleziono użytkownika z adresem email "+email));
+        else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono użytkownika z adresem email "+email));
     }
 
     @Transactional
@@ -271,15 +270,15 @@ public class UserService implements IUserService
                 {
                     List<PasswordResetToken> allTokens = passwordResetTokenRepository.findAllByUser_Id(resetToken.getUser().getId());
                     passwordResetTokenRepository.deleteAll(allTokens);
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Link stracił ważność! Spróbuj ponownie zresetować hasło!"));
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Link stracił ważność! Spróbuj ponownie zresetować hasło!"));
                 }
             }
-            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby resetowania hasła! Przesłano niepoprawne żądanie!"));
+            else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Wystąpił błąd podczas próby resetowania hasła! Przesłano niepoprawne żądanie!"));
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Wystąpił błąd podczas próby resetowania hasła! Komunikat: "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Wystąpił błąd podczas próby resetowania hasła! Komunikat: "+e.getMessage()));
         }
     }
 

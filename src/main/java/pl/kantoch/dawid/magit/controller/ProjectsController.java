@@ -1,12 +1,12 @@
 package pl.kantoch.dawid.magit.controller;
 
-import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import pl.kantoch.dawid.magit.models.Project;
 import pl.kantoch.dawid.magit.services.ProjectsService;
+import pl.kantoch.dawid.magit.utils.GsonInstance;
 
 import java.util.Optional;
 
@@ -15,8 +15,6 @@ import java.util.Optional;
 public class ProjectsController
 {
     private final ProjectsService projectsService;
-
-    private final Gson gson = new Gson();
 
     public ProjectsController(ProjectsService projectsService) {
         this.projectsService = projectsService;
@@ -34,7 +32,7 @@ public class ProjectsController
         String searchedString = Optional.ofNullable(params.getFirst("search")).orElse(null);
         String idStr = Optional.ofNullable(params.getFirst("id")).orElse(null);
         if(idStr==null)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Brak parametru ID w zapytaniu!"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak parametru ID w zapytaniu!"));
         Long id = Long.valueOf(idStr);
         if(searchedString!=null)
         {
