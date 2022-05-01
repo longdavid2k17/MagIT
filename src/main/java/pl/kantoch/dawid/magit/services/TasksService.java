@@ -220,4 +220,44 @@ public class TasksService
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania podzadań. Komunikat: "+e.getMessage()));
         }
     }
+
+    @Transactional
+    public ResponseEntity<?> setTaskStatusAsComplete(Long id){
+        try {
+            Task task = findByIdAndDeletedFalse(id);
+            if(task==null) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono zadania o ID="+id));
+            task.setStatus("WYKONANE");
+            task.setModificationDate(new Date());
+            task.setCompleted(true);
+            tasksRepository.save(task);
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e){
+            LOGGER.error("Error in TasksService.setTaskStatusAsComplete for ID {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas zmiany statusu zadania. Komunikat: "+e.getMessage()));
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<?> setTaskStatusAsInRealization(Long id){
+        try {
+            Task task = findByIdAndDeletedFalse(id);
+            if(task==null) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono zadania o ID="+id));
+            task.setStatus("REALIZACJA");
+            task.setCompleted(false);
+            task.setModificationDate(new Date());
+            tasksRepository.save(task);
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e){
+            LOGGER.error("Error in TasksService.setTaskStatusAsInRealization for ID {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas zmiany statusu zadania. Komunikat: "+e.getMessage()));
+        }
+    }
+
+    public Task findByIdAndDeletedFalse(Long id){
+        Optional<Task> optionalTask = tasksRepository.findByIdAndDeletedFalse(id);
+        if(optionalTask.isEmpty()) return null;
+        else return optionalTask.get();
+    }
 }

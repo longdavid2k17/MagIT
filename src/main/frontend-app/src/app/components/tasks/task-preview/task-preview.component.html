@@ -61,8 +61,8 @@
             <div style="padding: 10px">
               <button mat-raised-button color="primary" title="Oznacza zadanie jako wykonane" type="button" (click)="setTaskAsCompleted()" *ngIf="!task.completed" style="margin: 5px">WYKONANE</button>
               <button mat-raised-button color="primary" title="Oznacza zadanie jako wykonane" type="button" (click)="setTaskAsCompleted()" *ngIf="task.completed" disabled  style="margin: 5px">WYKONANE</button>
-              <button mat-raised-button color="warn" title="Oznacza zadanie jako w trakcie realizacji" type="button" (click)="setTaskAsCompleted()" *ngIf="!task.completed" disabled  style="margin: 5px">W REALIZACJI</button>
-              <button mat-raised-button color="warn" title="Oznacza zadanie jako w trakcie realizacji" type="button" (click)="setTaskAsCompleted()" *ngIf="task.completed"  style="margin: 5px">W REALIZACJI</button>
+              <button mat-raised-button color="warn" title="Oznacza zadanie jako w trakcie realizacji" type="button" (click)="setTaskAsInRealization()" *ngIf="!task.completed" disabled  style="margin: 5px">W REALIZACJI</button>
+              <button mat-raised-button color="warn" title="Oznacza zadanie jako w trakcie realizacji" type="button" (click)="setTaskAsInRealization()" *ngIf="task.completed"  style="margin: 5px">W REALIZACJI</button>
             </div>
           </div>
         </div>

@@ -46,7 +46,22 @@ export class TaskPreviewComponent implements OnInit {
   }
 
   setTaskAsCompleted() {
+    this.tasksService.setStatus(this.task.id,"WYKONANE").subscribe(()=>{
+    this.toastr.success("Oznaczono zadanie jako wykonane!");
+    this.task.completed = true;
+    },error => {
+      this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd");
+    });
+  }
 
+  setTaskAsInRealization() {
+    this.tasksService.setStatus(this.task.id,"REALIZACJA").subscribe(()=>{
+      this.toastr.success("Oznaczono zadanie jako w realizacji!");
+      this.task.completed = false;
+      this.status = true;
+    },error => {
+      this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd");
+    });
   }
 
   changeRealizationStatus() : void {

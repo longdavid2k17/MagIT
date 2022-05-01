@@ -41,8 +41,9 @@ public class TaskRealizationService
 
     public ResponseEntity<?> verifyRealizationPossibility(Long taskId,String token){
         try {
-            Optional<Task> optionalTask = tasksRepository.findByIdAndDeletedFalseAndCompletedFalse(taskId);
+            Optional<Task> optionalTask = tasksRepository.findByIdAndDeletedFalse(taskId);
             if(optionalTask.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono zadania o ID="+taskId));
+            if(optionalTask.get().getCompleted()) return ResponseEntity.ok().body(false);
             String username = jwtUtils.getUsernameFromJwtToken(token.substring(7));
             Optional<User> optionalUser = userRepository.findByUsername(username);
             if(optionalUser.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono użytkownika!"));
@@ -63,7 +64,7 @@ public class TaskRealizationService
 
     public ResponseEntity<?> getRealizationStatus(Long taskId,String token){
         try {
-            Optional<Task> optionalTask = tasksRepository.findByIdAndDeletedFalseAndCompletedFalse(taskId);
+            Optional<Task> optionalTask = tasksRepository.findByIdAndDeletedFalse(taskId);
             if(optionalTask.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono zadania o ID="+taskId));
             String username = jwtUtils.getUsernameFromJwtToken(token.substring(7));
             Optional<User> optionalUser = userRepository.findByUsername(username);
@@ -89,8 +90,9 @@ public class TaskRealizationService
     @Transactional
     public ResponseEntity<?> changeStatus(Long taskId,String token){
         try {
-            Optional<Task> optionalTask = tasksRepository.findByIdAndDeletedFalseAndCompletedFalse(taskId);
+            Optional<Task> optionalTask = tasksRepository.findByIdAndDeletedFalse(taskId);
             if(optionalTask.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono zadania o ID="+taskId));
+            if(optionalTask.get().getCompleted()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie można włączyć rejestracji czasu dla zamkniętego zadania. Oznacz je jako w realizacji!"));
             String username = jwtUtils.getUsernameFromJwtToken(token.substring(7));
             Optional<User> optionalUser = userRepository.findByUsername(username);
             if(optionalUser.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono użytkownika!"));
@@ -100,6 +102,10 @@ public class TaskRealizationService
                     Optional<TeamMember> optionalTeamMember = teamMembersRepository.findByUser_IdAndTeam_Id(optionalUser.get().getId(),task.getTeam().getId());
                     if(optionalTeamMember.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Użytkownik nie ma prawa do uruchomienia realizacji tego zadania!"));
                 } else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Użytkownik nie ma prawa do uruchomienia realizacji tego zadania!"));
+            }
+            if(task.getStatus().equals("NOWY")){
+                task.setStatus("REALIZACJA");
+                tasksRepository.save(task);
             }
 
             Optional<TaskRealization> optionalTaskRealization = taskRealizationRepository.findAllByTaskAndUser_IdAndStatusEquals(task,optionalUser.get().getId(),"REALIZACJA");

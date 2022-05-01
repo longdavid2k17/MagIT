@@ -59,6 +59,14 @@ public class TasksController
         return tasksService.getSubtasks(id);
     }
 
+    @GetMapping("/set-status/{id}/{status}")
+    public ResponseEntity<?> setTaskStatus(@PathVariable Long id,@PathVariable String status){
+        if(id==null || status==null || status.isEmpty())
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak wymaganych parametrów do wykonania zmiany statusu!"));
+        if(status.equals("REALIZACJA")) return tasksService.setTaskStatusAsInRealization(id);
+        else return tasksService.setTaskStatusAsComplete(id);
+    }
+
     @GetMapping("/pageable/{selectionMode}/{id}")
     public ResponseEntity<?> getTasksPageable(@PathVariable String selectionMode, @PathVariable Long id, Pageable pageable){
         if(selectionMode==null || id==null)

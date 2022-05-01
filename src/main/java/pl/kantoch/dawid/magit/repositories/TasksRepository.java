@@ -34,6 +34,7 @@ public interface TasksRepository extends JpaRepository<Task,Long> {
     Long countAllByDeletedFalseAndProject(Project project);
 
     Optional<Task> findByIdAndDeletedFalseAndCompletedFalse(Long id);
+    Optional<Task> findByIdAndDeletedFalse(Long id);
 
     @Modifying
     @Query("update Task set deleted=true where id=:id")

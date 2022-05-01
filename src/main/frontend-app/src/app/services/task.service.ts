@@ -33,6 +33,10 @@ export class TaskService {
     return this.http.get<any[]>(`${API}subtasks/${parentTaskId}`);
   }
 
+  setStatus(taskId:any,status:string):Observable<any>{
+    return this.http.get<any>(`${API}set-status/${taskId}/${status}`);
+  }
+
   save(task:any):Observable<any> {
     return this.http.post<any>(`${API}save`,
       task);
