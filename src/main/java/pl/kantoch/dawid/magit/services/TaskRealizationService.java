@@ -43,7 +43,7 @@ public class TaskRealizationService
         try {
             Optional<Task> optionalTask = tasksRepository.findByIdAndDeletedFalseAndCompletedFalse(taskId);
             if(optionalTask.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono zadania o ID="+taskId));
-            String username = jwtUtils.getUsernameFromJwtToken(token);
+            String username = jwtUtils.getUsernameFromJwtToken(token.substring(7));
             Optional<User> optionalUser = userRepository.findByUsername(username);
             if(optionalUser.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono użytkownika!"));
             Task task = optionalTask.get();
@@ -65,7 +65,7 @@ public class TaskRealizationService
         try {
             Optional<Task> optionalTask = tasksRepository.findByIdAndDeletedFalseAndCompletedFalse(taskId);
             if(optionalTask.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono zadania o ID="+taskId));
-            String username = jwtUtils.getUsernameFromJwtToken(token);
+            String username = jwtUtils.getUsernameFromJwtToken(token.substring(7));
             Optional<User> optionalUser = userRepository.findByUsername(username);
             if(optionalUser.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono użytkownika!"));
             Task task = optionalTask.get();
@@ -91,7 +91,7 @@ public class TaskRealizationService
         try {
             Optional<Task> optionalTask = tasksRepository.findByIdAndDeletedFalseAndCompletedFalse(taskId);
             if(optionalTask.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono zadania o ID="+taskId));
-            String username = jwtUtils.getUsernameFromJwtToken(token);
+            String username = jwtUtils.getUsernameFromJwtToken(token.substring(7));
             Optional<User> optionalUser = userRepository.findByUsername(username);
             if(optionalUser.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono użytkownika!"));
             Task task = optionalTask.get();

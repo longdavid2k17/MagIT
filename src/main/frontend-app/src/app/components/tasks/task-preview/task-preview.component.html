@@ -1,5 +1,8 @@
 <div mat-dialog-title class="dialog-title">
-  <h3 mat-dialog-title><b>Zadanie #{{task.id}} - {{task.title}}</b></h3>
+  <h2 mat-dialog-title><b>Zadanie #{{task.id}} - {{task.title}}</b></h2>
+  <button mat-icon-button title="Włącz rejestrację czasu" (click)="changeRealizationStatus()" *ngIf="canChangeRealization && status"><mat-icon>timer</mat-icon></button>
+  <button mat-icon-button title="Nie masz uprawnień do uruchomienia rejestracji czasu" *ngIf="!canChangeRealization" disabled><mat-icon>timer</mat-icon></button>
+  <button mat-icon-button title="Zatrzymaj rejestrację czasu" (click)="changeRealizationStatus()" *ngIf="canChangeRealization && !status"><mat-icon>stop</mat-icon></button>
   <button mat-icon-button aria-label="close dialog" mat-dialog-close title="Zamknij podgląd">
     <mat-icon>close</mat-icon>
   </button>
@@ -13,7 +16,7 @@
           <span>Tytuł: <b>{{task.title}}</b></span><br/>
           <span>Opis: <b>{{task.description}}</b></span><br/>
           <span>Odpowiedzialny: <b>{{task?.user.name}} {{task?.user.surname}}</b></span><br/>
-          <span>Zespół: <b>{{task?.team.name}}</b></span><br/>
+          <span>Zespół: <b>{{task?.team?.name}}</b></span><br/>
         </div>
         <hr style="width: 80%">
         <div>
