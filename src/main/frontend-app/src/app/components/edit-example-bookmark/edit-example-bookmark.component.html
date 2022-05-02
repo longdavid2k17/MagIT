@@ -10,20 +10,20 @@
 <form class="example-form" name="form" [formGroup]="form" (submit)="save()">
   <div mat-dialog-content>
     <div style="margin-bottom: 5px">
-      <span>Przykładowe zadanie: <b>{{task.title}}</b> [{{task.status}}]</span>
+      <span>Przykładowe zadanie: <b>{{bookmark?.task.title}}</b> [{{bookmark?.task.status}}]</span>
     </div>
-      <div class="form-group">
-        <mat-form-field class="example-full-width">
-          <mat-label>Rodzaj rozwiązania</mat-label>
-          <input type="text" matInput [formControl]="myControl" formControlName="type"
-                 [matAutocomplete]="auto">
-          <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let option of allTypes" [value]="option">
-              {{option}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-      </div>
+    <div class="form-group">
+      <mat-form-field class="example-full-width">
+        <mat-label>Rodzaj rozwiązania</mat-label>
+        <input type="text" matInput [formControl]="myControl" formControlName="type"
+               [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of allTypes" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
     <div class="form-group">
       <mat-form-field class="example-full-width">
       <textarea matInput placeholder="Opis rozwiązania" formControlName="description" cdkTextareaAutosize

@@ -61,6 +61,7 @@ import {MatListModule} from "@angular/material/list";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import { AddExampleBookmarkComponent } from './components/add-example-bookmark/add-example-bookmark.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import { EditExampleBookmarkComponent } from './components/edit-example-bookmark/edit-example-bookmark.component';
 
 @NgModule({
   declarations: [
@@ -92,6 +93,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
     TaskPreviewComponent,
     ResultFileUploadComponent,
     AddExampleBookmarkComponent,
+    EditExampleBookmarkComponent,
   ],
     imports: [
         BrowserModule,

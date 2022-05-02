@@ -11,8 +11,8 @@ export class BookmarkService {
 
   constructor(private http:HttpClient) { }
 
-  getByOrganisation(id:any):Observable<any>{
-    return this.http.get<any>(`${API}organisation/${id}`);
+  getByOrganisation(id:any,params:any):Observable<any>{
+    return this.http.get<any>(`${API}organisation/${id}`,{params});
   }
 
   save(bookmark:any):Observable<any>

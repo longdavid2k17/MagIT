@@ -156,7 +156,7 @@ export class TasksRegisterComponent implements OnInit,AfterViewInit {
       if(dialogResult)
       {
         this.bookmarkService.delete(row.id).subscribe(()=>{
-          this.toastr.success("Usunięto zadanie!")
+          this.toastr.success("Usunięto rozwiązanie!")
           this.refresh();
         },error => {
           this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd!");

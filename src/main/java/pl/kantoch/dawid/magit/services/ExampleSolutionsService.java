@@ -47,8 +47,10 @@ public class ExampleSolutionsService
     @Transactional
     public ResponseEntity<?> save(ExampleSolutions exampleSolutions) {
         try {
-            Optional<ExampleSolutions> optional = exampleSolutionsRepository.findByTask(exampleSolutions.getTask());
-            if(optional.isPresent()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Do tego zadania istnieje wpis rozwiązania. Zmodyfikuj go, lub usuń aby dodać nowy wpis!"));
+            if(exampleSolutions.getId()==null){
+                Optional<ExampleSolutions> optional = exampleSolutionsRepository.findByTask(exampleSolutions.getTask());
+                if(optional.isPresent()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Do tego zadania istnieje wpis rozwiązania. Zmodyfikuj go, lub usuń aby dodać nowy wpis!"));
+            }
             ExampleSolutions saved = exampleSolutionsRepository.save(exampleSolutions);
             return ResponseEntity.ok().body(saved);
         }
