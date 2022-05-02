@@ -43,18 +43,11 @@
   </div>
   <div style="clear:both;  margin: 10px; text-align: left">
     <mat-card style="margin: 10px;">
-      <mat-card-title>Rezultat</mat-card-title>
+      <mat-card-title>Rezultat - zasoby</mat-card-title>
       <mat-card-content>
         <div>
           <div>
-            <h4><b>Zasoby</b></h4>
-            <div *ngIf="!taskResults || taskResults.length==0">
-              <span>Brak zasobów</span>
-            </div>
-          </div>
-          <hr style="width: 80%">
-          <div class="container">
-            <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target)">
+            <app-result-file-upload [taskId]="task?.id"></app-result-file-upload>
           </div>
         <hr style="width: 80%">
           <span>Status zadania: <b>{{task.status}}</b></span><br/>

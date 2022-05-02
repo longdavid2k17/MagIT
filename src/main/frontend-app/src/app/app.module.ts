@@ -56,6 +56,9 @@ import { ManageTeamMembershipComponent } from './components/teams/manage-team-me
 import { TasksRegisterComponent } from './components/tasks/tasks-register/tasks-register.component';
 import { CreateTaskFormComponent } from './components/tasks/create-task-form/create-task-form.component';
 import { TaskPreviewComponent } from './components/tasks/task-preview/task-preview.component';
+import { ResultFileUploadComponent } from './components/general/result-file-upload/result-file-upload.component';
+import {MatListModule} from "@angular/material/list";
+import {MatToolbarModule} from "@angular/material/toolbar";
 
 @NgModule({
   declarations: [
@@ -85,46 +88,49 @@ import { TaskPreviewComponent } from './components/tasks/task-preview/task-previ
     TasksRegisterComponent,
     CreateTaskFormComponent,
     TaskPreviewComponent,
+    ResultFileUploadComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        NgMultiSelectDropDownModule.forRoot(),
-        MatTabsModule,
-        MatDialogModule,
-        ToastrModule.forRoot({
-                timeOut: 5000,
-                progressBar: true,
-                progressAnimation: 'increasing',
-                preventDuplicates: true,
-                positionClass: 'toast-top-right'
-            }
-        ),
-        NgbModule,
-        HttpClientModule,
-        ReactiveFormsModule,
-        FormsModule,
-        BrowserAnimationsModule,
-        DragDropModule,
-        MatFormFieldModule,
-        MatButtonModule,
-        MatInputModule,
-        MatIconModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        ClipboardModule,
-        MatCardModule,
-        MatSelectModule,
-        MatOptionModule,
-        MatProgressSpinnerModule,
-        MatSlideToggleModule,
-        MatMenuModule,
-        MatCheckboxModule,
-        MatPaginatorModule,
-        MatTableModule,
-        MatStepperModule,
-        MatProgressBarModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    NgMultiSelectDropDownModule.forRoot(),
+    MatTabsModule,
+    MatDialogModule,
+    ToastrModule.forRoot({
+        timeOut: 5000,
+        progressBar: true,
+        progressAnimation: 'increasing',
+        preventDuplicates: true,
+        positionClass: 'toast-top-right'
+      }
+    ),
+    NgbModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    DragDropModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatInputModule,
+    MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ClipboardModule,
+    MatCardModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatProgressSpinnerModule,
+    MatSlideToggleModule,
+    MatMenuModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatStepperModule,
+    MatProgressBarModule,
+    MatListModule,
+    MatToolbarModule
+  ],
   providers: [
     MatDatepickerModule,
     { provide: HTTP_INTERCEPTORS, useClass: UserEmulationInterceptor, multi: true },
