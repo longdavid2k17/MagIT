@@ -11,9 +11,9 @@ import {
   ConfirmationDialogComponent,
   ConfirmDialogModel
 } from "../../general/confirmation-dialog/confirmation-dialog.component";
-import {TeamEditFormComponent} from "../../teams/team-edit-form/team-edit-form.component";
 import {TaskPreviewComponent} from "../task-preview/task-preview.component";
 import {AddExampleBookmarkComponent} from "../../add-example-bookmark/add-example-bookmark.component";
+import {BookmarkService} from "../../../services/bookmark.service";
 
 @Component({
   selector: 'app-tasks-register',
@@ -32,7 +32,8 @@ export class TasksRegisterComponent implements OnInit,AfterViewInit {
   constructor(private tokenStorage: TokenStorageService,
               private tasksService: TaskService,
               private toastr: ToastrService,
-              public dialog: MatDialog,) { }
+              public dialog: MatDialog,
+              private bookmarkService:BookmarkService) { }
 
   ngOnInit(): void {
     this.user = this.tokenStorage.getUser();
@@ -135,11 +136,32 @@ export class TasksRegisterComponent implements OnInit,AfterViewInit {
       minWidth:"600px"
     });
     modalRef.afterClosed().subscribe(res =>{
-      this.refresh();
+      if(res?.id){
+        this.refresh();
+      }
     });
   }
 
   removeBookmark(row: any) {
+    const message = `Czy jesteś pewny że chcesz odznaczyć usunąć to zadanie z rejestru przykładowych rozwiązań?`;
+    const dialogData = new ConfirmDialogModel("Wymagane potwierdzenie", message);
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      maxWidth: "400px",
+      data: dialogData,
+      hasBackdrop: true,
+      disableClose:true
+    });
 
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult)
+      {
+        this.bookmarkService.delete(row.id).subscribe(()=>{
+          this.toastr.success("Usunięto zadanie!")
+          this.refresh();
+        },error => {
+          this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd!");
+        });
+      }
+    });
   }
 }

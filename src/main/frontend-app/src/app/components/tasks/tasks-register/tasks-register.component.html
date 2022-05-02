@@ -23,8 +23,8 @@
             <button mat-icon-button color="primary" title="Podgląd" (click)="openPreview(row)"><mat-icon>preview</mat-icon></button>
             <button mat-icon-button color="primary" title="Edytuj"><mat-icon>edit</mat-icon></button>
             <button mat-icon-button color="primary" title="Usuń zadanie" (click)="delete(row)"><mat-icon>delete</mat-icon></button>
-            <button mat-icon-button color="primary" title="Odznacz rozwiązanie" (click)="removeBookmark(row)" *ngIf="row?.isExample"><mat-icon>star</mat-icon></button>
-            <button mat-icon-button color="primary" title="Oznacz rozwiązanie" (click)="setBookmark(row)" *ngIf="!row?.isExample"><mat-icon>star_border</mat-icon></button>
+            <button mat-icon-button color="primary" title="Odznacz rozwiązanie" (click)="removeBookmark(row)" *ngIf="row?.example"><mat-icon>star</mat-icon></button>
+            <button mat-icon-button color="primary" title="Oznacz rozwiązanie" (click)="setBookmark(row)" *ngIf="!row?.example"><mat-icon>star_border</mat-icon></button>
           </td>
         <tr>
       </ng-container>

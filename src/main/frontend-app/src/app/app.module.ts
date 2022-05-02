@@ -60,6 +60,7 @@ import { ResultFileUploadComponent } from './components/general/result-file-uplo
 import {MatListModule} from "@angular/material/list";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import { AddExampleBookmarkComponent } from './components/add-example-bookmark/add-example-bookmark.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 @NgModule({
   declarations: [
@@ -92,47 +93,48 @@ import { AddExampleBookmarkComponent } from './components/add-example-bookmark/a
     ResultFileUploadComponent,
     AddExampleBookmarkComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    NgMultiSelectDropDownModule.forRoot(),
-    MatTabsModule,
-    MatDialogModule,
-    ToastrModule.forRoot({
-        timeOut: 5000,
-        progressBar: true,
-        progressAnimation: 'increasing',
-        preventDuplicates: true,
-        positionClass: 'toast-top-right'
-      }
-    ),
-    NgbModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    BrowserAnimationsModule,
-    DragDropModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatInputModule,
-    MatIconModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    ClipboardModule,
-    MatCardModule,
-    MatSelectModule,
-    MatOptionModule,
-    MatProgressSpinnerModule,
-    MatSlideToggleModule,
-    MatMenuModule,
-    MatCheckboxModule,
-    MatPaginatorModule,
-    MatTableModule,
-    MatStepperModule,
-    MatProgressBarModule,
-    MatListModule,
-    MatToolbarModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        NgMultiSelectDropDownModule.forRoot(),
+        MatTabsModule,
+        MatDialogModule,
+        ToastrModule.forRoot({
+                timeOut: 5000,
+                progressBar: true,
+                progressAnimation: 'increasing',
+                preventDuplicates: true,
+                positionClass: 'toast-top-right'
+            }
+        ),
+        NgbModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        DragDropModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatInputModule,
+        MatIconModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        ClipboardModule,
+        MatCardModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatProgressSpinnerModule,
+        MatSlideToggleModule,
+        MatMenuModule,
+        MatCheckboxModule,
+        MatPaginatorModule,
+        MatTableModule,
+        MatStepperModule,
+        MatProgressBarModule,
+        MatListModule,
+        MatToolbarModule,
+        MatAutocompleteModule
+    ],
   providers: [
     MatDatepickerModule,
     { provide: HTTP_INTERCEPTORS, useClass: UserEmulationInterceptor, multi: true },
