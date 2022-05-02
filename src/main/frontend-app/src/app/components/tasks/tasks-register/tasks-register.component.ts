@@ -13,6 +13,7 @@ import {
 } from "../../general/confirmation-dialog/confirmation-dialog.component";
 import {TeamEditFormComponent} from "../../teams/team-edit-form/team-edit-form.component";
 import {TaskPreviewComponent} from "../task-preview/task-preview.component";
+import {AddExampleBookmarkComponent} from "../../add-example-bookmark/add-example-bookmark.component";
 
 @Component({
   selector: 'app-tasks-register',
@@ -123,5 +124,22 @@ export class TasksRegisterComponent implements OnInit,AfterViewInit {
 
   refresh(): void {
     window.location.reload();
+  }
+
+  setBookmark(row: any) {
+    const modalRef = this.dialog.open(AddExampleBookmarkComponent, {
+      disableClose: true,
+      data:{task:row},
+      hasBackdrop: true,
+      panelClass: 'my-dialog',
+      minWidth:"600px"
+    });
+    modalRef.afterClosed().subscribe(res =>{
+      this.refresh();
+    });
+  }
+
+  removeBookmark(row: any) {
+
   }
 }

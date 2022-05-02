@@ -59,6 +59,7 @@ import { TaskPreviewComponent } from './components/tasks/task-preview/task-previ
 import { ResultFileUploadComponent } from './components/general/result-file-upload/result-file-upload.component';
 import {MatListModule} from "@angular/material/list";
 import {MatToolbarModule} from "@angular/material/toolbar";
+import { AddExampleBookmarkComponent } from './components/add-example-bookmark/add-example-bookmark.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
     CreateTaskFormComponent,
     TaskPreviewComponent,
     ResultFileUploadComponent,
+    AddExampleBookmarkComponent,
   ],
   imports: [
     BrowserModule,

@@ -8,14 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.kantoch.dawid.magit.models.Organisation;
-import pl.kantoch.dawid.magit.models.Project;
-import pl.kantoch.dawid.magit.models.Task;
-import pl.kantoch.dawid.magit.models.Team;
-import pl.kantoch.dawid.magit.repositories.OrganisationsRepository;
-import pl.kantoch.dawid.magit.repositories.ProjectsRepository;
-import pl.kantoch.dawid.magit.repositories.TasksRepository;
-import pl.kantoch.dawid.magit.repositories.TeamsRepository;
+import pl.kantoch.dawid.magit.models.*;
+import pl.kantoch.dawid.magit.repositories.*;
 import pl.kantoch.dawid.magit.utils.GsonInstance;
 
 import java.util.Date;
@@ -31,15 +25,18 @@ public class TasksService
     private final TeamsRepository teamsRepository;
     private final ProjectsRepository projectsRepository;
     private final OrganisationsRepository organisationsRepository;
+    private final ExampleSolutionsRepository exampleSolutionsRepository;
 
     public TasksService(TasksRepository tasksRepository,
                         TeamsRepository teamsRepository,
                         ProjectsRepository projectsRepository,
-                        OrganisationsRepository organisationsRepository) {
+                        OrganisationsRepository organisationsRepository,
+                        ExampleSolutionsRepository exampleSolutionsRepository) {
         this.tasksRepository = tasksRepository;
         this.teamsRepository = teamsRepository;
         this.projectsRepository = projectsRepository;
         this.organisationsRepository = organisationsRepository;
+        this.exampleSolutionsRepository = exampleSolutionsRepository;
     }
 
     @Transactional
@@ -102,6 +99,10 @@ public class TasksService
             if(optionalProject.isEmpty())
                 throw new Exception("Nie znaleziono projektu o ID="+id);
             Page<Task> page = tasksRepository.findAllByDeletedFalseAndProjectAndParentTaskIsNull(optionalProject.get(),pageable);
+            page.get().forEach(e->{
+                Optional<ExampleSolutions> optional = exampleSolutionsRepository.findByTask(e);
+                if(optional.isPresent()) e.setExample(true);
+            });
             return ResponseEntity.ok().body(page);
         }
         catch (Exception e){
@@ -130,6 +131,10 @@ public class TasksService
             if(optionalTeam.isEmpty())
                 throw new Exception("Nie znaleziono zespołu o ID="+id);
             Page<Task> list = tasksRepository.findAllByDeletedFalseAndTeamAndParentTaskIsNull(optionalTeam.get(),pageable);
+            list.get().forEach(e->{
+                Optional<ExampleSolutions> optional = exampleSolutionsRepository.findByTask(e);
+                if(optional.isPresent()) e.setExample(true);
+            });
             return ResponseEntity.ok().body(list);
         }
         catch (Exception e){
@@ -158,6 +163,10 @@ public class TasksService
             if(optionalOrganisation.isEmpty())
                 throw new Exception("Nie znaleziono organizacji o ID="+id);
             Page<Task> page = tasksRepository.findAllByDeletedFalseAndOrganisationAndParentTaskIsNull(optionalOrganisation.get(),pageable);
+            page.get().forEach(e->{
+                Optional<ExampleSolutions> optional = exampleSolutionsRepository.findByTask(e);
+                if(optional.isPresent()) e.setExample(true);
+            });
             return ResponseEntity.ok().body(page);
         }
         catch (Exception e){

@@ -70,6 +70,8 @@ public class Task
     private Organisation organisation;
 
     @Transient
+    private Boolean isExample;
+    @Transient
     private String deadlineTime;
     @Transient
     private String startTime;
@@ -94,6 +96,14 @@ public class Task
         this.deadlineDate = deadlineDate;
         this.deleted = deleted;
         this.organisation = organisation;
+    }
+
+    public Boolean getExample() {
+        return isExample;
+    }
+
+    public void setExample(Boolean example) {
+        isExample = example;
     }
 
     public Boolean getCompleted() {
