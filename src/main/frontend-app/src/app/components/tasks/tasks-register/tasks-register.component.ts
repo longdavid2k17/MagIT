@@ -75,11 +75,14 @@ export class TasksRegisterComponent implements OnInit,AfterViewInit {
   }
 
   addTask() {
-    this.dialog.open(CreateTaskFormComponent, {
+    let modalRef = this.dialog.open(CreateTaskFormComponent, {
       data:{organisation:this.user.organisation},
       autoFocus: false,
       disableClose: true,
       hasBackdrop: true
+    });
+    modalRef.afterClosed().subscribe(res =>{
+      this.refresh();
     });
   }
 

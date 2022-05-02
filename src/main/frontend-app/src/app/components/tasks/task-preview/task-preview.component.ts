@@ -25,6 +25,10 @@ export class TaskPreviewComponent implements OnInit {
               private tasksService:TaskService,
               private realizationService:TaskRealizationService) {
     this.task = data.task;
+    this.getData();
+  }
+
+  getData():void{
     this.tasksService.getSubtasks(this.task.id).subscribe(res=>{
       this.subtasks = res;
     },error => {
@@ -49,6 +53,7 @@ export class TaskPreviewComponent implements OnInit {
     this.tasksService.setStatus(this.task.id,"WYKONANE").subscribe(()=>{
     this.toastr.success("Oznaczono zadanie jako wykonane!");
     this.task.completed = true;
+    this.getData();
     },error => {
       this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd");
     });
@@ -58,7 +63,7 @@ export class TaskPreviewComponent implements OnInit {
     this.tasksService.setStatus(this.task.id,"REALIZACJA").subscribe(()=>{
       this.toastr.success("Oznaczono zadanie jako w realizacji!");
       this.task.completed = false;
-      this.status = true;
+      this.getData();
     },error => {
       this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd");
     });
@@ -79,5 +84,16 @@ export class TaskPreviewComponent implements OnInit {
    */
   fileBrowseHandler(event:any) {
     console.log(event.files);
+  }
+
+  setSubtaskCompletedValue(subtask: any,event:any) {
+    let status = "";
+    if(event.checked) status="WYKONANE";
+    else status = "REALIZACJA";
+    this.tasksService.setStatus(subtask?.id,status).subscribe(()=>{
+      this.getData();
+    },error => {
+      this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd");
+    });
   }
 }
