@@ -12,6 +12,7 @@ import {
 import {MatDialog} from "@angular/material/dialog";
 import {AddExampleBookmarkComponent} from "../add-example-bookmark/add-example-bookmark.component";
 import {EditExampleBookmarkComponent} from "../edit-example-bookmark/edit-example-bookmark.component";
+import {PreviewBookmarkComponent} from "../preview-bookmark/preview-bookmark.component";
 
 @Component({
   selector: 'app-solutions-library',
@@ -95,7 +96,12 @@ export class SolutionsLibraryComponent implements OnInit,AfterViewInit {
   }
 
   openPreview(row: any) {
-
+    const dialogRef = this.dialog.open(PreviewBookmarkComponent, {
+      maxWidth: "400px",
+      data: row,
+      hasBackdrop: true,
+      disableClose:true
+    });
   }
 
   removeBookmark(row:any) {
