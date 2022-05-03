@@ -25,9 +25,19 @@ public class TasksController
         return tasksService.save(task);
     }
 
+    @PostMapping("/edit")
+    public ResponseEntity<?> edit(@RequestBody Task task){
+        return tasksService.save(task);
+    }
+
     @PostMapping("/save-subtasks")
-    public ResponseEntity<?> save(@RequestBody List<Task> tasks){
+    public ResponseEntity<?> saveSubtasks(@RequestBody List<Task> tasks){
         return tasksService.saveSubtasks(tasks);
+    }
+
+    @PostMapping("/edit-subtasks/{parentTaskId}")
+    public ResponseEntity<?> editSubtasks(@RequestBody List<Task> tasks,@PathVariable Long parentTaskId){
+        return tasksService.editSubtasks(tasks,parentTaskId);
     }
 
     @GetMapping("/{selectionMode}/{id}")

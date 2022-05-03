@@ -58,7 +58,24 @@ export class EditTaskFormComponent implements OnInit {
       status: [null],
       id: [null],
     });
+    this.taskService.getSubtasks(this.task.id).subscribe(res=>{
+      this.subTasks=res;
+    },error => {
+      this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd");
+    });
     this.form.patchValue(this.task);
+    let startTime = null;
+    let deadlineTime = null;
+    if(this.task?.startDate){
+      const date = new Date(this.task.startDate);
+      startTime = date.getHours()+":"+date.getMinutes();
+      this.form.controls['startTime'].setValue(startTime);
+    }
+    if(this.task?.deadlineDate){
+      const date = new Date(this.task.deadlineDate);
+      deadlineTime = date.getHours()+":"+date.getMinutes();
+      this.form.controls['deadlineTime'].setValue(deadlineTime);
+    }
   }
 
   ngOnInit(): void {
@@ -87,8 +104,7 @@ export class EditTaskFormComponent implements OnInit {
       return;
     }
     let form = this.form.value;
-    form.organisation = this.organisation;
-    this.taskService.save(form).subscribe(res=>{
+    this.taskService.edit(form).subscribe(res=>{
       this.saveSubtasks(res);
     },error => {
       this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd!");
@@ -135,9 +151,11 @@ export class EditTaskFormComponent implements OnInit {
   {
     if(this.subTasks.length>0){
       for(let i=0;i<this.subTasks.length;i++){
-        this.subTasks[i].parentTask = parentTask;
+        if(!this.subTasks[i].parentTask){
+          this.subTasks[i].parentTask = parentTask;
+        }
       }
-      this.taskService.saveSubtasks(this.subTasks).subscribe(res=>{
+      this.taskService.editSubtasks(this.subTasks).subscribe(res=>{
         this.dialogRef.close();
       },error => {
         this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd!")
@@ -145,4 +163,7 @@ export class EditTaskFormComponent implements OnInit {
     } else this.dialogRef.close("SUCCESS");
   }
 
+  dismiss() {
+    this.dialogRef.close();
+  }
 }

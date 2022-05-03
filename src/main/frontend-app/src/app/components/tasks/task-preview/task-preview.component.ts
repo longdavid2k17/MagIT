@@ -4,6 +4,7 @@ import {ToastrService} from "ngx-toastr";
 import {TaskService} from "../../../services/task.service";
 import {ErrorMessageClass} from "../../projects/projects/projects.component";
 import {TaskRealizationService} from "../../../services/task-realization.service";
+import {AttachmentFileUploadService} from "../../../services/attachment-file-upload.service";
 
 @Component({
   selector: 'app-task-preview',
@@ -17,13 +18,15 @@ export class TaskPreviewComponent implements OnInit {
 
   task:any;
   subtasks:any[]=[];
-  taskResults:any[]=[];
+  fileInfos?: any[]=[];
+  resourcesMessage='';
 
   constructor(public dialogRef: MatDialogRef<TaskPreviewComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private toastr:ToastrService,
               private tasksService:TaskService,
-              private realizationService:TaskRealizationService) {
+              private realizationService:TaskRealizationService,
+              private fileUploadService:AttachmentFileUploadService) {
     this.task = data.task;
     this.getData();
   }
@@ -43,6 +46,11 @@ export class TaskPreviewComponent implements OnInit {
       this.status = res === "Brak realizacji";
     },error => {
       this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd");
+    });
+    this.fileUploadService.getFiles(this.task.id).subscribe(res=>{
+      this.fileInfos = res;
+    },error => {
+      this.resourcesMessage = ErrorMessageClass.getErrorMessage(error);
     });
   }
 

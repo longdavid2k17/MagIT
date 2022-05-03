@@ -42,7 +42,17 @@ export class TaskService {
       task);
   }
 
+  edit(task:any):Observable<any> {
+    return this.http.post<any>(`${API}edit`,
+      task);
+  }
+
   saveSubtasks(tasks:any[]):Observable<any> {
+    return this.http.post<any>(`${API}save-subtasks`,
+      tasks);
+  }
+
+  editSubtasks(tasks:any[]):Observable<any> {
     return this.http.post<any>(`${API}save-subtasks`,
       tasks);
   }

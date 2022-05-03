@@ -23,9 +23,12 @@
         <hr style="width: 80%">
         <div>
           <h4><b>Załączniki</b></h4>
-          <div *ngIf="!taskResults || taskResults.length==0">
-            <span>Brak zasobów</span>
-          </div>
+          <mat-list role="list">
+            <mat-list-item role="listitem" *ngFor="let file of fileInfos">
+              <a href="{{ file.url }}">{{ file.name }}</a>
+            </mat-list-item>
+            <span style="max-width: 100px;color: red">{{resourcesMessage}}</span>
+          </mat-list>
         </div>
       </mat-card-content>
     </mat-card>

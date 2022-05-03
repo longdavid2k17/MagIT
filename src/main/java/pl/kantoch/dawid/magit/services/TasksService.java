@@ -50,7 +50,8 @@ public class TasksService
                 task.setCreationDate(new Date());
                 task.setDeleted(false);
                 task.setStatus("NOWY");
-            } else task.setModificationDate(new Date());
+            }
+            else task.setModificationDate(new Date());
             if(task.getStartDate()!=null){
                 if(task.getStartTime()!=null){
                     String[] parts = task.getStartTime().split(":");
@@ -232,6 +233,34 @@ public class TasksService
         }
     }
 
+    @Transactional
+    public ResponseEntity<?> editSubtasks(List<Task> tasks,Long parentTaskId)
+    {
+        List<Task> list = tasksRepository.findAllByDeletedFalseAndParentTask_Id(parentTaskId);
+        tasksRepository.deleteAll(list);
+        try {
+            tasks.forEach(e->{
+                if(e.getId()==null){
+                    e.setDeleted(false);
+                    e.setCompleted(false);
+                    e.setDeadlineDate(e.getParentTask().getDeadlineDate());
+                    e.setStartDate(e.getParentTask().getStartDate());
+                    e.setTeam(e.getParentTask().getTeam());
+                    e.setProject(e.getParentTask().getProject());
+                    e.setGitHubUrl(e.getParentTask().getGitHubUrl());
+                    e.setStatus(e.getParentTask().getStatus());
+                    e.setCreationDate(new Date());
+                }
+            });
+            tasksRepository.saveAll(tasks);
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e){
+            LOGGER.error("Error in TasksService.saveSubtasks for entities {}. Message: {}",tasks,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas zapisywania podzadań. Komunikat: "+e.getMessage()));
+        }
+    }
+
     public ResponseEntity<?> getSubtasks(Long id)
     {
         try {
@@ -283,4 +312,6 @@ public class TasksService
         if(optionalTask.isEmpty()) return null;
         else return optionalTask.get();
     }
+
+
 }

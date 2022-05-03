@@ -4,7 +4,7 @@
        cdkDragHandle  style="display: inline-block"
        cdkDragBoundary=".cdk-overlay-container">
     <h1>#{{entryData.id}} {{entryData.type}} - (Zadanie #{{entryData?.task.id}} - {{entryData?.task.title}})</h1>
-    <button mat-icon-button type="button" class="close" aria-label="Zamknij" (click)="dismiss()">
+    <button mat-button type="button" class="close" aria-label="Zamknij" (click)="dismiss()">
       <mat-icon>close</mat-icon>
     </button>
   </div>

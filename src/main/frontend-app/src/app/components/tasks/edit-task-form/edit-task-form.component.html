@@ -4,6 +4,9 @@
      cdkDragHandle  style="display: inline-block"
      cdkDragBoundary=".cdk-overlay-container" >
   <h2>Edytuj zadanie #{{task?.id}}</h2>
+  <button mat-button type="button" class="close" aria-label="Close" (click)="dismiss()">
+    <mat-icon>close</mat-icon>
+  </button>
 </div>
 <mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
   <mat-step [stepControl]="form">
@@ -105,10 +108,8 @@
   <mat-step [stepControl]="form">
     <form [formGroup]="form">
       <ng-template matStepLabel>Załączniki</ng-template>
-      <div class="form-group">
-        <div class="example-full-width">
+      <div class="example-full-width">
           <app-attachment-file-upload [taskId]="task.id"></app-attachment-file-upload>
-        </div>
       </div>
       <div style="text-align: right;float: right; margin-top: 10px">
         <button mat-button matStepperPrevious>Cofnij</button>

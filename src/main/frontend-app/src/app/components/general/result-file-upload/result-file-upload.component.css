@@ -4,7 +4,7 @@
 .progress {
   width: 50px;
 }
-#fileInput {
+.fileInput {
   position: absolute;
   cursor: pointer;
   z-index: 10;

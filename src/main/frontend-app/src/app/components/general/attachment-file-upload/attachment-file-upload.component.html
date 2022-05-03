@@ -18,9 +18,18 @@
       </mat-toolbar>
       <input
         type="file"
-        id="fileInput"
+        class="fileInput"
         (change)="selectFile($event)"
         name="fileInput"
+        *ngIf="!resourcesMessage"
+      />
+      <input
+        type="file"
+        class="fileInput"
+        (change)="selectFile($event)"
+        name="fileInput"
+        *ngIf="resourcesMessage"
+        disabled
       />
     </div>
   </mat-form-field>
