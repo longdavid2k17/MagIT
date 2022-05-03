@@ -10,7 +10,6 @@ import {
   ConfirmDialogModel
 } from "../general/confirmation-dialog/confirmation-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
-import {AddExampleBookmarkComponent} from "../add-example-bookmark/add-example-bookmark.component";
 import {EditExampleBookmarkComponent} from "../edit-example-bookmark/edit-example-bookmark.component";
 import {PreviewBookmarkComponent} from "../preview-bookmark/preview-bookmark.component";
 
@@ -28,6 +27,8 @@ export class SolutionsLibraryComponent implements OnInit,AfterViewInit {
   filterVal:any="";
 
   user:any;
+  canEdit:boolean=false;
+  roles:any[]=[];
 
   constructor(private tokenStorage: TokenStorageService,
               private toastr: ToastrService,
@@ -36,6 +37,8 @@ export class SolutionsLibraryComponent implements OnInit,AfterViewInit {
 
   ngOnInit(): void {
     this.user = this.tokenStorage.getUser();
+    this.roles = this.user.roles;
+    if(this.roles.includes("ROLE_PM") || this.roles.includes("ROLE_ADMIN")) this.canEdit=true;
     if(this.user.organisation.id){
       const usersRequest = {};
       // @ts-ignore

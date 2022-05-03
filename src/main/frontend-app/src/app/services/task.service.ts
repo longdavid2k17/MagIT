@@ -21,6 +21,10 @@ export class TaskService {
     return this.http.get<any>(`${API}wrapper/${userId}`);
   }
 
+  getMyTasksWrapper(userId:any):Observable<any>{
+    return this.http.get<any>(`${API}my-tasks/${userId}`);
+  }
+
   getByProjectIdPageable(orgId:any,params:any):Observable<any[]>{
     return this.http.get<any[]>(`${API}pageable/project/${orgId}`,{
       params

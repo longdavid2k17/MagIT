@@ -104,6 +104,11 @@ public class TasksController
         return tasksService.getTaskWrapper(id);
     }
 
+    @GetMapping("/my-tasks/{id}/{mode}")
+    public ResponseEntity<?> getMyTasksWrapper(@PathVariable Long id,@PathVariable String mode){
+        return tasksService.getMyTasksWrapper(id,mode);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
         return tasksService.delete(id);

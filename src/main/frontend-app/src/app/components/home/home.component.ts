@@ -3,6 +3,8 @@ import {ToastrService} from "ngx-toastr";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {DatePipe} from "@angular/common";
 import * as moment from "moment";
+import {TaskService} from "../../services/task.service";
+import {ErrorMessageClass} from "../projects/projects/projects.component";
 
 @Component({
   selector: 'app-home',
@@ -12,12 +14,24 @@ import * as moment from "moment";
 export class HomeComponent implements OnInit {
   dzienTygodnia:any;
   dzisiejszaData:any;
-  constructor(private toastr:ToastrService,private tokenStorageService:TokenStorageService,public datepipe: DatePipe) { }
+  user:any;
+  wrapper:any;
+  constructor(private toastr:ToastrService,
+              private tokenStorageService:TokenStorageService,
+              public datepipe: DatePipe,
+              private tasksService:TaskService) {
+    this.user = this.tokenStorageService.getUser();
+  }
 
   ngOnInit(): void
   {
     this.dzienTygodnia = moment().locale("pl").format('dddd');
     this.dzisiejszaData =this.datepipe.transform((new Date), 'dd/MM/yyyy');
+    this.tasksService.getMyTasksWrapper(this.user.id).subscribe(res=>{
+      this.wrapper=res;
+    },error => {
+      this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd");
+    })
   }
 
 

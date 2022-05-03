@@ -358,4 +358,25 @@ public class TasksService
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania asystenta zadań. Komunikat: "+e.getMessage()));
         }
     }
+
+    public ResponseEntity<?> getMyTasksWrapper(Long id,String mode) {
+        if(mode==null) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak parametru trybu wyboru!"));
+        try {
+            switch (mode){
+                case "day":
+                    break;
+                case "week":
+                    break;
+                case "month":
+                    break;
+                default:
+                    break;
+            }
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e){
+            LOGGER.error("Error in TasksService.getMyTasksWrapper for ID {} and mode param = {}. Message: {}",id,mode,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania zadań. Komunikat: "+e.getMessage()));
+        }
+    }
 }
