@@ -26,7 +26,7 @@ export class TasksRegisterComponent implements OnInit,AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   isLoading:boolean=true;
   totalElements:number=0;
-
+  filterVal:any="";
   user:any;
 
   constructor(private tokenStorage: TokenStorageService,
@@ -69,11 +69,40 @@ export class TasksRegisterComponent implements OnInit,AfterViewInit {
   }
 
   nextPage(event: PageEvent) {
-
+    const usersRequest = {};
+    // @ts-ignore
+    usersRequest['page'] = event.pageIndex+1;
+    // @ts-ignore
+    usersRequest['size'] = event.pageSize;
+    if(this.filterVal.length>0) {
+      // @ts-ignore
+      usersRequest['query'] = searchString;
+    }
+    this.getData(usersRequest);
   }
 
   applyFilter(x: any) {
     const searchString = x.target.value;
+    if(searchString.length>0){
+      this.filterVal=searchString;
+      const usersRequest = {};
+      // @ts-ignore
+      usersRequest['page'] = 0;
+      // @ts-ignore
+      usersRequest['size'] = 10;
+      // @ts-ignore
+      usersRequest['query'] = searchString;
+      this.getData(usersRequest);
+    }
+    else {
+      this.filterVal="";
+      const usersRequest = {};
+      // @ts-ignore
+      usersRequest['page'] = 0;
+      // @ts-ignore
+      usersRequest['size'] = 10;
+      this.getData(usersRequest);
+    }
   }
 
   addTask() {

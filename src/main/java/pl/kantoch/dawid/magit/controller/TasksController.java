@@ -68,19 +68,19 @@ public class TasksController
     }
 
     @GetMapping("/pageable/{selectionMode}/{id}")
-    public ResponseEntity<?> getTasksPageable(@PathVariable String selectionMode, @PathVariable Long id, Pageable pageable){
+    public ResponseEntity<?> getTasksPageable(@PathVariable String selectionMode, @PathVariable Long id, Pageable pageable,@RequestParam(required = false) String query){
         if(selectionMode==null || id==null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak wymaganych parametrów do pobrania zasobów!"));
         ResponseEntity<?> response;
         switch (selectionMode){
             case "project":
-                response = tasksService.getForProjectPageable(id,pageable);
+                response = tasksService.getForProjectPageable(id,pageable,query);
                 break;
             case "team":
-                response = tasksService.getForTeamPageable(id,pageable);
+                response = tasksService.getForTeamPageable(id,pageable,query);
                 break;
             case "organisation":
-                response = tasksService.getForOrganisationPageable(id,pageable);
+                response = tasksService.getForOrganisationPageable(id,pageable,query);
                 break;
             default:
                 response = ResponseEntity.ok().build();

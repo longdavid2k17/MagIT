@@ -26,7 +26,14 @@ const routes: Routes = [
   { path: 'register-confirm', component: TokenComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'reset-confirm', component: ResetPasswordConfirmationComponent },
-  { path: 'solutions', component: SolutionsLibraryComponent },
+  {
+    path: 'solutions',
+    component: SolutionsLibraryComponent,
+    canActivate:[RoleGuard],
+    data:{
+      expectedRoles:['ROLE_USER']
+    }
+  },
   {
     path: 'projects',
     component: ProjectsComponent,

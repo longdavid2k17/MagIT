@@ -14,6 +14,7 @@ import pl.kantoch.dawid.magit.utils.GsonInstance;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -93,12 +94,16 @@ public class TasksService
         }
     }
 
-    public ResponseEntity<?> getForProjectPageable(Long id, Pageable pageable){
+    public ResponseEntity<?> getForProjectPageable(Long id, Pageable pageable,String query){
         try {
             Optional<Project> optionalProject = projectsRepository.findByIdAndDeletedIsFalseAndArchivedIsFalse(id);
             if(optionalProject.isEmpty())
                 throw new Exception("Nie znaleziono projektu o ID="+id);
-            Page<Task> page = tasksRepository.findAllByDeletedFalseAndProjectAndParentTaskIsNull(optionalProject.get(),pageable);
+            Page<Task> page;
+            if(query!=null) {
+                query = "%"+query.toLowerCase(Locale.ROOT)+"%";
+                page = tasksRepository.findAllByDeletedFalseAndProjectAndParentTaskIsNullFitlered(optionalProject.get(),query,pageable);
+            } else page = tasksRepository.findAllByDeletedFalseAndProjectAndParentTaskIsNull(optionalProject.get(),pageable);
             page.get().forEach(e->{
                 Optional<ExampleSolutions> optional = exampleSolutionsRepository.findByTask(e);
                 if(optional.isPresent()) e.setExample(true);
@@ -125,17 +130,21 @@ public class TasksService
         }
     }
 
-    public ResponseEntity<?> getForTeamPageable(Long id, Pageable pageable){
+    public ResponseEntity<?> getForTeamPageable(Long id, Pageable pageable,String query){
         try {
             Optional<Team> optionalTeam = teamsRepository.findByDeletedFalseAndId(id);
             if(optionalTeam.isEmpty())
                 throw new Exception("Nie znaleziono zespołu o ID="+id);
-            Page<Task> list = tasksRepository.findAllByDeletedFalseAndTeamAndParentTaskIsNull(optionalTeam.get(),pageable);
-            list.get().forEach(e->{
+            Page<Task> page;
+            if(query!=null) {
+                query = "%"+query.toLowerCase(Locale.ROOT)+"%";
+                page = tasksRepository.findAllByDeletedFalseAndTeamAndParentTaskIsNullFiltered(optionalTeam.get(),query,pageable);
+            } else page = tasksRepository.findAllByDeletedFalseAndTeamAndParentTaskIsNull(optionalTeam.get(),pageable);
+            page.get().forEach(e->{
                 Optional<ExampleSolutions> optional = exampleSolutionsRepository.findByTask(e);
                 if(optional.isPresent()) e.setExample(true);
             });
-            return ResponseEntity.ok().body(list);
+            return ResponseEntity.ok().body(page);
         }
         catch (Exception e){
             LOGGER.error("Error in TasksService.getForTeamPageable for id {}. Message: {}",id,e.getMessage());
@@ -157,12 +166,17 @@ public class TasksService
         }
     }
 
-    public ResponseEntity<?> getForOrganisationPageable(Long id, Pageable pageable){
+    public ResponseEntity<?> getForOrganisationPageable(Long id, Pageable pageable,String query){
         try {
             Optional<Organisation> optionalOrganisation = organisationsRepository.findById(id);
             if(optionalOrganisation.isEmpty())
                 throw new Exception("Nie znaleziono organizacji o ID="+id);
-            Page<Task> page = tasksRepository.findAllByDeletedFalseAndOrganisationAndParentTaskIsNull(optionalOrganisation.get(),pageable);
+            Page<Task> page;
+            if(query!=null) {
+                query = "%"+query.toLowerCase(Locale.ROOT)+"%";
+                page = tasksRepository.findAllByDeletedFalseAndOrganisationAndParentTaskIsNullFiltered(optionalOrganisation.get(),query,pageable);
+            }
+            else page = tasksRepository.findAllByDeletedFalseAndOrganisationAndParentTaskIsNull(optionalOrganisation.get(),pageable);
             page.get().forEach(e->{
                 Optional<ExampleSolutions> optional = exampleSolutionsRepository.findByTask(e);
                 if(optional.isPresent()) e.setExample(true);

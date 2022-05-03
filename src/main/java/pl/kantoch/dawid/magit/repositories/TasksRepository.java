@@ -28,6 +28,18 @@ public interface TasksRepository extends JpaRepository<Task,Long> {
     Page<Task> findAllByDeletedFalseAndUserAndParentTaskIsNull(User user, Pageable pageable);
     Page<Task> findAllByDeletedFalseAndOrganisationAndParentTaskIsNull(Organisation organisation, Pageable pageable);
 
+    @Query("select task from Task task where task.deleted=false and task.project = :project and task.parentTask is null and " +
+            "(lower(task.title) like :search or lower(task.description) like :search) ")
+    Page<Task> findAllByDeletedFalseAndProjectAndParentTaskIsNullFitlered(@Param("project") Project project,@Param("search") String search, Pageable pageable);
+
+    @Query("select task from Task task where task.deleted=false and task.organisation = :organisation and task.parentTask is null and " +
+            "(lower(task.title) like :search or lower(task.description) like :search) ")
+    Page<Task> findAllByDeletedFalseAndOrganisationAndParentTaskIsNullFiltered(@Param("organisation") Organisation organisation,@Param("search") String search, Pageable pageable);
+
+    @Query("select task from Task task where task.deleted=false and task.team = :team and task.parentTask is null and " +
+            "(lower(task.title) like :search or lower(task.description) like :search) ")
+    Page<Task> findAllByDeletedFalseAndTeamAndParentTaskIsNullFiltered(@Param("team") Team team,@Param("search") String search, Pageable pageable);
+
     List<Task> findAllByDeletedFalseAndParentTask_Id(Long id);
 
     Long countAllByCompletedTrueAndDeletedFalseAndProject(Project project);

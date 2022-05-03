@@ -15,6 +15,7 @@ import pl.kantoch.dawid.magit.repositories.OrganisationsRepository;
 import pl.kantoch.dawid.magit.utils.GsonInstance;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -36,6 +37,20 @@ public class ExampleSolutionsService
             Optional<Organisation> optionalOrganisation = organisationsRepository.findById(id);
             if(optionalOrganisation.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono organizacji użytkownika!"));
             Page<ExampleSolutions> page = exampleSolutionsRepository.findAllByOrganisation_Id(id,pageable);
+            return ResponseEntity.ok().body(page);
+        }
+        catch (Exception e){
+            LOGGER.error("Error in ExampleSolutionsService.getAllForOrganisation for id={}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania danych. Komunikat: "+e.getMessage()));
+        }
+    }
+
+    public ResponseEntity<?> getAllForOrganisationFilter(Long id, Pageable pageable,String query) {
+        try {
+            Optional<Organisation> optionalOrganisation = organisationsRepository.findById(id);
+            if(optionalOrganisation.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono organizacji użytkownika!"));
+            query="%"+query.toLowerCase(Locale.ROOT)+"%";
+            Page<ExampleSolutions> page = exampleSolutionsRepository.findByQueryParam(id,query,pageable);
             return ResponseEntity.ok().body(page);
         }
         catch (Exception e){

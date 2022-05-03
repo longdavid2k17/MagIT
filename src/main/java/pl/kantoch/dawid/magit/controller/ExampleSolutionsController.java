@@ -17,8 +17,9 @@ public class ExampleSolutionsController
     }
 
     @GetMapping("/organisation/{id}")
-    public ResponseEntity<?> getAllForOrganisation(@PathVariable Long id, Pageable pageable){
-        return exampleSolutionsService.getAllForOrganisation(id,pageable);
+    public ResponseEntity<?> getAllForOrganisation(@PathVariable Long id, Pageable pageable,@RequestParam(required = false) String query){
+        if(query!=null) return exampleSolutionsService.getAllForOrganisationFilter(id,pageable,query);
+        else return exampleSolutionsService.getAllForOrganisation(id,pageable);
     }
 
     @GetMapping("/types/{id}")
