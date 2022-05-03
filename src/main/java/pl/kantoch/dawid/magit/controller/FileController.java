@@ -37,6 +37,21 @@ public class FileController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(GsonInstance.get().toJson(message));
         }
     }
+
+    @PostMapping("/upload-attachment/{taskId}")
+    public ResponseEntity<?> uploadAttachment(@PathVariable Long taskId,@RequestHeader("Authorization")String token ,@RequestParam("file") MultipartFile file) {
+        if(taskId==null) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie przekazano parametru zadania"));
+        String message = "";
+        try {
+            storageService.saveAttachment(file,taskId,token);
+            message = "Pomyślnie przesłano plik: " + file.getOriginalFilename();
+            return ResponseEntity.status(HttpStatus.OK).body(GsonInstance.get().toJson(message));
+        } catch (Exception e) {
+            message = "Wystąpił błąd podczas przesyłania pliku! "+e.getMessage();
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(GsonInstance.get().toJson(message));
+        }
+    }
+
     @GetMapping("/result-files/{taskId}")
     public ResponseEntity<?> getListFiles(@PathVariable Long taskId) {
         try {
@@ -52,6 +67,23 @@ public class FileController {
          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson(e.getMessage()));
         }
     }
+
+    @GetMapping("/attachment-files/{taskId}")
+    public ResponseEntity<?> getAttachmentListFiles(@PathVariable Long taskId) {
+        try {
+            List<FileInfo> fileInfos = storageService.loadAllAttachments(taskId).stream().map(path -> {
+                String filename = path.getFileName().toString();
+                String url = MvcUriComponentsBuilder
+                        .fromMethodName(FileController.class, "getFile", path.getFileName().toString()).build().toString();
+                return new FileInfo(filename, url);
+            }).collect(Collectors.toList());
+            return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson(e.getMessage()));
+        }
+    }
+
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {

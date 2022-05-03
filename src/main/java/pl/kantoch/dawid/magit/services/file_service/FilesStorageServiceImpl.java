@@ -9,14 +9,15 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.kantoch.dawid.magit.TaskResult;
 import pl.kantoch.dawid.magit.models.MemoryDirectory;
 import pl.kantoch.dawid.magit.models.Task;
+import pl.kantoch.dawid.magit.models.TaskAttachment;
 import pl.kantoch.dawid.magit.repositories.MemoryDirectoriesRepository;
+import pl.kantoch.dawid.magit.repositories.TaskAttachmentRepository;
 import pl.kantoch.dawid.magit.repositories.TasksRepository;
 import pl.kantoch.dawid.magit.repositories.TasksResultsRepository;
 import pl.kantoch.dawid.magit.security.JWTUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService
@@ -36,25 +36,20 @@ public class FilesStorageServiceImpl implements FilesStorageService
     private final TasksResultsRepository tasksResultsRepository;
     private final MemoryDirectoriesRepository memoryDirectoriesRepository;
     private final JWTUtils jwtUtils;
+    private final TaskAttachmentRepository taskAttachmentRepository;
 
     public FilesStorageServiceImpl(TasksRepository tasksRepository,
                                    TasksResultsRepository tasksResultsRepository,
-                                   MemoryDirectoriesRepository memoryDirectoriesRepository, JWTUtils jwtUtils) {
+                                   MemoryDirectoriesRepository memoryDirectoriesRepository,
+                                   JWTUtils jwtUtils,
+                                   TaskAttachmentRepository taskAttachmentRepository) {
         this.tasksRepository = tasksRepository;
         this.tasksResultsRepository = tasksResultsRepository;
         this.memoryDirectoriesRepository = memoryDirectoriesRepository;
         this.jwtUtils = jwtUtils;
+        this.taskAttachmentRepository = taskAttachmentRepository;
     }
 
-    @Override
-    public void init() {
-        try {
-            Files.createDirectory(root);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Could not initialize folder for upload!");
-        }
-    }
     @Transactional
     @Override
     public void save(MultipartFile file,Long id,String token) {
@@ -76,11 +71,41 @@ public class FilesStorageServiceImpl implements FilesStorageService
             taskResult.setFileUrl(savedFile.getAbsolutePath());
             taskResult.setTaskId(optionalTask.get().getId());
             tasksResultsRepository.save(taskResult);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    @Transactional
+    @Override
+    public void saveAttachment(MultipartFile file, Long taskId, String token) {
+        try {
+            Optional<Task> optionalTask = tasksRepository.findByIdAndDeletedFalse(taskId);
+            if(optionalTask.isEmpty()) throw new Exception("Nie znaleziono zadania o ID="+taskId);
+            if(optionalTask.get().getProject()==null) throw new Exception("To zadanie nie posiada zdefiniowanego projektu i nie można przesyłać do niego zasobów");
+            if(optionalTask.get().getProject()!=null && optionalTask.get().getProject().getDriveName()==null) throw new Exception("Dla projektu tego zadania nie zdefiniowano dysku sieciowego!");
+            Optional<MemoryDirectory> memoryDirectoryOptional = memoryDirectoriesRepository.findByProject_Id(optionalTask.get().getProject().getId());
+            if(memoryDirectoryOptional.isEmpty()) throw new FileNotFoundException("Nie znaleziono katalogu projektu!");
+            File savedFile = new File(memoryDirectoryOptional.get().getGeneratedUrl()+File.separator+file.getOriginalFilename());
+            if(savedFile.exists()) throw new Exception(file.getOriginalFilename()+" już istnieje w katalogu docelowym!");
+            Files.copy(file.getInputStream(), savedFile.toPath());
+            TaskAttachment taskAttachment = new TaskAttachment();
+            taskAttachment.setCreationDate(new Date());
+            String username = jwtUtils.getUsernameFromJwtToken(token.substring(7));
+            taskAttachment.setLogin(username);
+            taskAttachment.setAttachmentType(file.getContentType());
+            taskAttachment.setFileUrl(savedFile.getAbsolutePath());
+            taskAttachment.setTaskId(optionalTask.get().getId());
+            taskAttachmentRepository.save(taskAttachment);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @Override
     public Resource load(String filename) {
         try {
@@ -122,7 +147,23 @@ public class FilesStorageServiceImpl implements FilesStorageService
     }
 
     @Override
-    public Stream<Path> loadAllAttachments(Long taskId) {
-        return null;
+    public List<Path> loadAllAttachments(Long taskId) {
+        try {
+            Optional<Task> optionalTask = tasksRepository.findByIdAndDeletedFalse(taskId);
+            if(optionalTask.isEmpty()) throw new Exception("Nie znaleziono zadania o ID="+taskId);
+            if(optionalTask.get().getProject()==null) throw new Exception("To zadanie nie posiada zdefiniowanego projektu i nie można przesyłać do niego zasobów");
+            if(optionalTask.get().getProject()!=null && optionalTask.get().getProject().getDriveName()==null) throw new Exception("Dla projektu tego zadania nie zdefiniowano dysku sieciowego!");
+            List<TaskAttachment> taskAttachmentList = taskAttachmentRepository.findAllByTaskId(optionalTask.get().getId());
+            List<Path> paths = new ArrayList<>();
+            taskAttachmentList.forEach(e->{
+                if(e.getFileUrl()!=null){
+                    paths.add(Path.of(e.getFileUrl()));
+                }
+            });
+            return paths;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Nie udało się pobrać plików załączników! "+e.getMessage());
+        }
     }
 }

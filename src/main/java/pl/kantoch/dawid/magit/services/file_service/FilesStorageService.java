@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public interface FilesStorageService {
-    void init();
     void save(MultipartFile file,Long id,String token);
     Resource load(String filename);
     void deleteAll();
     List<Path> loadAllResultsFile(Long taskId);
-    Stream<Path> loadAllAttachments(Long taskId);
+    List<Path> loadAllAttachments(Long taskId);
+    void saveAttachment(MultipartFile file, Long taskId, String token);
 }

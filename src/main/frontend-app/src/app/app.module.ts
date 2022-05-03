@@ -63,6 +63,7 @@ import { AddExampleBookmarkComponent } from './components/add-example-bookmark/a
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { EditExampleBookmarkComponent } from './components/edit-example-bookmark/edit-example-bookmark.component';
 import { PreviewBookmarkComponent } from './components/preview-bookmark/preview-bookmark.component';
+import { AttachmentFileUploadComponent } from './components/general/attachment-file-upload/attachment-file-upload.component';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { PreviewBookmarkComponent } from './components/preview-bookmark/preview-
     AddExampleBookmarkComponent,
     EditExampleBookmarkComponent,
     PreviewBookmarkComponent,
+    AttachmentFileUploadComponent,
   ],
     imports: [
         BrowserModule,
