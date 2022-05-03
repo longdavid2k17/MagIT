@@ -9,13 +9,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kantoch.dawid.magit.models.*;
+import pl.kantoch.dawid.magit.models.payloads.responses.TaskWrapper;
 import pl.kantoch.dawid.magit.repositories.*;
+import pl.kantoch.dawid.magit.security.user.User;
+import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
+import pl.kantoch.dawid.magit.utils.DateUtils;
 import pl.kantoch.dawid.magit.utils.GsonInstance;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class TasksService
@@ -27,17 +35,23 @@ public class TasksService
     private final ProjectsRepository projectsRepository;
     private final OrganisationsRepository organisationsRepository;
     private final ExampleSolutionsRepository exampleSolutionsRepository;
+    private final UserRepository userRepository;
+    private final TaskRealizationRepository taskRealizationRepository;
 
     public TasksService(TasksRepository tasksRepository,
                         TeamsRepository teamsRepository,
                         ProjectsRepository projectsRepository,
                         OrganisationsRepository organisationsRepository,
-                        ExampleSolutionsRepository exampleSolutionsRepository) {
+                        ExampleSolutionsRepository exampleSolutionsRepository,
+                        UserRepository userRepository,
+                        TaskRealizationRepository taskRealizationRepository) {
         this.tasksRepository = tasksRepository;
         this.teamsRepository = teamsRepository;
         this.projectsRepository = projectsRepository;
         this.organisationsRepository = organisationsRepository;
         this.exampleSolutionsRepository = exampleSolutionsRepository;
+        this.userRepository = userRepository;
+        this.taskRealizationRepository = taskRealizationRepository;
     }
 
     @Transactional
@@ -314,4 +328,34 @@ public class TasksService
     }
 
 
+    public ResponseEntity<?> getTaskWrapper(Long id) {
+        try {
+            Optional<User> user = userRepository.findById(id);
+            if(user.isEmpty())
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono użytkownika o ID="+id));
+            TaskWrapper taskWrapper = new TaskWrapper();
+            Optional<TaskRealization> taskRealizationOptional = taskRealizationRepository.findByUserAndStatusEquals(user.get(),"REALIZACJA");
+            taskRealizationOptional.ifPresent(taskRealization -> taskWrapper.setTask(taskRealization.getTask()));
+            LocalDateTime morningDate = LocalDate.now().atStartOfDay();
+            LocalDateTime eveningDate = LocalTime.MAX.atDate(LocalDate.now());
+            Date dateMorningConverted =  DateUtils.convertToDateViaSqlTimestamp(morningDate);
+            Date dateEveningConverted =  DateUtils.convertToDateViaSqlTimestamp(eveningDate);
+            Long countUserDoneToday = tasksRepository.countAllByDeletedFalseAndUserAndCompletedTrueAndModificationDateBetween(user.get(),dateMorningConverted,dateEveningConverted);
+            Long countUserAllToday = tasksRepository.countAllByDeletedFalseAndUserAndModificationDateBetween(user.get(),dateMorningConverted,dateEveningConverted);
+            taskWrapper.setTodayUserTasks("Wykonane dzisiaj: "+countUserDoneToday+"/"+countUserAllToday+" zadań");
+            List<Team> teams = teamsRepository.findForUser(user.get().getId());
+            AtomicReference<Long> allUserTeamsDoneToday = new AtomicReference<>(0L);
+            AtomicReference<Long> allUserTeamsAllToday = new AtomicReference<>(0L);
+            teams.forEach(e->{
+                allUserTeamsDoneToday.updateAndGet(v -> v + tasksRepository.countAllByDeletedFalseAndTeamAndCompletedTrueAndModificationDateBetween(e, dateMorningConverted, dateEveningConverted));
+                allUserTeamsAllToday.updateAndGet(v -> v + tasksRepository.countAllByDeletedFalseAndTeamAndModificationDateBetween(e, dateMorningConverted, dateEveningConverted));
+            });
+            taskWrapper.setTodayTeamTasks("Zadania twoich zespołów: "+allUserTeamsDoneToday.get()+"/"+allUserTeamsAllToday.get());
+            return ResponseEntity.ok().body(taskWrapper);
+        }
+        catch (Exception e){
+            LOGGER.error("Error in TasksService.getTaskWrapper for ID {}. Message: {}",id,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania asystenta zadań. Komunikat: "+e.getMessage()));
+        }
+    }
 }

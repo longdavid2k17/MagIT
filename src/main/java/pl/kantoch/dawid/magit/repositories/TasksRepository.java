@@ -46,6 +46,11 @@ public interface TasksRepository extends JpaRepository<Task,Long> {
     Long countAllByCompletedTrueAndDeletedFalseAndProject(Project project);
     Long countAllByDeletedFalseAndProject(Project project);
 
+    Long countAllByDeletedFalseAndUserAndCompletedTrueAndModificationDateBetween(User user,Date date, Date date1);
+    Long countAllByDeletedFalseAndTeamAndCompletedTrueAndModificationDateBetween(Team team,Date date, Date date1);
+    Long countAllByDeletedFalseAndTeamAndModificationDateBetween(Team team,Date date, Date date1);
+    Long countAllByDeletedFalseAndUserAndModificationDateBetween(User user,Date date, Date date1);
+
     @Query("select count(task) from Task task where task.deleted=false and task.completed=true and task.project=:project" +
             " and task.modificationDate between :morningDate and :eveningDate")
     Long countTodayCompletedTasks(@Param("project") Project project,@Param("morningDate") Date morningDate,@Param("eveningDate") Date eveningDate);

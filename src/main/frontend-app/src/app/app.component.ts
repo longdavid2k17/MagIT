@@ -6,6 +6,8 @@ import {MessengerWindowComponent} from "./components/messenger-window/messenger-
 import {MatDialog} from "@angular/material/dialog";
 import {OrganisationManagementComponent} from "./components/organisation-management/organisation-management.component";
 import {ProfileManagementComponent} from "./components/profile-management/profile-management.component";
+import {TaskService} from "./services/task.service";
+import {TaskPreviewComponent} from "./components/tasks/task-preview/task-preview.component";
 
 @Component({
   selector: 'app-root',
@@ -21,9 +23,12 @@ export class AppComponent {
   login='';
   messengerInstantions:any;
 
+  taskAssistant:any;
+
   constructor(private tokenStorageService:TokenStorageService,
               private toastr:ToastrService,
               private messengerService:MessengerService,
+              private taskService:TaskService,
               public dialog: MatDialog) {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
 
@@ -40,6 +45,11 @@ export class AppComponent {
         this.messengerInstantions=res;
       },error => {
         this.toastr.error(error.error,"Błąd pobierania wiadomości!")
+      });
+      this.taskService.getWrapper(user.id).subscribe(res=>{
+        this.taskAssistant=res;
+      },error => {
+        this.toastr.error(error.error,"Błąd!")
       })
     }
   }
@@ -83,5 +93,21 @@ export class AppComponent {
       hasBackdrop: true
     });
     modalRef.afterClosed().subscribe();
+  }
+
+  openTaskPreview() {
+    const modalRef = this.dialog.open(TaskPreviewComponent, {
+      disableClose: true,
+      data:{task:this.taskAssistant.task},
+      hasBackdrop: true,
+      panelClass: 'my-dialog',
+      minWidth:"600px"
+    });
+    modalRef.afterClosed().subscribe(()=>{
+      this.refresh();
+    });
+  }
+  refresh(): void {
+    window.location.reload();
   }
 }

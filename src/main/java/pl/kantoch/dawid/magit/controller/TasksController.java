@@ -99,6 +99,11 @@ public class TasksController
         return response;
     }
 
+    @GetMapping("/wrapper/{id}")
+    public ResponseEntity<?> getTaskWrapper(@PathVariable Long id){
+        return tasksService.getTaskWrapper(id);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
         return tasksService.delete(id);

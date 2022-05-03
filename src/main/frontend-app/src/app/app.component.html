@@ -72,9 +72,10 @@
       <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary" *ngIf="messengerInstantions?.allUnread>0">+{{messengerInstantions.allUnread}}</span>
     </button>
     <div ngbDropdownMenu aria-labelledby="messengerDropdown" class="dropdown-content">
-      <a>Wykonane dzisiaj: 0/10 zadań</a>
-      <a>Zadania zespołu: 0/10</a>
-      <a>Aktualnie wykonujesz</a>
+      <a href="/home" routerLink="home">{{taskAssistant.todayUserTasks}}</a>
+      <a>{{taskAssistant.todayTeamTasks}}</a>
+      <a *ngIf="taskAssistant?.task" (click)="openTaskPreview()">Aktualnie wykonujesz '{{taskAssistant.task?.title}}'</a>
+      <a *ngIf="!taskAssistant.task">Aktualnie nie wykonujesz żadnego zadania</a>
     </div>
   </div>
 </div>
