@@ -51,6 +51,9 @@ public interface TasksRepository extends JpaRepository<Task,Long> {
     Long countAllByDeletedFalseAndTeamAndModificationDateBetween(Team team,Date date, Date date1);
     Long countAllByDeletedFalseAndUserAndModificationDateBetween(User user,Date date, Date date1);
 
+    @Query("select task from Task task where task.deleted=false and task.user.id=:id and (task.deadlineDate between :startDate and :endDate or task.startDate between :startDate and :endDate)")
+    List<Task> getAllForDay(@Param("id") Long userId,@Param("startDate")Date startDate,@Param("endDate") Date endDate);
+
     @Query("select count(task) from Task task where task.deleted=false and task.completed=true and task.project=:project" +
             " and task.modificationDate between :morningDate and :eveningDate")
     Long countTodayCompletedTasks(@Param("project") Project project,@Param("morningDate") Date morningDate,@Param("eveningDate") Date eveningDate);

@@ -1,5 +1,6 @@
 package pl.kantoch.dawid.magit.services;
 
+import org.joda.time.DateTimeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kantoch.dawid.magit.models.*;
+import pl.kantoch.dawid.magit.models.payloads.responses.DailyTasks;
+import pl.kantoch.dawid.magit.models.payloads.responses.MyTasksWrapper;
 import pl.kantoch.dawid.magit.models.payloads.responses.TaskWrapper;
 import pl.kantoch.dawid.magit.repositories.*;
 import pl.kantoch.dawid.magit.security.user.User;
@@ -16,13 +19,13 @@ import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
 import pl.kantoch.dawid.magit.utils.DateUtils;
 import pl.kantoch.dawid.magit.utils.GsonInstance;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.time.format.TextStyle;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
@@ -362,21 +365,95 @@ public class TasksService
     public ResponseEntity<?> getMyTasksWrapper(Long id,String mode) {
         if(mode==null) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak parametru trybu wyboru!"));
         try {
+            MyTasksWrapper wrapper = new MyTasksWrapper();
             switch (mode){
                 case "day":
+                    wrapper.setList(getForDay(id));
                     break;
                 case "week":
+                    wrapper.setList(getForWeek(id));
                     break;
                 case "month":
+                    wrapper.setList(getForMonth(id));
                     break;
                 default:
                     break;
             }
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(wrapper);
         }
         catch (Exception e){
+            e.printStackTrace();
             LOGGER.error("Error in TasksService.getMyTasksWrapper for ID {} and mode param = {}. Message: {}",id,mode,e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania zadań. Komunikat: "+e.getMessage()));
         }
+    }
+
+    private List<DailyTasks> getForDay(Long userId){
+        DailyTasks dailyTasks = getDailyTasks(userId,LocalDate.now());
+        return List.of(dailyTasks);
+    }
+
+    private List<DailyTasks> getForWeek(Long userId){
+        LocalDate monday = LocalDate.now().withDayOfMonth(DateTimeConstants.MONDAY);
+        LocalDate sunday = LocalDate.now().withDayOfMonth(DateTimeConstants.SUNDAY);
+        List<DailyTasks> list = new ArrayList<>();
+        for (LocalDate d = monday; !d.isAfter(sunday); d = d.plusDays(1)) {
+            list.add(getDailyTasks(userId,d));
+        }
+        return list;
+    }
+
+    private List<DailyTasks> getForMonth(Long userId){
+        LocalDate firstDayOfMonth = LocalDateTime.now()
+                .with(LocalTime.MIN)
+                .with(TemporalAdjusters.firstDayOfMonth()).toLocalDate();
+        LocalDate lastDayOfMonth = LocalDateTime.now()
+                .with(LocalTime.MIN)
+                .with(TemporalAdjusters.lastDayOfMonth()).toLocalDate();
+        List<DailyTasks> list = new ArrayList<>();
+        for (LocalDate d = firstDayOfMonth; !d.isAfter(lastDayOfMonth); d = d.plusDays(1)) {
+            list.add(getDailyTasks(userId,d));
+        }
+        return list;
+    }
+
+    public DailyTasks getDailyTasks(Long userId,LocalDate localDate){
+        LocalDateTime morningDate = localDate.atStartOfDay();
+        LocalDateTime eveningDate = LocalTime.MAX.atDate(localDate);
+        Date dateMorningConverted =  DateUtils.convertToDateViaSqlTimestamp(morningDate);
+        Date dateEveningConverted =  DateUtils.convertToDateViaSqlTimestamp(eveningDate);
+        String label = getDayOfWeek(localDate)+", "+localDate;
+        List<Task> tasks = tasksRepository.getAllForDay(userId,dateMorningConverted,dateEveningConverted);
+        return new DailyTasks(label,tasks);
+    }
+
+    public String getDayOfWeek(LocalDate localDate){
+        String day = localDate.getDayOfWeek().getDisplayName(TextStyle.FULL,Locale.ENGLISH);
+        String translated;
+        switch (day.toLowerCase(Locale.ROOT)){
+            case "monday":
+            default:
+                translated="Poniedziałek";
+                break;
+            case "tuesday":
+                translated="Wtorek";
+                break;
+            case "wednesday":
+                translated="Środa";
+                break;
+            case "thursday":
+                translated="Czwartek";
+                break;
+            case "friday":
+                translated="Piątek";
+                break;
+            case "saturday":
+                translated="Sobota";
+                break;
+            case "sunday":
+                translated="Niedziela";
+                break;
+        }
+        return translated;
     }
 }
