@@ -14,6 +14,7 @@ import {
 import {TaskPreviewComponent} from "../task-preview/task-preview.component";
 import {AddExampleBookmarkComponent} from "../../add-example-bookmark/add-example-bookmark.component";
 import {BookmarkService} from "../../../services/bookmark.service";
+import {EditTaskFormComponent} from "../edit-task-form/edit-task-form.component";
 
 @Component({
   selector: 'app-tasks-register',
@@ -190,6 +191,24 @@ export class TasksRegisterComponent implements OnInit,AfterViewInit {
         },error => {
           this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd!");
         });
+      }
+    });
+  }
+
+  edit(row:any) {
+    const modalRef = this.dialog.open(EditTaskFormComponent, {
+      disableClose: true,
+      data:{
+        task:row,
+        organisation:this.user.organisation
+      },
+      hasBackdrop: true,
+      panelClass: 'my-dialog',
+      minWidth:"600px"
+    });
+    modalRef.afterClosed().subscribe(res =>{
+      if(res?.id){
+        this.refresh();
       }
     });
   }

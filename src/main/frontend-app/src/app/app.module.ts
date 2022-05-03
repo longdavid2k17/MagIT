@@ -64,6 +64,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { EditExampleBookmarkComponent } from './components/edit-example-bookmark/edit-example-bookmark.component';
 import { PreviewBookmarkComponent } from './components/preview-bookmark/preview-bookmark.component';
 import { AttachmentFileUploadComponent } from './components/general/attachment-file-upload/attachment-file-upload.component';
+import { EditTaskFormComponent } from './components/tasks/edit-task-form/edit-task-form.component';
 
 @NgModule({
   declarations: [
@@ -98,6 +99,7 @@ import { AttachmentFileUploadComponent } from './components/general/attachment-f
     EditExampleBookmarkComponent,
     PreviewBookmarkComponent,
     AttachmentFileUploadComponent,
+    EditTaskFormComponent,
   ],
     imports: [
         BrowserModule,

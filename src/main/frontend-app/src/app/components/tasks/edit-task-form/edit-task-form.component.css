@@ -1,0 +1,7 @@
+.example-full-width {
+  width: 100%;
+}
+
+#parent > * {
+  margin: 30px 0;
+}

@@ -3,7 +3,7 @@
      cdkDragRootElement=".cdk-overlay-pane"
      cdkDragHandle  style="display: inline-block"
      cdkDragBoundary=".cdk-overlay-container" >
-  <h2>Edytuj zadanie</h2>
+  <h2>Edytuj zadanie #{{task?.id}}</h2>
 </div>
 <mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
   <mat-step [stepControl]="form">
@@ -106,7 +106,9 @@
     <form [formGroup]="form">
       <ng-template matStepLabel>Załączniki</ng-template>
       <div class="form-group">
-        <label>Dodawanie załączników jest możliwe po utworzeniu zadania, w panelu edycji</label>
+        <div class="example-full-width">
+          <app-attachment-file-upload [taskId]="task.id"></app-attachment-file-upload>
+        </div>
       </div>
       <div style="text-align: right;float: right; margin-top: 10px">
         <button mat-button matStepperPrevious>Cofnij</button>
@@ -114,42 +116,42 @@
       </div>
     </form>
   </mat-step>
-    <mat-step [stepControl]="form">
-      <form [formGroup]="form" (submit)="onSubmit()">
-        <ng-template matStepLabel>Podzadania</ng-template>
-        <div class="form-group">
-          <div *ngFor="let subTask of subTasks">
-            <div>
-              <button mat-icon-button title="Usuń podzadanie" (click)="remove(subTask)"><mat-icon>delete</mat-icon></button>
-              <span>{{subTask.title}} - {{subTask.user.name}} {{subTask.user.surname}}</span>
-            </div>
+  <mat-step [stepControl]="form">
+    <form [formGroup]="form" (submit)="onSubmit()">
+      <ng-template matStepLabel>Podzadania</ng-template>
+      <div class="form-group">
+        <div *ngFor="let subTask of subTasks">
+          <div>
+            <button mat-icon-button title="Usuń podzadanie" (click)="remove(subTask)"><mat-icon>delete</mat-icon></button>
+            <span>{{subTask.title}} - {{subTask.user.name}} {{subTask.user.surname}}</span>
           </div>
         </div>
-        <div class="form-group">
-          <div style="float: left; margin-right: 15px">
-            <mat-form-field appearance="fill">
-              <mat-label>Treść</mat-label>
-              <input matInput name="subtaskTitle" (input)="onTitleChange($event.target)" #inputElement>
-            </mat-form-field>
-          </div>
-          <div style="float: left; margin-right: 15px">
-            <mat-form-field appearance="fill">
-              <mat-label>Odpowiedzialny</mat-label>
-              <mat-select (selectionChange)="onUserChange($event)">
-                <mat-option *ngFor="let user of users" [value]="user">
-                  {{user.name}} {{user.surname}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div style="float: left">
-            <button mat-button (click)="addSubtask()" type="button"><mat-icon>add</mat-icon></button>
-          </div>
+      </div>
+      <div class="form-group">
+        <div style="float: left; margin-right: 15px">
+          <mat-form-field appearance="fill">
+            <mat-label>Treść</mat-label>
+            <input matInput name="subtaskTitle" (input)="onTitleChange($event.target)" #inputElement>
+          </mat-form-field>
         </div>
-        <div style="text-align: right;float: right; margin-top: 10px">
-          <button mat-button matStepperPrevious>Cofnij</button>
-          <button mat-raised-button type="submit">Utwórz</button>
+        <div style="float: left; margin-right: 15px">
+          <mat-form-field appearance="fill">
+            <mat-label>Odpowiedzialny</mat-label>
+            <mat-select (selectionChange)="onUserChange($event)">
+              <mat-option *ngFor="let user of users" [value]="user">
+                {{user.name}} {{user.surname}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
-      </form>
+        <div style="float: left">
+          <button mat-button (click)="addSubtask()" type="button"><mat-icon>add</mat-icon></button>
+        </div>
+      </div>
+      <div style="text-align: right;float: right; margin-top: 10px">
+        <button mat-button matStepperPrevious>Cofnij</button>
+        <button mat-raised-button type="submit">Utwórz</button>
+      </div>
+    </form>
   </mat-step>
 </mat-stepper>
