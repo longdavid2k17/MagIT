@@ -155,7 +155,7 @@ export class EditTaskFormComponent implements OnInit {
           this.subTasks[i].parentTask = parentTask;
         }
       }
-      this.taskService.editSubtasks(this.subTasks).subscribe(res=>{
+      this.taskService.editSubtasks(this.subTasks,parentTask.id).subscribe(res=>{
         this.dialogRef.close();
       },error => {
         this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd!")

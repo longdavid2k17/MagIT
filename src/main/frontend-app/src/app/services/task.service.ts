@@ -52,8 +52,8 @@ export class TaskService {
       tasks);
   }
 
-  editSubtasks(tasks:any[]):Observable<any> {
-    return this.http.post<any>(`${API}save-subtasks`,
+  editSubtasks(tasks:any[],parentTaskId:any):Observable<any> {
+    return this.http.post<any>(`${API}edit-subtasks/${parentTaskId}`,
       tasks);
   }
 
