@@ -13,6 +13,7 @@ import pl.kantoch.dawid.magit.models.Task;
 import pl.kantoch.dawid.magit.models.Team;
 import pl.kantoch.dawid.magit.security.user.User;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +45,10 @@ public interface TasksRepository extends JpaRepository<Task,Long> {
 
     Long countAllByCompletedTrueAndDeletedFalseAndProject(Project project);
     Long countAllByDeletedFalseAndProject(Project project);
+
+    @Query("select count(task) from Task task where task.deleted=false and task.completed=true and task.project=:project" +
+            " and task.modificationDate between :morningDate and :eveningDate")
+    Long countTodayCompletedTasks(@Param("project") Project project,@Param("morningDate") Date morningDate,@Param("eveningDate") Date eveningDate);
 
     Optional<Task> findByIdAndDeletedFalseAndCompletedFalse(Long id);
     Optional<Task> findByIdAndDeletedFalse(Long id);

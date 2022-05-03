@@ -14,8 +14,12 @@ import pl.kantoch.dawid.magit.security.user.Role;
 import pl.kantoch.dawid.magit.security.user.User;
 import pl.kantoch.dawid.magit.security.user.repositories.RoleRepository;
 import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
+import pl.kantoch.dawid.magit.utils.DateUtils;
 import pl.kantoch.dawid.magit.utils.GsonInstance;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -104,10 +108,11 @@ public class ProjectsService
             projects.forEach(e->{
                 long completedTasks = tasksRepository.countAllByCompletedTrueAndDeletedFalseAndProject(e);
                 long allTasks = tasksRepository.countAllByDeletedFalseAndProject(e);
-                long completedTasksToday = 0l;
-                long allTasksToday = 0l;
+                LocalDateTime morningDate = LocalDate.now().atStartOfDay();
+                LocalDateTime eveningDate = LocalTime.MAX.atDate(LocalDate.now());
+                long completedTasksToday = tasksRepository.countTodayCompletedTasks(e, DateUtils.convertToDateViaSqlTimestamp(morningDate),DateUtils.convertToDateViaSqlTimestamp(eveningDate));
                 e.setAllTasks(completedTasks+"/"+allTasks);
-                e.setTodayTasks(completedTasksToday+"/"+allTasksToday);
+                e.setTodayTasks(String.valueOf(completedTasksToday));
             });
             return ResponseEntity.ok().body(projects);
         }
@@ -167,10 +172,11 @@ public class ProjectsService
             projects.forEach(e->{
                 long completedTasks = tasksRepository.countAllByCompletedTrueAndDeletedFalseAndProject(e);
                 long allTasks = tasksRepository.countAllByDeletedFalseAndProject(e);
-                long completedTasksToday = 0l;
-                long allTasksToday = 0l;
+                LocalDateTime morningDate = LocalDate.now().atStartOfDay();
+                LocalDateTime eveningDate = LocalTime.MAX.atDate(LocalDate.now());
+                long completedTasksToday = tasksRepository.countTodayCompletedTasks(e, DateUtils.convertToDateViaSqlTimestamp(morningDate),DateUtils.convertToDateViaSqlTimestamp(eveningDate));
                 e.setAllTasks(completedTasks+"/"+allTasks);
-                e.setTodayTasks(completedTasksToday+"/"+allTasksToday);
+                e.setTodayTasks(String.valueOf(completedTasksToday));
             });
             return ResponseEntity.ok().body(projects);
         }
