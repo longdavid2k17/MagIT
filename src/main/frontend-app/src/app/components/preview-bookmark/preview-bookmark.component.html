@@ -1,1 +1,48 @@
-<p>preview-bookmark works!</p>
+<div *ngIf="entryData">
+  <div mat-dialog-title class="dialog-title" cdkDrag
+       cdkDragRootElement=".cdk-overlay-pane"
+       cdkDragHandle  style="display: inline-block"
+       cdkDragBoundary=".cdk-overlay-container">
+    <h2>#{{entryData.id}} {{entryData.type}} - (Zadanie #{{entryData?.task.id}} - {{entryData?.task.title}})</h2>
+    <button mat-button type="button" class="close" aria-label="Zamknij" (click)="dismiss()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <mat-card>
+      <mat-card-title>Rozwiązanie</mat-card-title>
+      <mat-card-content>
+        <div>
+          <p>Opis: <b>{{entryData?.description}}</b></p><br/>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card style="margin-top: 10px">
+      <mat-card-title>Treść zadania</mat-card-title>
+      <mat-card-content>
+        <div>
+          <span>Tytuł: <b>{{entryData?.task?.title}}</b></span><br/>
+          <span>Opis: <b>{{entryData?.task?.description}}</b></span><br/>
+          <span>Odpowiedzialny: <b>{{entryData?.task?.user?.name}} {{entryData?.task?.user?.surname}}</b></span><br/>
+          <span>Zespół: <b>{{entryData?.task?.team?.name}}</b></span><br/>
+        </div>
+      </mat-card-content>
+    </mat-card >
+    <mat-card style="margin-top: 10px">
+      <mat-card-header>
+        <mat-card-title>Zasoby</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list role="list">
+          <mat-list-item role="listitem" *ngFor="let file of fileInfos">
+            <a href="{{ file.url }}">{{ file.name }}</a>
+          </mat-list-item>
+          <span style="max-width: 100px;color: red">{{resourcesMessage}}</span>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div *ngIf="!entryData">
+  <span>Brak danych do podglądu!</span>
+</div>

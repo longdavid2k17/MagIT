@@ -79,13 +79,6 @@ export class TaskPreviewComponent implements OnInit {
     });
   }
 
-  /**
-   * handle file from browsing
-   */
-  fileBrowseHandler(event:any) {
-    console.log(event.files);
-  }
-
   setSubtaskCompletedValue(subtask: any,event:any) {
     let status = "";
     if(event.checked) status="WYKONANE";
