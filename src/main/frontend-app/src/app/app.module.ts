@@ -65,6 +65,7 @@ import { EditExampleBookmarkComponent } from './components/edit-example-bookmark
 import { PreviewBookmarkComponent } from './components/preview-bookmark/preview-bookmark.component';
 import { AttachmentFileUploadComponent } from './components/general/attachment-file-upload/attachment-file-upload.component';
 import { EditTaskFormComponent } from './components/tasks/edit-task-form/edit-task-form.component';
+import { ProjectTasksRegistryComponent } from './components/tasks/project-tasks-registry/project-tasks-registry.component';
 
 @NgModule({
   declarations: [
@@ -100,6 +101,7 @@ import { EditTaskFormComponent } from './components/tasks/edit-task-form/edit-ta
     PreviewBookmarkComponent,
     AttachmentFileUploadComponent,
     EditTaskFormComponent,
+    ProjectTasksRegistryComponent,
   ],
     imports: [
         BrowserModule,

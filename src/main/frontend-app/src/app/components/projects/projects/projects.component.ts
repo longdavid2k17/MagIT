@@ -10,6 +10,7 @@ import {
   ConfirmationDialogComponent,
   ConfirmDialogModel
 } from "../../general/confirmation-dialog/confirmation-dialog.component";
+import {ProjectTasksRegistryComponent} from "../../tasks/project-tasks-registry/project-tasks-registry.component";
 
 @Component({
   selector: 'app-projects',
@@ -63,7 +64,13 @@ export class ProjectsComponent implements OnInit,AfterViewInit  {
   }
 
   showTasks(row : any) {
-
+    const dialogRef = this.dialog.open(ProjectTasksRegistryComponent, {
+      data:row.id,
+      autoFocus: false,
+      disableClose: true,
+      hasBackdrop: true
+    });
+    dialogRef.afterClosed().subscribe();
   }
 
   addProject() {

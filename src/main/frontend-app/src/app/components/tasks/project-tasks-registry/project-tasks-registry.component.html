@@ -1,0 +1,70 @@
+<div mat-dialog-title class="dialog-title" cdkDrag
+     cdkDragRootElement=".cdk-overlay-pane"
+     cdkDragHandle  style="display: inline-block"
+     cdkDragBoundary=".cdk-overlay-container" >
+  <h2>Zadania</h2>
+  <button class="close" mat-button mat-dialog-close><mat-icon>close</mat-icon></button>
+</div>
+<mat-dialog-content style="margin-bottom: 30px">
+  <div class="mat-elevation-z8">
+    <div class="container" style="margin: 15px; display: flex;
+  justify-content: space-between;">
+      <div style="text-align: left">
+        <mat-form-field>
+          <input matInput (keyup.enter)="applyFilter($event)" placeholder="Szukaj">
+        </mat-form-field>
+      </div>
+      <div style="text-align: right; margin-right: 15px">
+        <button mat-icon-button color="primary" (click)="addTask()" title="Utwórz zadanie"><mat-icon>add</mat-icon></button>
+      </div>
+    </div>
+    <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="action">
+        <tr><th mat-header-cell *matHeaderCellDef> </th></tr>
+        <tr>
+          <td mat-cell *matCellDef="let row" style="width:20%">
+            <button mat-icon-button color="primary" title="Podgląd" (click)="openPreview(row)"><mat-icon>preview</mat-icon></button>
+            <button mat-icon-button color="primary" title="Edytuj" (click)="edit(row)"><mat-icon>edit</mat-icon></button>
+            <button mat-icon-button color="primary" title="Usuń zadanie" (click)="delete(row)"><mat-icon>delete</mat-icon></button>
+            <button mat-icon-button color="primary" title="Odznacz rozwiązanie" (click)="removeBookmark(row)" *ngIf="row?.example"><mat-icon>star</mat-icon></button>
+            <button mat-icon-button color="primary" title="Oznacz rozwiązanie" (click)="setBookmark(row)" *ngIf="!row?.example"><mat-icon>star_border</mat-icon></button>
+          </td>
+        <tr>
+      </ng-container>
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Nazwa </th>
+        <td mat-cell *matCellDef="let element"> {{element?.title}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="project">
+        <th mat-header-cell *matHeaderCellDef> Projekt </th>
+        <td mat-cell *matCellDef="let element"> {{element?.project?.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="endDate">
+        <th mat-header-cell *matHeaderCellDef> Deadline </th>
+        <td mat-cell *matCellDef="let element"> {{element.deadlineDate | date:'dd-MM-yyyy'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="complete">
+        <th mat-header-cell *matHeaderCellDef> Zakończony </th>
+        <td mat-cell *matCellDef="let element"> <span *ngIf="element.completed">TAK</span><span *ngIf="!element.completed">NIE</span></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator #paginator [length]="totalElements"
+                   [pageSizeOptions]="[5, 10, 25]" [pageSize]="10" (page)="nextPage($event)" aria-label="Wybierz stronę">
+    </mat-paginator>
+  </div>
+</mat-dialog-content>
