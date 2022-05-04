@@ -52,12 +52,9 @@ export class TasksRegisterComponent implements OnInit,AfterViewInit {
     this.isLoading=true;
     this.tasksService.getByOrganisationIdPageable(this.user.organisation.id,request).subscribe(res => {
         // @ts-ignore
-        this.teams = res['content'];
-        // @ts-ignore
-        this.totalTeamsElements = res['totalElements'];
+        this.totalElements = res['totalElements'];
         // @ts-ignore
         this.dataSource = new MatTableDataSource(res['content']);
-        this.dataSource.paginator = this.paginator;
       },
       error => {
         this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd podczas pobierania danych!");

@@ -1,6 +1,8 @@
 package pl.kantoch.dawid.magit.services;
 
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.Minutes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -424,6 +427,9 @@ public class TasksService
         Date dateEveningConverted =  DateUtils.convertToDateViaSqlTimestamp(eveningDate);
         String label = getDayOfWeek(localDate)+", "+localDate;
         List<Task> tasks = tasksRepository.getAllForDay(userId,dateMorningConverted,dateEveningConverted);
+        tasks.forEach(e->{
+            e.setNow(e.getDeadlineDate().before(new Date()) && ChronoUnit.MINUTES.between(LocalDateTime.now(),DateUtils.convertToLocalDateTimeViaInstant(e.getDeadlineDate())) < 10);
+        });
         return new DailyTasks(label,tasks);
     }
 

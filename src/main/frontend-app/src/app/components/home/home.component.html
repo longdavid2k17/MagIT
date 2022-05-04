@@ -1,8 +1,8 @@
-<div class="container" style="min-height: 85vh">
-  <h1 class="text-uppercase text-letter-spacing-xs my-0 text-primary font-weight-bold">
-    Twoje zadania
-  </h1>
-  <mat-tab-group animationDuration="2000ms" (selectedTabChange)="onTabChanged($event)">
+<div class="container" style="min-height: 75vh; margin: 50px">
+    <div style="margin: 10px; text-align: left">
+      <h1 class="text-uppercase text-letter-spacing-xs my-0 text-primary font-weight-bold">Twoje zadania</h1>
+    </div>
+  <mat-tab-group mat-align-tabs="center" animationDuration="2000ms" (selectedTabChange)="onTabChanged($event)" style="min-height: 70%" dynamicHeight>
     <mat-tab label="Dzień">
       <!-- Days -->
       <div class="row">
@@ -12,8 +12,8 @@
           </h4>
           <ul class="list-timeline list-timeline-primary">
             <li class="list-timeline-item p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column" *ngFor="let task of wrapper?.list[0]?.taskList" (click)="openPreview(task)">
-              <p class="my-0 text-dark flex-fw text-sm text-uppercase"><span class="text-primary font-weight-bold op-8 infinite animated flash" data-animate="flash" data-animate-infinite="1" data-animate-duration="3.5" style="animation-duration: 3.5s;">{{task?.startDate | date: 'HH:mm'}} - {{task?.deadlineDate | date: 'HH:mm'}}</span> - {{task?.title}}</p>
-              <p class="my-0 text-dark flex-fw text-sm text-uppercase"><span class="text-inverse op-8">{{task?.startDate | date: 'HH:mm'}} - {{task?.deadlineDate | date: 'HH:mm'}}</span> - {{task?.title}}</p>
+              <p class="my-0 text-dark flex-fw text-sm text-uppercase" *ngIf="task?.now"><span class="text-primary font-weight-bold op-8 infinite animated flash" data-animate="flash" data-animate-infinite="1" data-animate-duration="3.5" style="animation-duration: 3.5s;">{{task?.startDate | date: 'HH:mm'}} - {{task?.deadlineDate | date: 'HH:mm'}}</span> - {{task?.title}} <mat-icon *ngIf="task.completed">done</mat-icon></p>
+              <p class="my-0 text-dark flex-fw text-sm text-uppercase" *ngIf="!task?.now"><span class="text-inverse op-8">{{task?.startDate | date: 'HH:mm'}} - {{task?.deadlineDate | date: 'HH:mm'}}</span> - {{task?.title}} <mat-icon *ngIf="task.completed">done</mat-icon></p>
             </li>
           </ul>
         </div>
@@ -23,42 +23,23 @@
     <mat-tab label="Tydzień">
       <!-- Days -->
       <div class="row">
-        <div class="col-lg-4 mb-3"*ngFor="let day of wrapper.list" >
-          <h4 class="mt-0 mb-3 text-dark op-8 font-weight-bold">
-            {{day?.label}}
-          </h4>
-          <!--<ul class="list-timeline list-timeline-primary">
-            <li class="list-timeline-item p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column">
-              <p class="my-0 text-dark flex-fw text-sm text-uppercase"><span class="text-inverse op-8">09:00 - 10:00</span> - Registration</p>
-            </li>
-            <li class="list-timeline-item show p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column" data-toggle="collapse" data-target="#day-1-item-2">
-              <p class="my-0 text-dark flex-fw text-sm text-uppercase"><span class="text-primary font-weight-bold op-8 infinite animated flash" data-animate="flash" data-animate-infinite="1" data-animate-duration="3.5" style="animation-duration: 3.5s;">Now</span> - Vitaly Friedmann</p>
-              <p class="my-0 collapse flex-fw text-uppercase text-xs text-dark op-8 show" id="day-1-item-2"> Talk: Wireframing / <span class="text-primary">Room 19</span> </p>
-            </li>
-            <li class="list-timeline-item p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column">
-              <p class="my-0 text-dark flex-fw text-sm text-uppercase"><span class="text-inverse op-8">12:00 - 13:00</span> - Lunch Break</p>
-            </li>
-            <li class="list-timeline-item p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column" data-toggle="collapse" data-target="#day-1-item-4">
-              <p class="my-0 text-dark flex-fw text-sm text-uppercase"><span class="text-inverse op-8">13:00 - 15:00</span> - Anthony Jonas</p>
-              <p class="my-0 collapse flex-fw text-uppercase text-xs text-dark op-8" id="day-1-item-4"> Talk: OpenData / <span class="text-primary">Room 31</span> </p>
-            </li>
-            <li class="list-timeline-item p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column">
-              <p class="my-0 text-dark flex-fw text-sm text-uppercase"><span class="text-inverse op-8">15:00 - 16:00</span> - Coffee Break</p>
-            </li>
-            <li class="list-timeline-item p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column" data-toggle="collapse" data-target="#day-1-item-6">
-              <p class="my-0 text-dark flex-fw text-sm text-uppercase"><span class="text-inverse op-8">16:00 - 18:00</span> - Jesscia Lawrence</p>
-              <p class="my-0 collapse flex-fw text-uppercase text-xs text-dark op-8" id="day-1-item-6"> Talk: Ninja coding / <span class="text-primary">Room 31</span> </p>
-            </li>
-            <li class="list-timeline-item p-0 pb-3 d-flex flex-wrap flex-column">
-              <p class="my-0 text-dark flex-fw text-sm text-uppercase"><span class="text-inverse op-8">18:00 - 23:00</span> - After conference</p>
-            </li>
-          </ul>-->
-          <ul class="list-timeline list-timeline-primary">
-            <li class="list-timeline-item p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column" *ngFor="let task of wrapper?.list[0]?.taskList" (click)="openPreview(task)">
-              <p class="my-0 text-dark flex-fw text-sm text-uppercase"><span class="text-primary font-weight-bold op-8 infinite animated flash" data-animate="flash" data-animate-infinite="1" data-animate-duration="3.5" style="animation-duration: 3.5s;">{{task?.startDate | date: 'HH:mm'}} - {{task?.deadlineDate | date: 'HH:mm'}}</span> - {{task?.title}}</p>
-              <p class="my-0 text-dark flex-fw text-sm text-uppercase"><span class="text-inverse op-8">{{task?.startDate | date: 'HH:mm'}} - {{task?.deadlineDate | date: 'HH:mm'}}</span> - {{task?.title}}</p>
-            </li>
-          </ul>
+        <div class="col-sm" *ngFor="let day of list" >
+          <div style="float: left">
+            <h4 class="mt-0 mb-3 text-dark op-8 font-weight-bold">
+              {{day?.label}}
+            </h4>
+            <div *ngIf="day?.taskList.length>0">
+              <ul class="list-timeline list-timeline-primary">
+                <li class="list-timeline-item p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column" *ngFor="let task of day?.taskList" (click)="openPreview(task)">
+                  <p class="my-0 text-dark flex-fw text-sm text-uppercase" *ngIf="task?.now"><span class="text-primary font-weight-bold op-8 infinite animated flash" data-animate="flash" data-animate-infinite="1" data-animate-duration="3.5" style="animation-duration: 3.5s;">{{task?.startDate | date: 'HH:mm'}} - {{task?.deadlineDate | date: 'HH:mm'}}</span> - {{task?.title}} <mat-icon *ngIf="task.completed">done</mat-icon></p>
+                  <p class="my-0 text-dark flex-fw text-sm text-uppercase" *ngIf="!task?.now"><span class="text-inverse op-8">{{task?.startDate | date: 'HH:mm'}} - {{task?.deadlineDate | date: 'HH:mm'}}</span> - {{task?.title}} <mat-icon *ngIf="task.completed">done</mat-icon></p>
+                </li>
+              </ul>
+            </div>
+            <div *ngIf="day?.taskList.length==0">
+              <span>Brak zadań</span>
+            </div>
+          </div>
         </div>
       </div>
     </mat-tab>
@@ -66,16 +47,23 @@
     <mat-tab label="Miesiąc">
       <!-- Days -->
       <div class="row">
-        <div class="col-lg-4 mb-3"*ngFor="let day of wrapper.list" >
-          <h4 class="mt-0 mb-3 text-dark op-8 font-weight-bold">
-            {{day?.label}}
-          </h4>
-          <ul class="list-timeline list-timeline-primary">
-            <li class="list-timeline-item p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column" *ngFor="let task of wrapper?.list[0]?.taskList" (click)="openPreview(task)">
-              <p class="my-0 text-dark flex-fw text-sm text-uppercase"><span class="text-primary font-weight-bold op-8 infinite animated flash" data-animate="flash" data-animate-infinite="1" data-animate-duration="3.5" style="animation-duration: 3.5s;">{{task?.startDate | date: 'HH:mm'}} - {{task?.deadlineDate | date: 'HH:mm'}}</span> - {{task?.title}}</p>
-              <p class="my-0 text-dark flex-fw text-sm text-uppercase"><span class="text-inverse op-8">{{task?.startDate | date: 'HH:mm'}} - {{task?.deadlineDate | date: 'HH:mm'}}</span> - {{task?.title}}</p>
-            </li>
-          </ul>
+        <div class="col-sm" *ngFor="let day of list">
+          <div style="float: left">
+            <h4 class="mt-0 mb-3 text-dark op-8 font-weight-bold">
+              {{day?.label}}
+            </h4>
+            <div *ngIf="day?.taskList.length>0">
+              <ul class="list-timeline list-timeline-primary">
+                <li class="list-timeline-item p-0 pb-3 pb-lg-4 d-flex flex-wrap flex-column" *ngFor="let task of day?.taskList" (click)="openPreview(task)">
+                  <p class="my-0 text-dark flex-fw text-sm text-uppercase" *ngIf="task?.now"><span class="text-primary font-weight-bold op-8 infinite animated flash" data-animate="flash" data-animate-infinite="1" data-animate-duration="3.5" style="animation-duration: 3.5s;">{{task?.startDate | date: 'HH:mm'}} - {{task?.deadlineDate | date: 'HH:mm'}}</span> - {{task?.title}} <mat-icon *ngIf="task.completed">done</mat-icon></p>
+                  <p class="my-0 text-dark flex-fw text-sm text-uppercase" *ngIf="!task?.now"><span class="text-inverse op-8">{{task?.startDate | date: 'HH:mm'}} - {{task?.deadlineDate | date: 'HH:mm'}}</span> - {{task?.title}} <mat-icon *ngIf="task.completed">done</mat-icon></p>
+                </li>
+              </ul>
+            </div>
+            <div *ngIf="day?.taskList.length==0">
+              <span>Brak zadań</span>
+            </div>
+          </div>
         </div>
       </div>
     </mat-tab>

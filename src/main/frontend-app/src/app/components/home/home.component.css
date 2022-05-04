@@ -349,3 +349,8 @@
 .list-timeline.list-timeline-green-bright .list-timeline-item:before {
   border-color: #2ECC71
 }
+
+
+.example-stretched-tabs {
+  max-width: 800px;
+}

@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit {
   dzisiejszaData:any;
   user:any;
   wrapper:any;
+  list:any[]=[];
   constructor(private toastr:ToastrService,
               private tokenStorageService:TokenStorageService,
               public datepipe: DatePipe,
@@ -38,6 +39,7 @@ export class HomeComponent implements OnInit {
     if(selectedMode){
       this.tasksService.getMyTasksWrapper(this.user.id,selectedMode).subscribe(res=>{
         this.wrapper=res;
+        this.list=res?.list;
       },error => {
         this.toastr.error(ErrorMessageClass.getErrorMessage(error),"Błąd");
       });

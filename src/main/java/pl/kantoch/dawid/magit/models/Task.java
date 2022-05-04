@@ -75,6 +75,8 @@ public class Task
     private String deadlineTime;
     @Transient
     private String startTime;
+    @Transient
+    private Boolean isNow;
 
     public Task() {
     }
@@ -252,6 +254,14 @@ public class Task
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
+    }
+
+    public Boolean getNow() {
+        return isNow;
+    }
+
+    public void setNow(Boolean now) {
+        isNow = now;
     }
 
     @Override
