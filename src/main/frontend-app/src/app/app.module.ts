@@ -66,6 +66,7 @@ import { PreviewBookmarkComponent } from './components/preview-bookmark/preview-
 import { AttachmentFileUploadComponent } from './components/general/attachment-file-upload/attachment-file-upload.component';
 import { EditTaskFormComponent } from './components/tasks/edit-task-form/edit-task-form.component';
 import { ProjectTasksRegistryComponent } from './components/tasks/project-tasks-registry/project-tasks-registry.component';
+import {NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -143,7 +144,8 @@ import { ProjectTasksRegistryComponent } from './components/tasks/project-tasks-
         MatProgressBarModule,
         MatListModule,
         MatToolbarModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        NgChartsModule
     ],
   providers: [
     MatDatepickerModule,
