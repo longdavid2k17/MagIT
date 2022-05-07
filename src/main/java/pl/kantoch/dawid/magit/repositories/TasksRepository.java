@@ -46,6 +46,7 @@ public interface TasksRepository extends JpaRepository<Task,Long> {
     Long countAllByCompletedTrueAndDeletedFalseAndProject(Project project);
     Long countAllByDeletedFalseAndProject(Project project);
 
+    Long countAllByDeletedFalseAndOrganisationAndCompletedTrueAndModificationDateBetween(Organisation organisation,Date date, Date date1);
     Long countAllByDeletedFalseAndUserAndCompletedTrueAndModificationDateBetween(User user,Date date, Date date1);
     Long countAllByDeletedFalseAndTeamAndCompletedTrueAndModificationDateBetween(Team team,Date date, Date date1);
     Long countAllByDeletedFalseAndTeamAndModificationDateBetween(Team team,Date date, Date date1);
@@ -64,4 +65,8 @@ public interface TasksRepository extends JpaRepository<Task,Long> {
     @Modifying
     @Query("update Task set deleted=true where id=:id")
     void setAsDeleted(@Param("id") Long id);
+
+    Long countAllByDeletedFalseAndOrganisationAndCreationDateBetween(Organisation organisation, Date dateMorningConverted, Date dateEveningConverted);
+
+    Long countAllByDeletedFalseAndProjectAndCreationDateBetween(Project project, Date dateMorningConverted, Date dateEveningConverted);
 }
