@@ -14,15 +14,17 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User,Long>
 {
-    Optional<User> findByUsername(String username);
+    Optional<User> findByUsernameAndIsDeletedFalse(String username);
+    Optional<User> findByUsernameAndRolesContainingAndIsDeletedFalse(String username,Role role);
 
-    User findByEmail(String email);
+    User findByEmailAndIsDeletedFalse(String email);
 
-    List<User> findAllByOrganisation_Id(Long id);
-    Page<User> findAllByOrganisation_Id(Long id, Pageable pageable);
+    List<User> findAllByOrganisation_IdAndIsDeletedFalse(Long id);
+    Page<User> findAllByOrganisation_IdAndIsDeletedFalse(Long id, Pageable pageable);
+    Page<User> findAllByOrganisation_IdAndNameContainsOrSurnameContainsOrEmailContainsOrUsernameContainsAndIsDeletedFalse(Long id, Pageable pageable,String param1,String param2,String param3,String param4);
 
-    List<User> findAllByOrganisation_IdAndRolesContains(Long id,Role role);
-    List<User> findAllByOrganisation_IdAndOrganisationRolesContains(Long id, OrganisationRole role);
+    List<User> findAllByOrganisation_IdAndRolesContainsAndIsDeletedFalse(Long id,Role role);
+    List<User> findAllByOrganisation_IdAndOrganisationRolesContainsAndIsDeletedFalse(Long id, OrganisationRole role);
 
-    List<User> findAllByOrganisationRolesContains(OrganisationRole role);
+    List<User> findAllByOrganisationRolesContainsAndIsDeletedFalse(OrganisationRole role);
 }

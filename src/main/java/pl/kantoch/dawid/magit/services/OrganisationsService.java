@@ -51,7 +51,7 @@ public class OrganisationsService
                 organisation.setName(request.getName());
                 organisation.setDescription(request.getDescription());
                 organisation.setInviteCode(generateInviteCode());
-                Optional<User> optionalUser = userRepository.findByUsername(request.getLogin());
+                Optional<User> optionalUser = userRepository.findByUsernameAndIsDeletedFalse(request.getLogin());
                 User user = null;
                 if(optionalUser.isPresent())
                 {

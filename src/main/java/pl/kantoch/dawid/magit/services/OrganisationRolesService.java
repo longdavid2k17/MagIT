@@ -124,7 +124,7 @@ public class OrganisationRolesService
             teamMembersRepository.deleteAll(allWithRole);
             Optional<OrganisationRole> organisationRole = organisationRolesRepository.findById(id);
             if(organisationRole.isEmpty()) throw new Exception("Nie znaleziono roli o ID="+id);
-            List<User> allUsersWithRole = userRepository.findAllByOrganisationRolesContains(organisationRole.get());
+            List<User> allUsersWithRole = userRepository.findAllByOrganisationRolesContainsAndIsDeletedFalse(organisationRole.get());
             allUsersWithRole.forEach(e->{
                 Set<OrganisationRole> organisationRoleSet = e.getOrganisationRoles();
                 organisationRoleSet.remove(organisationRole.get());

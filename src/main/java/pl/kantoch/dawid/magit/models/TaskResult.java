@@ -1,4 +1,4 @@
-package pl.kantoch.dawid.magit;
+package pl.kantoch.dawid.magit.models;
 
 import org.hibernate.annotations.CreationTimestamp;
 

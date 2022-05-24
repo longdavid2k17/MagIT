@@ -8,9 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.kantoch.dawid.magit.models.OrganisationRole;
 import pl.kantoch.dawid.magit.repositories.OrganisationRolesRepository;
+import pl.kantoch.dawid.magit.security.JWTUtils;
+import pl.kantoch.dawid.magit.security.user.ERole;
+import pl.kantoch.dawid.magit.security.user.Role;
 import pl.kantoch.dawid.magit.security.user.User;
+import pl.kantoch.dawid.magit.security.user.repositories.RoleRepository;
 import pl.kantoch.dawid.magit.security.user.repositories.UserRepository;
 import pl.kantoch.dawid.magit.utils.GsonInstance;
 
@@ -25,14 +30,20 @@ public class ProfileService
     private final UserRepository userRepository;
     private final OrganisationRolesRepository organisationRolesRepository;
     private final PasswordEncoder encoder;
+    private final JWTUtils jwtUtils;
+    private final RoleRepository roleRepository;
 
     public ProfileService(UserRepository userRepository,
                           OrganisationRolesRepository organisationRolesRepository,
-                          PasswordEncoder encoder)
+                          PasswordEncoder encoder,
+                          JWTUtils jwtUtils,
+                          RoleRepository roleRepository)
     {
         this.userRepository = userRepository;
         this.organisationRolesRepository = organisationRolesRepository;
         this.encoder = encoder;
+        this.jwtUtils = jwtUtils;
+        this.roleRepository = roleRepository;
     }
 
     public ResponseEntity<?> getUserById(Long id)
@@ -72,11 +83,13 @@ public class ProfileService
         }
     }
 
-    public ResponseEntity<?> getByOrganisationId(Long id, Pageable pageable)
+    public ResponseEntity<?> getByOrganisationId(Long id, Pageable pageable,String search)
     {
         try
         {
-            Page<User> users = userRepository.findAllByOrganisation_Id(id,pageable);
+            Page<User> users;
+            if(search==null) users = userRepository.findAllByOrganisation_IdAndIsDeletedFalse(id,pageable);
+            else users = userRepository.findAllByOrganisation_IdAndNameContainsOrSurnameContainsOrEmailContainsOrUsernameContainsAndIsDeletedFalse(id,pageable,search,search,search,search);
             return ResponseEntity.ok().body(users);
         }
         catch (Exception e)
@@ -90,7 +103,7 @@ public class ProfileService
     {
         try
         {
-            List<User> users = userRepository.findAllByOrganisation_Id(id);
+            List<User> users = userRepository.findAllByOrganisation_IdAndIsDeletedFalse(id);
             return ResponseEntity.ok().body(users);
         }
         catch (Exception e)
@@ -107,7 +120,7 @@ public class ProfileService
             Optional<OrganisationRole> optional = organisationRolesRepository.findById(roleId);
             if(optional.isPresent())
             {
-                List<User> allRoleUsers = userRepository.findAllByOrganisation_IdAndOrganisationRolesContains(orgId,optional.get());
+                List<User> allRoleUsers = userRepository.findAllByOrganisation_IdAndOrganisationRolesContainsAndIsDeletedFalse(orgId,optional.get());
                 return ResponseEntity.ok().body(allRoleUsers);
             }
             else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono wskazanej roli!"));
@@ -117,5 +130,63 @@ public class ProfileService
             LOGGER.error("Error in ProfileService.getByOrganisationIdAndRoleId for orgId {} and roleId {}. Message: {}",orgId,roleId,e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas pobierania użytkowników z rolą o ID="+roleId+". Komunikat: "+e.getMessage()));
         }
+    }
+
+    @Transactional
+    public ResponseEntity<?> forceEnableAccount(Long userId, String token) {
+        if(!isAdmin(token)) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak uprawnień do wykonania tej operacji!"));
+        try {
+            Optional<User> userOptional = userRepository.findById(userId);
+            if(userOptional.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono wskazanego użytkownika!"));
+            User user = userOptional.get();
+            user.setEnabled(true);
+            userRepository.save(user);
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e){
+            LOGGER.error("Error in ProfileService.forceEnableAccount for userId {}. Message: {}",userId,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas aktywowania użytkownika o ID="+userId+". Komunikat: "+e.getMessage()));
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<?> forceDisableAccount(Long userId, String token) {
+        if(!isAdmin(token)) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak uprawnień do wykonania tej operacji!"));
+        try {
+            Optional<User> userOptional = userRepository.findById(userId);
+            if(userOptional.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono wskazanego użytkownika!"));
+            User user = userOptional.get();
+            user.setEnabled(false);
+            userRepository.save(user);
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e){
+            LOGGER.error("Error in ProfileService.forceDisableAccount for userId {}. Message: {}",userId,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas dezaktywowania użytkownika o ID="+userId+". Komunikat: "+e.getMessage()));
+        }
+    }
+
+    @Transactional
+    public ResponseEntity<?> removeAccount(Long userId, String token) {
+        if(!isAdmin(token)) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak uprawnień do wykonania tej operacji!"));
+        try {
+            Optional<User> userOptional = userRepository.findById(userId);
+            if(userOptional.isEmpty()) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Nie znaleziono wskazanego użytkownika!"));
+            User user = userOptional.get();
+            user.setDeleted(true);
+            userRepository.save(user);
+            return ResponseEntity.ok().build();
+        }
+        catch (Exception e){
+            LOGGER.error("Error in ProfileService.removeAccount for userId {}. Message: {}",userId,e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Błąd podczas usuwania użytkownika o ID="+userId+". Komunikat: "+e.getMessage()));
+        }
+    }
+
+    private boolean isAdmin(String token){
+        String username = jwtUtils.getUsernameFromJwtToken(token.substring(7));
+        Optional<Role> optionalAdminRole = roleRepository.findByName(ERole.ROLE_ADMIN);
+        Optional<User> optionalAdmin = userRepository.findByUsernameAndRolesContainingAndIsDeletedFalse(username, optionalAdminRole.get());
+        return optionalAdmin.isPresent();
     }
 }

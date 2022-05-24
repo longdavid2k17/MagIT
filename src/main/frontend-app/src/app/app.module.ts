@@ -67,6 +67,7 @@ import { AttachmentFileUploadComponent } from './components/general/attachment-f
 import { EditTaskFormComponent } from './components/tasks/edit-task-form/edit-task-form.component';
 import { ProjectTasksRegistryComponent } from './components/tasks/project-tasks-registry/project-tasks-registry.component';
 import {NgChartsModule } from 'ng2-charts';
+import { UserManagmentComponent } from './components/user-managment/user-managment.component';
 
 @NgModule({
   declarations: [
@@ -103,6 +104,7 @@ import {NgChartsModule } from 'ng2-charts';
     AttachmentFileUploadComponent,
     EditTaskFormComponent,
     ProjectTasksRegistryComponent,
+    UserManagmentComponent,
   ],
     imports: [
         BrowserModule,

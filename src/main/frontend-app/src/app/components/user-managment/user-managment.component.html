@@ -1,0 +1,69 @@
+<div class="container" style="min-height: 75vh; margin: 50px">
+  <div style="margin: 10px; text-align: left">
+    <h1 class="text-uppercase text-letter-spacing-xs my-0 text-primary font-weight-bold">Użytkownicy</h1>
+  </div>
+  <div class="mat-elevation-z8">
+    <div class="container" style="margin: 15px; display: flex;
+  justify-content: space-between;">
+      <div style="text-align: left">
+        <mat-form-field>
+          <input matInput (keyup.enter)="applyFilter($event)" placeholder="Szukaj">
+        </mat-form-field>
+      </div>
+    </div>
+    <table mat-table [dataSource]="dataSource">
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Imię </th>
+        <td mat-cell *matCellDef="let element"> {{element?.name}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="surname">
+        <th mat-header-cell *matHeaderCellDef> Nazwisko </th>
+        <td mat-cell *matCellDef="let element"> {{element?.surname}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Adres email </th>
+        <td mat-cell *matCellDef="let element"> {{element?.email}} </td>
+      </ng-container>
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef> Login </th>
+        <td mat-cell *matCellDef="let element"> {{element?.username}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="enabled">
+        <th mat-header-cell *matHeaderCellDef> Konto aktywowane </th>
+        <td mat-cell *matCellDef="let element"> <span *ngIf="element.enabled">TAK</span><span *ngIf="!element.enabled">NIE</span> </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="lastLogged">
+        <th mat-header-cell *matHeaderCellDef> Ostatnio aktywny </th>
+        <td mat-cell *matCellDef="let element"> {{element.lastLogged | date:'dd/MM/yyyy HH:MM'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <tr><th mat-header-cell *matHeaderCellDef> </th></tr>
+        <tr>
+          <td mat-cell *matCellDef="let row" style="width:20%">
+            <button mat-icon-button color="primary" *ngIf="!row.enabled"  (click)="activateUser(row)" title="Aktywuj użytkownika"><mat-icon>done_outline</mat-icon></button>
+            <button mat-icon-button color="primary" *ngIf="row.enabled" (click)="deactivateUser(row)" title="Dezaktywuj użytkownika"><mat-icon>power_settings_new</mat-icon></button>
+            <button mat-icon-button color="primary" (click)="deleteUser(row)" title="Usuń użytkownika"><mat-icon>delete</mat-icon></button>
+          </td>
+        <tr>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                   showFirstLastButtons
+                   aria-label="Wybierz ilość elementów"
+                   (page)="nextUserPage($event)">
+    </mat-paginator>
+  </div>
+</div>

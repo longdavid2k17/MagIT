@@ -32,4 +32,16 @@ export class UserService {
     return this.http.put<any>(`${API}save`,
       profile);
   }
+
+  enableAccount(profile: any) {
+    return this.http.get<any>(`${API}enable-account/`+profile.id);
+  }
+
+  disableAccount(profile: any) {
+    return this.http.get<any>(`${API}disable-account/`+profile.id);
+  }
+
+  delete(profile: any) {
+    return this.http.delete<any>(`${API}remove-account/`+profile.id);
+  }
 }

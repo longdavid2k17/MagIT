@@ -55,7 +55,7 @@ public class ProjectsService
             Optional<Role> optional = roleRepository.findByName(ERole.ROLE_PM);
             if(optional.isPresent())
             {
-                List<User> allPmUsers = userRepository.findAllByOrganisation_IdAndRolesContains(id,optional.get());
+                List<User> allPmUsers = userRepository.findAllByOrganisation_IdAndRolesContainsAndIsDeletedFalse(id,optional.get());
                 return ResponseEntity.ok().body(allPmUsers);
             }
             else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(GsonInstance.get().toJson("Brak użytkowników z rolą PM w twojej organizacji"));

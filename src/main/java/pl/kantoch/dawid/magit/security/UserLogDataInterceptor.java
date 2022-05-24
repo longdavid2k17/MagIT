@@ -30,7 +30,7 @@ public class UserLogDataInterceptor implements HandlerInterceptor
         if (authorizationHeaderValue != null && authorizationHeaderValue.startsWith("Bearer")) {
             String token = authorizationHeaderValue.substring(7);
             String username = jwtUtils.getUsernameFromJwtToken(token);
-            Optional<User> userOptional = userRepository.findByUsername(username);
+            Optional<User> userOptional = userRepository.findByUsernameAndIsDeletedFalse(username);
             if(userOptional.isPresent())
             {
                 User user = userOptional.get();

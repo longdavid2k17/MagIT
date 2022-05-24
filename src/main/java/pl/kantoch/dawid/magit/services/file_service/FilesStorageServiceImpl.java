@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
-import pl.kantoch.dawid.magit.TaskResult;
+import pl.kantoch.dawid.magit.models.TaskResult;
 import pl.kantoch.dawid.magit.models.MemoryDirectory;
 import pl.kantoch.dawid.magit.models.Task;
 import pl.kantoch.dawid.magit.models.TaskAttachment;

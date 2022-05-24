@@ -8,6 +8,7 @@ import {OrganisationManagementComponent} from "./components/organisation-managem
 import {ProfileManagementComponent} from "./components/profile-management/profile-management.component";
 import {TaskService} from "./services/task.service";
 import {TaskPreviewComponent} from "./components/tasks/task-preview/task-preview.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -29,7 +30,8 @@ export class AppComponent {
               private toastr:ToastrService,
               private messengerService:MessengerService,
               private taskService:TaskService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private router: Router) {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
 
     if (this.isLoggedIn) {
@@ -109,5 +111,9 @@ export class AppComponent {
   }
   refresh(): void {
     window.location.reload();
+  }
+
+  openUserManager() {
+    this.router.navigate(['/users']);
   }
 }

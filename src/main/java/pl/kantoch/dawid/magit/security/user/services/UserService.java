@@ -1,6 +1,5 @@
 package pl.kantoch.dawid.magit.security.user.services;
 
-import com.google.gson.Gson;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,6 +70,7 @@ public class UserService implements IUserService
         user.setPassword(encoder.encode(userDto.getPassword()));
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
+        user.setDeleted(false);
         Set<String> strRoles = userDto.getRole();
         Set<Role> roles = new HashSet<>();
 
@@ -190,11 +190,11 @@ public class UserService implements IUserService
     }
 
     private boolean emailExist(String email) {
-        return userRepository.findByEmail(email) != null;
+        return userRepository.findByEmailAndIsDeletedFalse(email) != null;
     }
 
     private boolean loginExist(String login) {
-        return userRepository.findByUsername(login).isPresent();
+        return userRepository.findByUsernameAndIsDeletedFalse(login).isPresent();
     }
 
     public String validateVerificationToken(String token)
@@ -230,7 +230,7 @@ public class UserService implements IUserService
     @Transactional
     public ResponseEntity<?> resetPassword(String email)
     {
-        User optionalUser = userRepository.findByEmail(email);
+        User optionalUser = userRepository.findByEmailAndIsDeletedFalse(email);
         if(optionalUser!=null)
         {
             optionalUser.setEnabled(false);
@@ -287,7 +287,7 @@ public class UserService implements IUserService
     {
         try
         {
-            Optional<User> optionalUser = userRepository.findByUsername(username);
+            Optional<User> optionalUser = userRepository.findByUsernameAndIsDeletedFalse(username);
             if(optionalUser.isPresent())
             {
                 User user = optionalUser.get();

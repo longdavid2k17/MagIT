@@ -30,9 +30,9 @@ public class ProfilesController
     }
 
     @GetMapping("/by-organisation/{id}")
-    public ResponseEntity<?> getByOrganisationId(@PathVariable Long id, Pageable pageable)
+    public ResponseEntity<?> getByOrganisationId(@PathVariable Long id, Pageable pageable,@RequestParam(required = false) String search)
     {
-        return profileService.getByOrganisationId(id,pageable);
+        return profileService.getByOrganisationId(id,pageable,search);
     }
 
     @GetMapping("/by-organisation-nopage/{id}")
@@ -45,5 +45,20 @@ public class ProfilesController
     public ResponseEntity<?> getByOrganisationIdAndRoleIdNoPage(@PathVariable Long orgId,@PathVariable Long roleId)
     {
         return profileService.getByOrganisationIdAndRoleId(orgId,roleId);
+    }
+
+    @GetMapping("/enable-account/{userId}")
+    public ResponseEntity<?> forceEnableAccount(@PathVariable Long userId,@RequestHeader("Authorization")String token){
+        return profileService.forceEnableAccount(userId,token);
+    }
+
+    @GetMapping("/disable-account/{userId}")
+    public ResponseEntity<?> forceDisableAccount(@PathVariable Long userId,@RequestHeader("Authorization")String token){
+        return profileService.forceDisableAccount(userId,token);
+    }
+
+    @DeleteMapping("/remove-account/{userId}")
+    public ResponseEntity<?> removeAccount(@PathVariable Long userId,@RequestHeader("Authorization")String token){
+        return profileService.removeAccount(userId,token);
     }
 }

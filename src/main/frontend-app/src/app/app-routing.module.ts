@@ -9,14 +9,13 @@ import {ResetPasswordComponent} from "./components/reset-password/reset-password
 import {
   ResetPasswordConfirmationComponent
 } from "./components/reset-password-confirmation/reset-password-confirmation.component";
-import {OrganisationManagementComponent} from "./components/organisation-management/organisation-management.component";
-import {ProfileManagementComponent} from "./components/profile-management/profile-management.component";
 import {TeamDashboardComponent} from "./components/teams/team-dashboard/team-dashboard.component";
 import {RoleGuard} from "./core/role.guard";
 import {PerformanceComponent} from "./components/performance/performance.component";
 import {SolutionsLibraryComponent} from "./components/solutions-library/solutions-library.component";
 import {ProjectsComponent} from "./components/projects/projects/projects.component";
 import {TasksRegisterComponent} from "./components/tasks/tasks-register/tasks-register.component";
+import {UserManagmentComponent} from "./components/user-managment/user-managment.component";
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -37,6 +36,14 @@ const routes: Routes = [
   {
     path: 'projects',
     component: ProjectsComponent,
+    canActivate:[RoleGuard],
+    data:{
+      expectedRoles:['ROLE_ADMIN']
+    }
+  },
+  {
+    path: 'users',
+    component: UserManagmentComponent,
     canActivate:[RoleGuard],
     data:{
       expectedRoles:['ROLE_ADMIN']

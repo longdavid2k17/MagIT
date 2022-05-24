@@ -45,6 +45,7 @@
         <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu dropdown-menu-right" *ngIf="isLoggedIn" style="padding: 0;float: right;">
           <a ngbDropdownItem class="nav-link" (click)="openProfileManager()" >Zarządzaj swoim profilem</a>
           <a *ngIf="isAdmin" ngbDropdownItem class="nav-link" (click)="openOrgManager()">Zarządzaj organizacją</a>
+          <a *ngIf="isAdmin" ngbDropdownItem class="nav-link" (click)="openUserManager()">Zarządzaj użytkownikami</a>
           <a ngbDropdownItem href="#" (click)="logout()">Wyloguj się</a>
         </div>
       </div>

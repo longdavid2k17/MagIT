@@ -64,6 +64,9 @@ public class User
     @Column(name = "last_logged")
     private Date lastLogged;
 
+    @Column(name = "is_deleted")
+    private Boolean isDeleted = false;
+
     public User()
     {
         super();
@@ -116,6 +119,30 @@ public class User
         this.organisationRoles = organisationRoles;
         this.organisation = organisation;
         this.lastLogged = lastLogged;
+    }
+
+    public User(Long id, String username, String email, String password, String bio, String name, String surname, boolean enabled, Set<Role> roles, Set<OrganisationRole> organisationRoles, Organisation organisation, Date lastLogged, Boolean isDeleted) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.bio = bio;
+        this.name = name;
+        this.surname = surname;
+        this.enabled = enabled;
+        this.roles = roles;
+        this.organisationRoles = organisationRoles;
+        this.organisation = organisation;
+        this.lastLogged = lastLogged;
+        this.isDeleted = isDeleted;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 
     public Set<OrganisationRole> getOrganisationRoles() {
@@ -226,6 +253,10 @@ public class User
                 ", surname='" + surname + '\'' +
                 ", enabled=" + enabled +
                 ", roles=" + roles +
+                ", organisationRoles=" + organisationRoles +
+                ", organisation=" + organisation +
+                ", lastLogged=" + lastLogged +
+                ", isDeleted=" + isDeleted +
                 '}';
     }
 

@@ -19,7 +19,8 @@ public interface ExampleSolutionsRepository extends JpaRepository<ExampleSolutio
     Page<ExampleSolutions> findAllByOrganisation_Id(Long id, Pageable pageable);
 
     @Query("select examples from ExampleSolutions examples where examples.organisation.id = :id and " +
-    "(LOWER(examples.description) like :search or LOWER(examples.type) like :search or LOWER(examples.task.title) like :search or LOWER(examples.task.description) like :search)")
+    "(LOWER(examples.description) like :search or LOWER(examples.type) like :search or LOWER(examples.task.title) like :search or " +
+            "LOWER(examples.task.description) like :search)")
     Page<ExampleSolutions> findByQueryParam(@Param("id") Long id,@Param("search") String search, Pageable pageable);
 
     @Query("select example.type from ExampleSolutions example where example.organisation.id=:id")
