@@ -397,8 +397,8 @@ public class TasksService
     }
 
     private List<DailyTasks> getForWeek(Long userId){
-        LocalDate monday = LocalDate.now().withDayOfMonth(DateTimeConstants.MONDAY);
-        LocalDate sunday = LocalDate.now().withDayOfMonth(DateTimeConstants.SUNDAY);
+        LocalDate monday = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate sunday = LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
         List<DailyTasks> list = new ArrayList<>();
         for (LocalDate d = monday; !d.isAfter(sunday); d = d.plusDays(1)) {
             list.add(getDailyTasks(userId,d));
