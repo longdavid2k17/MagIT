@@ -1,3 +1,12 @@
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~font-awesome/css/font-awesome.css";
+.background-set{
+  /*  background-size: auto;*/
+/*  background: url("https://mdbootstrap.com/img/Photos/Others/img%20(42).webp")no-repeat center center;*/
+  background-size: cover;
+  background: linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,.5)),url("assets/img/vecteezy_abstract-blue-and-gray-wave-background_.jpg") no-repeat fixed;
+}
+
 table {
   width: 100%;
 }
@@ -345,5 +354,29 @@ input.au-input.au-input-xl{
   }
 }
 
+#page-container {
+  position: relative;
+  min-height: 90vh;
+}
+
+#content-wrap {
+  padding-bottom: 2.5rem;    /* Footer height */
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.cdk-overlay-pane.my-dialog {
+  position: relative!important;
+}
+.close.mat-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px;
+  line-height: 14px;
+  min-width: auto;
+}

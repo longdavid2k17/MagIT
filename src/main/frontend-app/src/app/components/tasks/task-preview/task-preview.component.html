@@ -1,0 +1,71 @@
+<div mat-dialog-title class="dialog-title">
+  <h2 mat-dialog-title><b>Zadanie #{{task.id}} - {{task.title}}</b></h2>
+  <div style="border: 2px solid black">
+    <button mat-icon-button title="Włącz rejestrację czasu" (click)="changeRealizationStatus()" *ngIf="canChangeRealization && status"><mat-icon>timer</mat-icon></button>
+    <button mat-icon-button title="Nie masz uprawnień do uruchomienia rejestracji czasu" *ngIf="!canChangeRealization" disabled><mat-icon>timer</mat-icon></button>
+    <button mat-icon-button title="Zatrzymaj rejestrację czasu" (click)="changeRealizationStatus()" *ngIf="canChangeRealization && !status"><mat-icon>stop</mat-icon></button>
+  </div>
+  <button mat-icon-button aria-label="close dialog" mat-dialog-close title="Zamknij podgląd">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content style="text-align: center;">
+  <div>
+    <mat-card style="float: left; margin: 10px; text-align: left">
+      <mat-card-title>Treść zadania</mat-card-title>
+      <mat-card-content>
+        <div>
+          <span>Tytuł: <b>{{task?.title}}</b></span><br/>
+          <span>Opis: <b>{{task?.description}}</b></span><br/>
+          <span>Odpowiedzialny: <b>{{task?.user?.name}} {{task?.user?.surname}}</b></span><br/>
+          <span>Zespół: <b>{{task?.team?.name}}</b></span><br/>
+          <span>Projekt: <b>{{task?.project?.name}}</b></span><br/>
+        </div>
+        <hr style="width: 80%">
+        <div>
+          <h4><b>Załączniki</b></h4>
+          <mat-list role="list">
+            <mat-list-item role="listitem" *ngFor="let file of fileInfos">
+              <a href="{{ file.url }}">{{ file.name }}</a>
+            </mat-list-item>
+            <span style="max-width: 100px;color: red">{{resourcesMessage}}</span>
+          </mat-list>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card style="float: left; margin: 10px; text-align: left">
+      <mat-card-title>Podzadania</mat-card-title>
+      <mat-card-content>
+        <div *ngIf="!subtasks || subtasks.length==0">
+          <span>Brak podzadań</span>
+        </div>
+        <div *ngFor="let subtask of subtasks">
+          <mat-checkbox class="example-margin" [checked]=subtask.completed (change)="setSubtaskCompletedValue(subtask,$event)" ><label>{{subtask.title}} [{{subtask?.user?.name}} {{subtask?.user?.surname}}]</label></mat-checkbox>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div style="clear:both;  margin: 10px; text-align: left">
+    <mat-card style="margin: 10px;">
+      <mat-card-title>Rezultat - zasoby</mat-card-title>
+      <mat-card-content>
+        <div>
+          <div>
+            <app-result-file-upload [taskId]="task?.id"></app-result-file-upload>
+          </div>
+        <hr style="width: 80%">
+          <span>Status zadania: <b>{{task.status}}</b></span><br/>
+          <span>Zrealizowano:  <b><span *ngIf="task.completed">TAK</span><span *ngIf="!task.completed">NIE</span></b></span>
+          <div class="container" style="margin-top: 30px; border-top: 3px solid black; text-align: center">
+            <div style="padding: 10px">
+              <button mat-raised-button color="primary" title="Oznacza zadanie jako wykonane" type="button" (click)="setTaskAsCompleted()" *ngIf="!task.completed" style="margin: 5px">WYKONANE</button>
+              <button mat-raised-button color="primary" title="Oznacza zadanie jako wykonane" type="button" (click)="setTaskAsCompleted()" *ngIf="task.completed" disabled  style="margin: 5px">WYKONANE</button>
+              <button mat-raised-button color="warn" title="Oznacza zadanie jako w trakcie realizacji" type="button" (click)="setTaskAsInRealization()" *ngIf="!task.completed" disabled  style="margin: 5px">W REALIZACJI</button>
+              <button mat-raised-button color="warn" title="Oznacza zadanie jako w trakcie realizacji" type="button" (click)="setTaskAsInRealization()" *ngIf="task.completed"  style="margin: 5px">W REALIZACJI</button>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

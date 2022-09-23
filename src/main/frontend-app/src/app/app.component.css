@@ -1,88 +1,59 @@
-.card-header,
-.card-footer {
-  background-color: #fff !important
-}
-
-.badge {
-  cursor: pointer
-}
-
-button {
-  justify-content: center;
-  border: none !important
-}
-
 a {
-  color: black !important;
-  text-decoration: none !important
+  color: black;
+}
+a :hover{
+  color: black;
 }
 
-.badge-outline {
-  border: 1px solid #999;
-  background-color: transparent
+#contactMessenger{
+  right: 30px;
+  bottom: 30px;
+  padding-bottom: 2em;
+  z-index: auto;
+  position:fixed;
 }
 
-li {
-  color: rgb(65, 65, 65);
-  font-size: 30px
+#taskAction{
+  left: 30px;
+  bottom: 30px;
+  padding-bottom: 2em;
+  z-index: auto;
+  position:fixed;
 }
 
-.hl {
-  align-content: center;
-  width: 25%
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
 }
 
-p {
-  font-size: 15px !important
-}
-
-span {
-  font-size: 18px !important
-}
-
-.badge {
-  padding: 0.5em .4em !important;
-  font-size: 13px !important
-}
-
-.badge-pill {
-  padding-right: 0.8rem !important;
-  padding-left: 0.8rem !important
-}
-
-.footer {
-  font-size: 16px !important;
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
   position: absolute;
-  bottom: 0; left: 0; right: 0;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
 }
 
-img {
-  opacity: 0.8 !important
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
 }
 
-h6 {
-  font-size: 14px !important
-}
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd}
 
-@media (max-width: 756px) {
-  .card .card-body {
-    padding: 0 !important
-  }
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
 
-  .card {
-    margin-top: 5px !important
-  }
-}
-
-@media (min-width: 1200px) {
-  .col-xl-3 {
-    flex: 0 0 35%;
-    max-width: 31%
-  }
-}
-
-.container-fluid {
-  margin-top: 50px !important;
-  margin-bottom: 50px !important;
-
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2.5rem;
 }

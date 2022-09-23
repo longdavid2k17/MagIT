@@ -1,24 +1,84 @@
-<nav class="navbar navbar-expand navbar-dark bg-dark">
-  <a href="/" class="navbar-brand"><h3>MagIT</h3></a>
-  <ul class="navbar-nav mr-auto" routerLinkActive="active">
-    <li class="nav-item">
-      <a href="#about" class="nav-link"><h4>O aplikacji</h4></a>
-    </li>
-  </ul>
-  <div class="nav-item" ngbDropdown >
-    <button class="btn btn-warning" tabindex="0" id="navbarDropdown2" ngbDropdownToggle style="float:right;">Konto</button>
-    <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu dropdown-menu-end" *ngIf="!isLoggedIn">
-      <a ngbDropdownItem href="/login" class="nav-link" routerLink="login">Zaloguj się</a>
-      <a ngbDropdownItem href="/register" class="nav-link" routerLink="register">Zarejestruj się</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <a class="navbar-brand mt-2 mt-lg-0" href="/">
+        <h3>MagIT</h3>
+      </a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="#">O aplikacji</a>
+        </li>
+        <li class="nav-item" *ngIf="isLoggedIn && !isAdmin">
+          <a class="nav-link" href="/home">Moje zadania</a>
+        </li>
+        <li class="nav-item" *ngIf="isAdmin" ngbDropdown >
+          <a class="nav-link" id="navBarTasks" ngbDropdownToggle style="float:right;">Zadania</a>
+          <div ngbDropdownMenu aria-labelledby="navBarTasks" class="dropdown-menu dropdown-menu-right" *ngIf="isAdmin" style="padding: 0;float: right;">
+            <a ngbDropdownItem href="/tasks" routerLink="tasks">Rejestr zadań</a>
+            <a ngbDropdownItem href="/home" routerLink="home">Moje zadania</a>
+          </div>
+        </li>
+        <li class="nav-item" *ngIf="isLoggedIn">
+          <a class="nav-link" href="/solutions" routerLink="solutions">Biblioteka</a>
+        </li>
+        <li class="nav-item" *ngIf="isAdmin">
+          <a class="nav-link" href="/projects" routerLink="projects">Projekty</a>
+        </li>
+        <li class="nav-item" *ngIf="isAdmin">
+          <a class="nav-link" href="/teams" routerLink="teams">Zespoły</a>
+        </li>
+        <li class="nav-item" *ngIf="isAdmin">
+          <a class="nav-link" href="/performance" routerLink="performance">Wydajność</a>
+        </li>
+      </ul>
     </div>
-    <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu dropdown-menu-end" *ngIf="isLoggedIn">
-      <a ngbDropdownItem href="#" (click)="logout()">Wyloguj się</a>
-      <a ngbDropdownItem href="/login" class="nav-link" routerLink="add-job-offer">Zarządzaj swoim profilem</a>
+    <div class="d-flex align-items-center" style="margin-right:75px;">
+      <div class="nav-item" *ngIf="!isLoggedIn" ngbDropdown >
+        <button class="btn btn-warning" tabindex="0" id="navbarDropdown2" ngbDropdownToggle style="float:right;">Konto</button>
+        <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu dropdown-menu-end" *ngIf="!isLoggedIn">
+          <a ngbDropdownItem href="/login" class="nav-link" routerLink="login">Zaloguj się</a>
+          <a ngbDropdownItem href="/register" class="nav-link" routerLink="register">Zarejestruj się</a>
+        </div>
+      </div>
+      <div class="nav-item" *ngIf="isLoggedIn" ngbDropdown >
+        <button class="btn btn-warning" tabindex="0" id="navbarDropdown1" ngbDropdownToggle style="float:right;">{{login}}</button>
+        <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu dropdown-menu-right" *ngIf="isLoggedIn" style="padding: 0;float: right;">
+          <a ngbDropdownItem class="nav-link" (click)="openProfileManager()" >Zarządzaj swoim profilem</a>
+          <a *ngIf="isAdmin" ngbDropdownItem class="nav-link" (click)="openOrgManager()">Zarządzaj organizacją</a>
+          <a *ngIf="isAdmin" ngbDropdownItem class="nav-link" (click)="openUserManager()">Zarządzaj użytkownikami</a>
+          <a ngbDropdownItem href="#" (click)="logout()">Wyloguj się</a>
+        </div>
+      </div>
     </div>
   </div>
 </nav>
+
 <div class="container">
-  <router-outlet></router-outlet>
+    <router-outlet></router-outlet>
+    <div id="contactMessenger"  *ngIf="isLoggedIn" ngbDropdown>
+      <button type="button" class="btn btn-danger position-relative" style="border-radius: 30px;" id="messengerDropdown" ngbDropdownToggle>
+        <i class="bi-megaphone-fill fa-1x"></i>
+        <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary" *ngIf="messengerInstantions?.allUnread>0">+{{messengerInstantions.allUnread}}</span>
+      </button>
+      <div ngbDropdownMenu aria-labelledby="messengerDropdown" class="dropdown-content">
+        <div *ngFor="let inst of messengerInstantions?.entityList">
+          <a *ngIf="inst.messages[inst.messages.length-1].read!=true" (click)="openMessenger(inst)"><b><i>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</i></b> {{inst.messages[inst.messages.length-1].text}}</a>
+          <a *ngIf="inst.messages[inst.messages.length-1].read==true" (click)="openMessenger(inst)"><i>{{inst.interlocutor.name}} {{inst.interlocutor.surname}}</i> {{inst.messages[inst.messages.length-1].text}}</a>
+        </div>
+      </div>
+    </div>
+  <div id="taskAction"  *ngIf="isLoggedIn" ngbDropdown>
+    <button mat-icon-button type="button" class="btn btn-primary position-relative" style="border-radius: 10px;" ngbDropdownToggle title="Centrum akcji">
+      <mat-icon>notification_important</mat-icon>
+      <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary" *ngIf="messengerInstantions?.allUnread>0">+{{messengerInstantions.allUnread}}</span>
+    </button>
+    <div ngbDropdownMenu aria-labelledby="messengerDropdown" class="dropdown-content">
+      <a href="/home" routerLink="home">{{taskAssistant?.todayUserTasks}}</a>
+      <a>{{taskAssistant?.todayTeamTasks}}</a>
+      <a *ngIf="taskAssistant?.task" (click)="openTaskPreview()">Aktualnie wykonujesz '{{taskAssistant.task?.title}}'</a>
+      <a *ngIf="!taskAssistant?.task">Aktualnie nie wykonujesz żadnego zadania</a>
+    </div>
+  </div>
 </div>
 <footer class="bg-dark text-center text-white">
   <div class="copyright py-4 text-center text-white">
@@ -27,4 +87,5 @@
     </div>
   </div>
 </footer>
+
 

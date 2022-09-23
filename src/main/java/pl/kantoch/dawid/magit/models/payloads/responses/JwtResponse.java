@@ -1,5 +1,7 @@
 package pl.kantoch.dawid.magit.models.payloads.responses;
 
+import pl.kantoch.dawid.magit.models.Organisation;
+
 import java.util.List;
 
 public class JwtResponse
@@ -10,13 +12,23 @@ public class JwtResponse
     private String username;
     private String email;
     private List<String> roles;
+    private Organisation organisation;
 
-    public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+    public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles, Organisation organisation) {
         this.token = accessToken;
         this.id = id;
         this.username = username;
         this.email = email;
         this.roles = roles;
+        this.organisation = organisation;
+    }
+
+    public Organisation getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
     }
 
     public String getAccessToken() {

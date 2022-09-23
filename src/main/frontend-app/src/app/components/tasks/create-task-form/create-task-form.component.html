@@ -1,0 +1,155 @@
+
+<div mat-dialog-title class="dialog-title" cdkDrag
+     cdkDragRootElement=".cdk-overlay-pane"
+     cdkDragHandle  style="display: inline-block"
+     cdkDragBoundary=".cdk-overlay-container" >
+  <h2>Edytuj zadanie</h2>
+</div>
+<mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="form">
+    <form [formGroup]="form">
+      <ng-template matStepLabel>Treść</ng-template>
+      <div mat-dialog-content>
+        <div class="form-group">
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>Nazwa zadania</mat-label>
+            <input matInput name="title" formControlName="title" required>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>Opis</mat-label>
+            <input matInput name="description" formControlName="description" >
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>Projekt</mat-label>
+            <mat-select formControlName="project" [compareWith]="compareFn">
+              <mat-option *ngFor="let project of projects" [value]="project">
+                {{project.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div style="text-align: right;float: right">
+          <button mat-button mat-dialog-close>Anuluj</button>
+          <button mat-button matStepperNext>Dalej</button>
+        </div>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="form">
+    <form [formGroup]="form">
+      <ng-template matStepLabel>Konfiguruj zadanie</ng-template>
+      <div mat-dialog-content>
+        <div class="form-group">
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>GitHub URL</mat-label>
+            <input matInput name="gitHubUrl" formControlName="gitHubUrl">
+          </mat-form-field>
+        </div>
+        <div>
+          <div class="form-group">
+            <mat-form-field appearance="fill" style="margin:10px">
+              <mat-label>Data rozpoczęcia zadania</mat-label>
+              <input matInput [matDatepicker]="pickerStart" formControlName="startDate" >
+              <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+              <mat-datepicker #pickerStart></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Czas rozpoczęcia</mat-label>
+              <input matInput type="time" formControlName="startTime">
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <mat-form-field appearance="fill" style="margin:10px">
+              <mat-label>Deadline</mat-label>
+              <input matInput [matDatepicker]="pickerEnd" formControlName="deadlineDate">
+              <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+              <mat-datepicker #pickerEnd></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>Czas zakończenia</mat-label>
+              <input matInput type="time" formControlName="deadlineTime">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>Osoba odpowiedzialna</mat-label>
+            <mat-select formControlName="user" [compareWith]="compareFn">
+              <mat-option *ngFor="let user of users" [value]="user">
+                {{user.name}} {{user.surname}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="fill" class="example-full-width">
+            <mat-label>Zespół odpowiedzialny</mat-label>
+            <mat-select formControlName="team" [compareWith]="compareFn">
+              <mat-option *ngFor="let team of teams" [value]="team">
+                {{team.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div style="text-align: right;float: right">
+          <button mat-button matStepperPrevious>Cofnij</button>
+          <button mat-button matStepperNext>Dalej</button>
+        </div>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="form">
+    <form [formGroup]="form">
+      <ng-template matStepLabel>Załączniki</ng-template>
+      <div class="form-group">
+        <label>Dodawanie załączników jest możliwe po utworzeniu zadania, w panelu edycji</label>
+      </div>
+      <div style="text-align: right;float: right; margin-top: 10px">
+        <button mat-button matStepperPrevious>Cofnij</button>
+        <button mat-button matStepperNext>Dalej</button>
+      </div>
+    </form>
+  </mat-step>
+    <mat-step [stepControl]="form">
+      <form [formGroup]="form" (submit)="onSubmit()">
+        <ng-template matStepLabel>Podzadania</ng-template>
+        <div class="form-group">
+          <div *ngFor="let subTask of subTasks">
+            <div>
+              <button mat-icon-button title="Usuń podzadanie" (click)="remove(subTask)"><mat-icon>delete</mat-icon></button>
+              <span>{{subTask.title}} - {{subTask.user.name}} {{subTask.user.surname}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div style="float: left; margin-right: 15px">
+            <mat-form-field appearance="fill">
+              <mat-label>Treść</mat-label>
+              <input matInput name="subtaskTitle" (input)="onTitleChange($event.target)" #inputElement>
+            </mat-form-field>
+          </div>
+          <div style="float: left; margin-right: 15px">
+            <mat-form-field appearance="fill">
+              <mat-label>Odpowiedzialny</mat-label>
+              <mat-select (selectionChange)="onUserChange($event)">
+                <mat-option *ngFor="let user of users" [value]="user">
+                  {{user.name}} {{user.surname}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div style="float: left">
+            <button mat-button (click)="addSubtask()" type="button"><mat-icon>add</mat-icon></button>
+          </div>
+        </div>
+        <div style="text-align: right;float: right; margin-top: 10px">
+          <button mat-button matStepperPrevious>Cofnij</button>
+          <button mat-raised-button type="submit">Utwórz</button>
+        </div>
+      </form>
+  </mat-step>
+</mat-stepper>

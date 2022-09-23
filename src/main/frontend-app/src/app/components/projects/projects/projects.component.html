@@ -1,0 +1,72 @@
+<div class="container" style="min-height: 75vh; margin: 50px">
+  <div style="margin: 10px; text-align: left">
+    <h1 class="text-uppercase text-letter-spacing-xs my-0 text-primary font-weight-bold">Projekty</h1>
+  </div>
+  <div class="mat-elevation-z8">
+    <div class="container" style="margin: 15px; display: flex;
+  justify-content: space-between;">
+      <div style="text-align: left">
+        <mat-form-field>
+          <input matInput (keyup.enter)="applyFilter($event)" placeholder="Szukaj">
+        </mat-form-field>
+      </div>
+      <div style="text-align: right; margin-right: 15px">
+        <button mat-icon-button color="primary" (click)="addProject()" title="Utwórz projekt"><mat-icon>add</mat-icon></button>
+      </div>
+    </div>
+    <table mat-table [dataSource]="dataSource">
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Nazwa </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Opis </th>
+        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef> Start </th>
+        <td mat-cell *matCellDef="let element"> {{element.startDate | date:'dd/MM/yyyy'}}</td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="endDate">
+        <th mat-header-cell *matHeaderCellDef> Planowany koniec </th>
+        <td mat-cell *matCellDef="let element"> {{element.endDate | date:'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="tasks">
+        <th mat-header-cell *matHeaderCellDef> Zadania - Łącznie </th>
+        <td mat-cell *matCellDef="let element"> {{element.allTasks}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="today_tasks">
+        <th mat-header-cell *matHeaderCellDef> Zadania - Dzisiaj </th>
+        <td mat-cell *matCellDef="let element"> {{element.todayTasks}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <tr><th mat-header-cell *matHeaderCellDef> </th></tr>
+        <tr>
+          <td mat-cell *matCellDef="let row" style="width:20%">
+            <button mat-icon-button color="primary" (click)="showTasks(row)" title="Otwórz rejestr zadań"><mat-icon>preview</mat-icon></button>
+            <button mat-icon-button color="primary" (click)="editProject(row)" title="Edytuj"><mat-icon>edit</mat-icon></button>
+            <button mat-icon-button color="primary" (click)="archiveProject(row)" title="Archiwizuj projekt"><mat-icon>archive</mat-icon></button>
+            <button mat-icon-button color="primary" (click)="deleteProject(row)" title="Usuń projekt"><mat-icon>delete</mat-icon></button>
+          </td>
+        <tr>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                   showFirstLastButtons
+                   aria-label="Wybierz ilość elementów">
+    </mat-paginator>
+  </div>
+</div>

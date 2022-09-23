@@ -1,0 +1,16 @@
+.dialog-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.messages{
+  max-height:250px;
+  overflow: auto;
+}
+.sendTooltip{
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: 20px 0 0;
+}

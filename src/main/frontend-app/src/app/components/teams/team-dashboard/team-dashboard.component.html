@@ -1,0 +1,111 @@
+<div class="content" style="margin: 25px;min-height: 79.5vh;">
+  <div style="display: grid; position: relative;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);">
+    <div style="grid-column: 1; grid-row: 1 / span 3;">
+      <mat-card>
+        <mat-card-title>Użytkownicy</mat-card-title>
+        <mat-card-content>
+          <div *ngFor="let user of users">
+            <button mat-button class="menu-button" title="Zarządzaj" [mat-menu-trigger-for]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="openRoleChooser(user)">Zarządzaj rolami</button>
+              <!--<button mat-menu-item (click)="openTeamManager(user)">Zarządzaj zespołami</button>-->
+            </mat-menu>
+            <span>{{user.username}}</span>
+          </div>
+          <mat-paginator [pageSizeOptions]="[5, 10, 25]" [pageSize]="10" [length]="totalUsersElements" (page)="nextUsersPage($event)"> </mat-paginator>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div style="grid-column: 2/ span 3 ; grid-row: 1 / span 3;">
+      <mat-card>
+        <mat-card-title>Zespoły</mat-card-title>
+        <mat-card-content>
+          <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+          <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <tr>
+                <td mat-cell *matCellDef="let row" style="width:20%">
+                  <button mat-button class="menu-button" title="Zarządzaj" [mat-menu-trigger-for]="teamMenu">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #teamMenu="matMenu">
+                    <button mat-menu-item (click)="editTeam(row)">Edytuj</button>
+                    <button mat-menu-item (click)="deleteTeam(row)">Usuń</button>
+                  </mat-menu>
+                </td>
+              <tr>
+            </ng-container>
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Nazwa </th>
+              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="defaultProject">
+              <th mat-header-cell *matHeaderCellDef> Projekt macierzysty </th>
+              <td mat-cell *matCellDef="let element"> {{element?.defaultProject?.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="teamLeader">
+              <th mat-header-cell *matHeaderCellDef> TeamLeader </th>
+              <td mat-cell *matCellDef="let element"> {{element?.teamLeader?.name}} {{element?.teamLeader?.surname}}</td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="teamTasks">
+              <th mat-header-cell *matHeaderCellDef> Zadania zespołowe </th>
+              <td mat-cell *matCellDef="let element"> {{element.teamTasks || '0/0'}}</td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="individualTasks">
+              <th mat-header-cell *matHeaderCellDef> Zadania indywidualne </th>
+              <td mat-cell *matCellDef="let element"> {{element.individualTasks || '0/0'}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          <mat-paginator #paginator [length]="totalTeamsElements"
+                         [pageSizeOptions]="[5, 10, 25]" [pageSize]="10" (page)="nextTeamsPage($event)" aria-label="Select page">
+          </mat-paginator>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-button title="Dodaj nowy zespół" (click)="openTeamForm()"><mat-icon>add</mat-icon></button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div style="grid-column: 1; grid-row: 4 / span 7;">
+      <mat-card>
+        <mat-card-title>Role w {{organisation.name}}</mat-card-title>
+        <mat-card-content>
+          <div *ngIf="roles.length==0">
+            <span>Brak zdefiniowanych ról w twojej organizacji! Dodaj je, klikając +</span>
+          </div>
+          <div *ngFor="let role of roles">
+            <button mat-button class="menu-button" title="Zarządzaj" [mat-menu-trigger-for]="roleMenu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #roleMenu="matMenu">
+              <button mat-menu-item (click)="editRoleForm(role)">Edytuj</button>
+              <button mat-menu-item (click)="deleteRole(role)">Usuń</button>
+            </mat-menu>
+            <span>{{role.name}} - <mat-icon>{{role.iconName}}</mat-icon></span>
+          </div>
+          <mat-paginator [pageSizeOptions]="[5, 10, 25]" [pageSize]="10" [length]="totalRolesElements" (page)="nextRolesPage($event)"> </mat-paginator>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-button title="Dodaj" (click)="openRoleForm()"><mat-icon>add</mat-icon></button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

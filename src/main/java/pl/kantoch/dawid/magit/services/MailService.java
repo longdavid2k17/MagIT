@@ -1,4 +1,4 @@
-package pl.kantoch.dawid.magit.services.listeners;
+package pl.kantoch.dawid.magit.services;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
